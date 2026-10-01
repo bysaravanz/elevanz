@@ -1,0 +1,183 @@
+<!-- ===== ACELERADORA DE TUTORES HOMESCHOOL · Desplegable para Elementor (widget HTML) ===== -->
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Urbanist:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  .eda-wrap{
+    --eda-orange:#F06A35;
+    --eda-orange-soft:#FDEDE6;
+    --eda-ink:#111111;
+    --eda-text:#6B6B76;
+    --eda-line:#EFEFF2;
+    --eda-bg:#FFFFFF;
+    font-family:'Urbanist',sans-serif;
+    color:var(--eda-text);
+    max-width:1200px;
+    margin:0 auto;
+    box-sizing:border-box;
+  }
+  .eda-wrap *,.eda-wrap *::before,.eda-wrap *::after{box-sizing:border-box}
+  .eda-wrap h3,.eda-wrap h5{font-family:'Quicksand',sans-serif;color:var(--eda-ink);margin:0;line-height:1.2}
+  .eda-wrap p{margin:0}
+
+  /* Botón principal */
+  .eda-wrap button.eda-toggle{
+    display:inline-flex;align-items:center;gap:12px;
+    background:var(--eda-orange);color:#fff;border:2px solid var(--eda-orange);
+    font-family:'Quicksand',sans-serif;font-weight:700;font-size:17px;letter-spacing:.2px;
+    padding:16px 30px;border-radius:999px;cursor:pointer;
+    transition:background .25s,color .25s,transform .25s;
+    box-shadow:0 10px 24px rgba(240,106,53,.25);
+  }
+  .eda-wrap button.eda-toggle:hover{background:#fff;color:var(--eda-orange);transform:translateY(-2px)}
+  .eda-wrap button.eda-toggle:focus-visible{outline:3px solid var(--eda-orange-soft);outline-offset:3px}
+  .eda-toggle .eda-chev{width:20px;height:20px;transition:transform .35s}
+  .eda-wrap.is-open .eda-toggle .eda-chev{transform:rotate(180deg)}
+
+  /* Panel desplegable */
+  .eda-panel{
+    overflow:hidden;max-height:0;opacity:0;
+    transition:max-height .6s ease,opacity .4s ease,margin-top .4s ease;
+  }
+  .eda-wrap.is-open .eda-panel{opacity:1;margin-top:28px}
+  .eda-card{
+    background:var(--eda-bg);
+    border:1px solid var(--eda-line);
+    border-left:6px solid var(--eda-orange);
+    border-radius:32px;
+    padding:56px 56px 48px;
+    box-shadow:0 18px 50px rgba(17,17,17,.06);
+  }
+
+  /* Encabezado */
+  .eda-pills{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}
+  .eda-pills span{
+    font-family:'Quicksand',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;text-transform:uppercase;
+    padding:8px 16px;border-radius:999px;
+  }
+  .eda-pill-main{background:var(--eda-orange);color:#fff}
+  .eda-pill-soft{background:var(--eda-orange-soft);color:var(--eda-orange)}
+  .eda-eyebrow{
+    font-family:'Quicksand',sans-serif;font-weight:700;font-size:14px;
+    letter-spacing:1px;text-transform:uppercase;color:var(--eda-orange);margin-bottom:10px;display:block;
+  }
+  .eda-title{font-size:clamp(28px,4vw,44px);font-weight:700}
+  .eda-lead{font-size:clamp(18px,1.8vw,22px);font-weight:300;line-height:1.55;margin-top:18px}
+
+  /* Temas */
+  .eda-topics{display:grid;gap:16px;margin-top:40px}
+  .eda-topic{
+    border:1px solid var(--eda-line);border-radius:22px;padding:26px 28px;
+    display:grid;grid-template-columns:110px 1fr;gap:20px;align-items:center;background:#fff;
+    transition:border-color .25s,box-shadow .25s;
+  }
+  .eda-topic:hover{border-color:var(--eda-orange);box-shadow:0 10px 30px rgba(240,106,53,.08)}
+  .eda-num{
+    font-family:'Quicksand',sans-serif;font-weight:700;font-size:52px;line-height:1;
+    color:var(--eda-orange-soft);-webkit-text-stroke:1.5px var(--eda-orange);
+  }
+  .eda-tag{font-family:'Quicksand',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--eda-orange)}
+  .eda-topic h5{font-size:clamp(19px,2vw,23px);font-weight:700;margin-top:6px}
+
+  /* Cierre */
+  .eda-sign{
+    margin-top:40px;padding-top:28px;border-top:1px solid var(--eda-line);
+    font-size:16px;line-height:1.5;text-align:center;font-style:italic;
+  }
+  .eda-sign strong{font-family:'Quicksand',sans-serif;font-style:normal;color:var(--eda-ink)}
+
+  /* Responsive */
+  @media (max-width:900px){
+    .eda-card{padding:36px 26px 32px;border-radius:26px}
+  }
+  @media (max-width:640px){
+    .eda-topic{grid-template-columns:1fr;gap:6px;padding:22px 20px}
+    .eda-num{font-size:40px}
+    .eda-wrap button.eda-toggle{width:100%;justify-content:center}
+  }
+</style>
+
+<div class="eda-wrap" id="edaAcel">
+
+  <button type="button" class="eda-toggle" aria-expanded="false" aria-controls="edaAcelPanel">
+    <span class="eda-toggle-label">Ver temario</span>
+    <svg class="eda-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </button>
+
+  <div class="eda-panel" id="edaAcelPanel" role="region" aria-label="Temario de la Aceleradora de Tutores Homeschool">
+    <div class="eda-card">
+
+      <div class="eda-pills">
+        <span class="eda-pill-main">EDUKHOMES</span>
+        <span class="eda-pill-soft">4 sesiones · Agosto</span>
+      </div>
+
+      <span class="eda-eyebrow">Temario</span>
+      <h3 class="eda-title">Aceleradora de Tutores Homeschool</h3>
+      <p class="eda-lead">Esto es lo que trabajaremos juntos, sesión a sesión, para fortalecer tu tutoría homeschool.</p>
+
+      <div class="eda-topics">
+        <div class="eda-topic">
+          <div class="eda-num">01</div>
+          <div>
+            <span class="eda-tag">Tema 01</span>
+            <h5>Fundamentos del Homeschool y Claves para una Tutoría Exitosa</h5>
+          </div>
+        </div>
+        <div class="eda-topic">
+          <div class="eda-num">02</div>
+          <div>
+            <span class="eda-tag">Tema 02</span>
+            <h5>Legalidad y Portafolio en el Homeschool</h5>
+          </div>
+        </div>
+        <div class="eda-topic">
+          <div class="eda-num">03</div>
+          <div>
+            <span class="eda-tag">Tema 03</span>
+            <h5>Crea Experiencias Educativas con Inteligencia Artificial sin VPN</h5>
+          </div>
+        </div>
+        <div class="eda-topic">
+          <div class="eda-num">04</div>
+          <div>
+            <span class="eda-tag">Tema 04</span>
+            <h5>Enseñanzas Fundamentales de Lectoescritura y Matemáticas en el Hogar</h5>
+          </div>
+        </div>
+      </div>
+
+      <p class="eda-sign"><strong>EDUKHOMES</strong> · El arte de EDUCAR con propósito</p>
+
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var wrap = document.getElementById('edaAcel');
+  if(!wrap) return;
+  var btn = wrap.querySelector('.eda-toggle');
+  var label = wrap.querySelector('.eda-toggle-label');
+  var panel = wrap.querySelector('.eda-panel');
+
+  btn.addEventListener('click', function(){
+    var open = !wrap.classList.contains('is-open');
+    btn.setAttribute('aria-expanded', open);
+    label.textContent = open ? 'Ocultar temario' : 'Ver temario';
+    if(open){
+      wrap.classList.add('is-open');
+      panel.style.maxHeight = panel.scrollHeight + 'px';
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + 'px';
+      panel.offsetHeight;
+      wrap.classList.remove('is-open');
+      panel.style.maxHeight = '0px';
+    }
+  });
+
+  panel.addEventListener('transitionend', function(e){
+    if(e.propertyName === 'max-height' && wrap.classList.contains('is-open')) panel.style.maxHeight = 'none';
+  });
+})();
+</script>
+<!-- ===== FIN ACELERADORA DE TUTORES HOMESCHOOL ===== -->
