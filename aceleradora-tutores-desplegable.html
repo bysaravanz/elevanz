@@ -99,7 +99,7 @@
 <div class="eda-wrap" id="edaAcel">
 
   <button type="button" class="eda-toggle" aria-expanded="false" aria-controls="edaAcelPanel">
-    <span class="eda-toggle-label">Ver temario</span>
+    <span class="eda-toggle-label">Ver contenido aceleradora</span>
     <svg class="eda-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
   </button>
 
@@ -163,7 +163,7 @@
   btn.addEventListener('click', function(){
     var open = !wrap.classList.contains('is-open');
     btn.setAttribute('aria-expanded', open);
-    label.textContent = open ? 'Ocultar temario' : 'Ver temario';
+    label.textContent = open ? 'Ocultar contenido aceleradora' : 'Ver contenido aceleradora';
     if(open){
       wrap.classList.add('is-open');
       panel.style.maxHeight = panel.scrollHeight + 'px';
