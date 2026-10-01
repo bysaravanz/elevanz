@@ -19,26 +19,29 @@
   .eda-wrap h3,.eda-wrap h5{font-family:'Quicksand',sans-serif;color:var(--eda-ink);margin:0;line-height:1.2}
   .eda-wrap :where(p){margin:0}
 
-  /* Botón principal */
-  .eda-wrap button.eda-toggle{
-    display:inline-flex;align-items:center;gap:12px;
+  /* Botón principal (sin JavaScript) */
+  .eda-wrap summary.eda-toggle{
+    display:inline-flex;align-items:center;gap:12px;list-style:none;
     background:var(--eda-orange);color:#fff;border:2px solid var(--eda-orange);
-    font-family:'Quicksand',sans-serif;font-weight:700;font-size:17px;letter-spacing:.2px;
-    padding:16px 30px;border-radius:999px;cursor:pointer;
+    font-family:'Quicksand',sans-serif;font-weight:700;font-size:17px;letter-spacing:.2px;line-height:1.2;
+    padding:16px 30px;border-radius:999px;cursor:pointer;user-select:none;
     transition:background .25s,color .25s,transform .25s;
     box-shadow:0 10px 24px rgba(240,106,53,.25);
   }
-  .eda-wrap button.eda-toggle:hover{background:#fff;color:var(--eda-orange);transform:translateY(-2px)}
-  .eda-wrap button.eda-toggle:focus-visible{outline:3px solid var(--eda-orange-soft);outline-offset:3px}
-  .eda-toggle .eda-chev{width:20px;height:20px;transition:transform .35s}
-  .eda-wrap.is-open .eda-toggle .eda-chev{transform:rotate(180deg)}
+  .eda-wrap summary.eda-toggle::-webkit-details-marker{display:none}
+  .eda-wrap summary.eda-toggle::marker{content:""}
+  .eda-wrap summary.eda-toggle:hover{background:#fff;color:var(--eda-orange);transform:translateY(-2px)}
+  .eda-wrap summary.eda-toggle:focus-visible{outline:3px solid var(--eda-orange-soft);outline-offset:3px}
+  .eda-toggle .eda-chev{width:20px;height:20px;flex:0 0 20px;transition:transform .35s}
+  .eda-details[open] .eda-chev{transform:rotate(180deg)}
+  .eda-l-open{display:none}
+  .eda-details[open] .eda-l-open{display:inline}
+  .eda-details[open] .eda-l-closed{display:none}
 
   /* Panel desplegable */
-  .eda-panel{
-    overflow:hidden;max-height:0;opacity:0;
-    transition:max-height .6s ease,opacity .4s ease,margin-top .4s ease;
-  }
-  .eda-wrap.is-open .eda-panel{opacity:1;margin-top:28px}
+  .eda-panel{margin-top:28px}
+  .eda-details[open] .eda-card{animation:edaOpen .45s ease}
+  @keyframes edaOpen{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
   .eda-card{
     background:var(--eda-bg);
     border:1px solid var(--eda-line);
@@ -92,18 +95,20 @@
   @media (max-width:640px){
     .eda-topic{grid-template-columns:1fr;gap:6px;padding:22px 20px}
     .eda-num{font-size:40px}
-    .eda-wrap button.eda-toggle{width:100%;justify-content:center}
+    .eda-wrap summary.eda-toggle{display:flex;width:100%;justify-content:center}
   }
 </style>
 
 <div class="eda-wrap" id="edaAcel">
+<details class="eda-details">
 
-  <button type="button" class="eda-toggle" aria-expanded="false" aria-controls="edaAcelPanel">
-    <span class="eda-toggle-label">Ver contenido aceleradora</span>
+  <summary class="eda-toggle">
+    <span class="eda-l-closed">Ver contenido aceleradora</span>
+    <span class="eda-l-open">Ocultar contenido aceleradora</span>
     <svg class="eda-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-  </button>
+  </summary>
 
-  <div class="eda-panel" id="edaAcelPanel" role="region" aria-label="Temario de la Aceleradora de Tutores Homeschool">
+  <div class="eda-panel">
     <div class="eda-card">
 
       <div class="eda-pills">
@@ -150,34 +155,7 @@
 
     </div>
   </div>
+</details>
 </div>
 
-<script>
-(function(){
-  var wrap = document.getElementById('edaAcel');
-  if(!wrap) return;
-  var btn = wrap.querySelector('.eda-toggle');
-  var label = wrap.querySelector('.eda-toggle-label');
-  var panel = wrap.querySelector('.eda-panel');
-
-  btn.addEventListener('click', function(){
-    var open = !wrap.classList.contains('is-open');
-    btn.setAttribute('aria-expanded', open);
-    label.textContent = open ? 'Ocultar contenido aceleradora' : 'Ver contenido aceleradora';
-    if(open){
-      wrap.classList.add('is-open');
-      panel.style.maxHeight = panel.scrollHeight + 'px';
-    } else {
-      panel.style.maxHeight = panel.scrollHeight + 'px';
-      panel.offsetHeight;
-      wrap.classList.remove('is-open');
-      panel.style.maxHeight = '0px';
-    }
-  });
-
-  panel.addEventListener('transitionend', function(e){
-    if(e.propertyName === 'max-height' && wrap.classList.contains('is-open')) panel.style.maxHeight = 'none';
-  });
-})();
-</script>
 <!-- ===== FIN ACELERADORA DE TUTORES HOMESCHOOL ===== -->
