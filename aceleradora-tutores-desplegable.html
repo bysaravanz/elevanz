@@ -97,6 +97,21 @@
     .eda-num{font-size:40px}
     .eda-wrap summary.eda-toggle{display:flex;width:100%;justify-content:center}
   }
+  /* Columnas angostas (3 columnas en Elementor) y móvil */
+  .eda-wrap{container-type:inline-size}
+  .eda-wrap h3,.eda-wrap h5,.eda-wrap p{overflow-wrap:break-word}
+  @container (max-width:700px){
+    .eda-wrap summary.eda-toggle{display:flex;width:100%;justify-content:center;text-align:center;padding:14px 20px;font-size:16px}
+    .eda-panel{margin-top:18px}
+    .eda-card{padding:28px 20px 26px;border-radius:22px;border-left-width:5px}
+    .eda-title{font-size:26px}
+    .eda-lead{font-size:17px}
+    .eda-topics{margin-top:24px;gap:12px}
+    .eda-topic{grid-template-columns:1fr;gap:6px;padding:18px 16px;border-radius:18px}
+    .eda-num{font-size:36px}
+    .eda-topic h5{font-size:18px}
+    .eda-sign{margin-top:28px;padding-top:20px}
+  }
 </style>
 
 <div class="eda-wrap" id="edaAcel">

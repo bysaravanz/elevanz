@@ -164,6 +164,34 @@
     .edk-wrap summary.edk-toggle{display:flex;width:100%;justify-content:center}
     .edk-price .edk-amount{font-size:46px}
   }
+  /* Columnas angostas (3 columnas en Elementor) y móvil */
+  .edk-wrap{container-type:inline-size}
+  .edk-wrap h3,.edk-wrap h4,.edk-wrap h5,.edk-wrap li,.edk-wrap p{overflow-wrap:break-word}
+  @container (max-width:700px){
+    .edk-wrap summary.edk-toggle{display:flex;width:100%;justify-content:center;text-align:center;padding:14px 20px;font-size:16px}
+    .edk-panel{margin-top:18px}
+    .edk-card{padding:28px 20px 26px;border-radius:22px;border-left-width:5px}
+    .edk-title{font-size:26px}
+    .edk-sub{font-size:20px;margin-bottom:16px}
+    .edk-lead{font-size:17px}
+    .edk-section{padding-top:28px;margin-top:28px}
+    .edk-grid-2,.edk-benefits,.edk-invest{grid-template-columns:1fr}
+    .edk-badge{padding:18px 18px}
+    .edk-badge strong{font-size:18px}
+    .edk-tabs{flex-direction:column}
+    .edk-wrap label.edk-tab{flex:none;padding:14px 16px;font-size:16px}
+    .edk-module{grid-template-columns:1fr;gap:6px;padding:18px 16px;border-radius:18px}
+    .edk-mod-num{font-size:36px}
+    .edk-module h5{font-size:18px}
+    .edk-weeks li{flex-direction:column;gap:2px;font-size:16px}
+    .edk-benefits li{font-size:16px}
+    .edk-price{padding:22px 20px}
+    .edk-price .edk-amount{font-size:42px}
+    .edk-steps{padding:20px 18px}
+    .edk-note,.edk-based{font-size:16px}
+    .edk-cta-row{flex-direction:column;align-items:stretch;text-align:center}
+    .edk-wrap a.edk-cta{justify-content:center}
+  }
 </style>
 
 <div class="edk-wrap" id="edkCert">
