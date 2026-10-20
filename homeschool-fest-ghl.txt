@@ -206,6 +206,7 @@
 
 /* La Ruta del Tutor */
 #hfest  .hf-ruta{border-radius:28px;overflow:hidden;box-shadow:0 30px 60px -28px rgba(45,20,80,.28)}
+#hfest  .hf-ruta-banner{display:block;width:100%;height:auto}
 #hfest  .hf-ruta-bar{height:6px;background:linear-gradient(90deg,#028183,#572893 45%,#ff761e)}
 #hfest  .hf-ruta-in{padding:26px 18px;display:grid;gap:26px;align-items:start}
 #hfest  .hf-ruta-copy{display:flex;flex-direction:column;gap:16px;min-width:0}
@@ -439,6 +440,7 @@
   var CFG = {
     logo: 'https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa876639f5a41333a6151f3.png',        // URL del logo (PNG con fondo transparente)
     hero: 'https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa87bb8381d46f46abadb8f.png',        // URL de la foto principal (JPG/WebP)
+    rutaBanner: '',              // opcional: URL del banner horizontal de la Ruta del Tutor (súbelo a Medios de GHL y pega el enlace). Vacío = no se muestra
     defaultDay: 'ruta',          // pestaña inicial: 'ruta', 'vie' o 'sab'
     scrollOffset: 0              // px a reservar arriba al hacer scroll (pon 80 si tu página GHL tiene header fijo)
   };
@@ -688,13 +690,14 @@
     /* ---------- La Ruta del Tutor ---------- */
     var renderRuta = function () {
       var rows = DATA.vie.filter(function (s) { return s.ruta; });
-      $('hf-ruta').innerHTML = '<div class="hf-ruta-bar"></div><div class="hf-ruta-in">' +
+      var banner = (CFG.rutaBanner && CFG.rutaBanner.indexOf('http') === 0) ? '<img class="hf-ruta-banner" src="' + esc(CFG.rutaBanner) + '" alt="La Ruta del Tutor · Viernes 23 de octubre · 9 AM a 6 PM · Zona rental UNIMET" width="2000" height="500" decoding="async" onerror="this.style.display=\'none\'">' : '';
+      $('hf-ruta').innerHTML = banner + '<div class="hf-ruta-bar"></div><div class="hf-ruta-in">' +
         '<div class="hf-ruta-copy">' +
           '<span class="hf-k">Formación para tutores</span>' +
           '<h3>La Ruta del Tutor</h3>' +
           '<div class="hf-ruta-when"><b>Viernes 23</b><i>|</i><span>9:00 am – 6:00 pm</span></div>' +
           '<p>Al participar en la Ruta del Tutor <strong>obtendrás un certificado de participación avalado por EDUKHOMES y DAWERE con 15 horas académicas</strong>, aportando valor a tu currículum y dándole así inicio a tu camino como tutor homeschool.</p>' +
-          '<div class="hf-badges"><span class="hf-badge2 b1">' + ico('award', 18) + 'Certificado · 15 horas académicas</span><span class="hf-badge2 b2">' + ico('mic', 18) + rows.length + ' charlas</span></div>' +
+          '<div class="hf-badges"><span class="hf-badge2 b1">' + ico('award', 18) + 'Certificado · 15 horas académicas</span><span class="hf-badge2 b2">' + ico('mic', 18) + rows.length + ' charlas</span><span class="hf-badge2 b2">' + ico('users', 18) + 'Para padres y docentes</span></div>' +
           '<div class="hf-ctas"><a class="hf-btn hf-btn-orange" href="' + RUTA_FORM + '" target="_blank" rel="noopener">Regístrate en la Ruta del Tutor' + ico('arrow-right', 18) + '</a></div>' +
           '<span class="hf-req">Requisito: tener comprada tu entrada de adulto. <a href="' + TICKET + '" target="_blank" rel="noopener">Confírmala en goliiive.com</a></span>' +
         '</div>' +
