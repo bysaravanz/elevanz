@@ -200,7 +200,7 @@
 #hfest  .hf-soon{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:10px 20px;border-radius:999px;background:#ece4f6;color:#572893;font-weight:600;font-size:15px;text-align:center}
 #hfest  .hf-btn-teal{background:#028183;color:#fff}
 #hfest  .hf-tag.is-tar{background:#fff1e8;color:#a3420a}
-#hfest  #hf-tabs-main{max-width:520px}
+#hfest  .hf-pick{align-self:center;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#6b7474;margin-bottom:-12px}
 #hfest  .hf-tab.is-ruta{align-items:center;text-align:center}
 #hfest  .hf-tab.is-ruta span{line-height:1.15}
 
@@ -365,8 +365,8 @@
           <div class="hf-where"><small>Ubicación</small><span>Zona rental de la UNIMET · Caracas</span></div>
         </div>
         <div class="hf-ctas">
-          <a class="hf-btn hf-btn-teal" href="#hf-charlas" data-act="ruta"><span data-ico="award" data-s="18"></span>La Ruta del Tutor</a>
           <a class="hf-btn hf-btn-purple" href="#hf-charlas" data-act="goto" data-target="hf-charlas"><span data-ico="mic" data-s="18"></span>Charlas para padres y docentes</a>
+          <a class="hf-btn hf-btn-teal" href="#hf-ruta-sec" data-act="ruta"><span data-ico="award" data-s="18"></span>La Ruta del Tutor</a>
           <a class="hf-btn hf-btn-orange" href="#hf-talleres" data-act="goto" data-target="hf-talleres"><span data-ico="palette" data-s="18"></span>Talleres para niños</a>
         </div>
       </div>
@@ -385,14 +385,18 @@
         <h2 class="hf-h2">Charlas para padres y docentes</h2>
         <span class="hf-bar3"></span>
       </div>
+      <span class="hf-pick">Elige el día</span>
       <div class="hf-tabs hf-glass" role="tablist" aria-label="Día de las charlas" id="hf-tabs-main"></div>
-      <div class="hf-ruta hf-glass" id="hf-ruta" hidden></div>
       <div class="hf-tools" id="hf-tools">
         <label class="hf-search"><span class="hf-sr">Buscar charla o speaker</span><span data-ico="search" data-s="18"></span><input type="search" id="hf-q" placeholder="Buscar charla o speaker" autocomplete="off"></label>
         <div class="hf-chips" id="hf-chips" role="group" aria-label="Filtrar por espacio"></div>
       </div>
       <p class="hf-count" id="hf-count" aria-live="polite"></p>
       <ul class="hf-list" id="hf-list"></ul>
+    </section>
+
+    <section class="hf-wrap hf-sec" id="hf-ruta-sec">
+      <div class="hf-ruta hf-glass" id="hf-ruta"></div>
     </section>
 
     <section class="hf-sec hf-kids" id="hf-talleres">
@@ -441,7 +445,7 @@
     logo: 'https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa876639f5a41333a6151f3.png',        // URL del logo (PNG con fondo transparente)
     hero: 'https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa87bb8381d46f46abadb8f.png',        // URL de la foto principal (JPG/WebP)
     rutaBanner: '',              // opcional: URL del banner horizontal de la Ruta del Tutor (súbelo a Medios de GHL y pega el enlace). Vacío = no se muestra
-    defaultDay: 'ruta',          // pestaña inicial: 'ruta', 'vie' o 'sab'
+    defaultDay: 'vie',           // día inicial de las charlas: 'vie' (23 oct) o 'sab' (24 oct)
     scrollOffset: 0              // px a reservar arriba al hacer scroll (pon 80 si tu página GHL tiene header fijo)
   };
   /* ========================================================= */
@@ -598,7 +602,6 @@
     /* ---------- Tabs ---------- */
     var tabsHTML = function (kind, cur) {
       var keys = Object.keys(DAYS);
-      if (kind === 'day') keys.unshift('ruta');
       return keys.map(function (k) {
         var sel = k === cur, r = k === 'ruta';
         return '<button type="button" class="hf-tab' + (r ? ' is-ruta' : '') + '" role="tab" id="hf-tab-' + kind + '-' + k + '" aria-selected="' + sel + '" tabindex="' + (sel ? 0 : -1) + '" data-act="' + kind + '" data-day="' + k + '">' +
@@ -708,14 +711,7 @@
         }).join('') + '</ul></div>';
     };
 
-    var renderMain = function () {
-      var isRuta = state.day === 'ruta';
-      $('hf-ruta').hidden = !isRuta;
-      $('hf-tools').hidden = isRuta;
-      $('hf-count').hidden = isRuta;
-      listEl.hidden = isRuta;
-      if (isRuta) renderRuta(); else renderList();
-    };
+    var renderMain = function () { renderList(); };
 
     var renderTabs = function () {
       $('hf-tabs-main').innerHTML = tabsHTML('day', state.day);
@@ -784,7 +780,7 @@
       else if (act === 'kid') { state.kidDay = t.getAttribute('data-day'); renderTabs(); renderKids(); }
       else if (act === 'space') { state.space = t.getAttribute('data-space'); renderChips(); renderList(); }
       else if (act === 'clear') { state.q = ''; state.space = ''; $('hf-q').value = ''; renderChips(); renderList(); }
-      else if (act === 'ruta') { e.preventDefault(); state.day = 'ruta'; state.open = null; renderTabs(); renderChips(); renderMain(); goto('hf-charlas'); }
+      else if (act === 'ruta') { e.preventDefault(); goto('hf-ruta-sec'); }
       else if (act === 'goto') { e.preventDefault(); goto(t.getAttribute('data-target')); }
     });
 
@@ -818,7 +814,7 @@
     }, true);
 
     /* ---------- Inicio ---------- */
-    renderTabs(); renderChips(); renderMain(); renderKids();
+    renderTabs(); renderChips(); renderMain(); renderRuta(); renderKids();
   };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
