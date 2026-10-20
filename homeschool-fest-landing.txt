@@ -1,0 +1,1006 @@
+<!-- ============================================================
+     HOMESCHOOL FEST 2026 — Landing completa
+     Pegar en GoHighLevel: Custom Code / HTML element (full width)
+     Requiere conexión (fuente Jost, imágenes CDN, formulario LC)
+     Versión con mejoras UX: móvil, tablet y desktop + ancho completo
+     ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{--hf-purple:#572893;--hf-orange:#ff761e;--hf-teal:#028183;--hf-navy:#00006e;--hf-purple-900:#2d1450;--hf-purple-800:#3d1c6c;--hf-purple-700:#4a2280;--hf-purple-600:#572893;--hf-purple-300:#b394da;--hf-purple-200:#d7c6ec;--hf-purple-100:#ece4f6;--hf-purple-050:#f6f1fb;--hf-orange-700:#c9540c;--hf-orange-600:#e66412;--hf-orange-500:#ff761e;--hf-orange-400:#ff9147;--hf-orange-100:#ffece0;--hf-teal-700:#01605f;--hf-teal-600:#028183;--hf-teal-500:#17a8a8;--hf-teal-100:#e6f6f6;--hf-neutral-050:#f6f8f8;--hf-neutral-100:#e7ebeb;--hf-neutral-200:#d3d9d9;--hf-neutral-300:#b3bcbc;--hf-neutral-500:#6b7474;--hf-neutral-600:#4d5555;--hf-neutral-700:#343a3a;--hf-neutral-800:#1f2323;--hf-neutral-900:#101212;--surface-page:#ffffff;--text-strong:#572893;--text-body:#343a3a;--text-muted:#6b7474;--border-subtle:#d3d9d9;--action-primary:#ff761e;--action-primary-hover:#e66412;--action-secondary:#572893;--action-secondary-hover:#4a2280;--action-tertiary:#028183;--action-tertiary-hover:#01605f;--hf-white:#ffffff;--transition-control:background-color 150ms cubic-bezier(.2,.7,.3,1),color 150ms cubic-bezier(.2,.7,.3,1),border-color 150ms cubic-bezier(.2,.7,.3,1),box-shadow 150ms cubic-bezier(.2,.7,.3,1),transform 150ms cubic-bezier(.2,.7,.3,1);}
+
+/* ---------- Ancho completo (sale de la caja de GHL) ---------- */
+html,body{overflow-x:clip !important;}
+#hf-landing{position:relative;width:100vw;max-width:100vw;margin-left:calc(50% - 50vw);margin-right:0;padding:0;float:none;clear:both;}
+
+#hf-landing{font-family:'Jost',system-ui,-apple-system,sans-serif;color:var(--text-body);background:#fff;line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;text-size-adjust:100%;overflow-x:hidden;}
+@supports (overflow:clip){#hf-landing{overflow:visible;overflow-x:clip;}}
+#hf-landing *{box-sizing:border-box;}
+#hf-landing h1,#hf-landing h2,#hf-landing h3,#hf-landing h4,#hf-landing p,#hf-landing ul,#hf-landing blockquote{margin:0;}
+#hf-landing ul{padding:0;}
+#hf-landing a{color:#572893;text-decoration:none;}
+#hf-landing img{max-width:100%;}
+#hf-landing button{font-family:inherit;}
+#hf-landing .hf-testi{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.16);}
+#hf-landing .hf-testi[data-active="1"]{background:rgba(255,255,255,.16);border-color:rgba(255,145,71,.9);}
+@keyframes hf-pulse{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes hf-heroZoom{from{transform:scale(1.08)}to{transform:scale(1)}}
+@keyframes hf-drift{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-18px,0)}}
+@keyframes hf-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (hover:hover){
+#hf-landing a:hover{color:#ff761e;}
+#hf-landing .hf-nav a:hover{color:var(--hf-orange-600);}
+#hf-landing .hf-testi:hover{transform:translateY(-3px);background:rgba(255,255,255,.14);}
+#hf-landing .hfh0:hover{background:var(--hf-neutral-100) !important;color:var(--hf-purple-600) !important}
+#hf-landing .hfh1:hover{background:var(--action-primary-hover) !important;color:#fff !important;box-shadow:0 18px 40px rgba(255,118,30,.46) !important}
+#hf-landing .hfh2:hover{background:rgba(255,255,255,.22) !important;color:#fff !important}
+#hf-landing .hfh3:hover{background:var(--action-secondary-hover) !important;color:#fff !important}
+#hf-landing .hfh4:hover{background:var(--action-tertiary-hover) !important;color:#fff !important}
+#hf-landing .hfh5:hover{background:rgba(255,255,255,.12) !important;color:#fff !important}
+#hf-landing .hfh6:hover{background:var(--hf-purple-600) !important;color:#fff !important}
+#hf-landing .hfh7:hover{background:var(--action-primary-hover) !important;color:#fff !important}
+#hf-landing .hfh8:hover{background:rgba(255,255,255,.14) !important;color:#fff !important}
+#hf-landing .hfh9:hover{background:var(--action-primary-hover) !important;color:#fff !important;box-shadow:0 18px 40px rgba(255,118,30,.44) !important}
+#hf-landing .hfh10:hover{background:var(--hf-purple-700) !important;color:#fff !important}
+}
+/* ---------- UX: base ---------- */
+#hf-landing a,#hf-landing button{touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+#hf-landing a:focus-visible,#hf-landing button:focus-visible{outline:3px solid #ff9147;outline-offset:3px;border-radius:12px;}
+#hf-landing .hf-hero h1,#hf-landing .hf-hero-copy p,#hf-landing .hf-hero-copy>span{text-shadow:0 1px 16px rgba(45,20,80,.35);}
+#hf-landing .hf-hero-overlay::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(45,20,80,.30),rgba(45,20,80,0) 60%);}
+#hf-landing .hf-hero{min-height:min(880px,calc(100vh - 64px));}
+@supports (height:100svh){#hf-landing .hf-hero{min-height:min(880px,calc(100svh - 64px));}}
+
+/* ---------- Header ---------- */
+#hf-landing .hf-hdr-in{max-width:1200px;margin:0 auto;padding:8px clamp(16px,4vw,48px);display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:56px;}
+#hf-landing .hf-logo{display:inline-flex;align-items:center;flex:0 0 auto;}
+#hf-landing .hf-logo img{height:40px;width:auto;display:block;}
+#hf-landing .hf-nav{display:none;align-items:center;gap:4px;margin-left:auto;}
+#hf-landing .hf-nav a{display:inline-flex;align-items:center;height:40px;padding:0 12px;border-radius:999px;font-size:13px;font-weight:600;letter-spacing:.04em;color:var(--hf-neutral-700);}
+#hf-landing .hf-hdr-cta{display:inline-flex;align-items:center;justify-content:center;height:42px;padding:0 20px;border-radius:999px;background:var(--action-primary);color:#fff;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;transition:var(--transition-control);box-shadow:0 8px 20px rgba(255,118,30,.28);}
+@media (min-width:1024px){#hf-landing .hf-nav{display:flex;}}
+
+/* ---------- Pantallas muy anchas ---------- */
+@media (min-width:1600px){
+#hf-landing .hf-hdr-in,#hf-landing .hf-hero-grid{max-width:1360px !important;}
+}
+
+/* ---------- Sticky CTA (mobile) ---------- */
+#hf-landing .hf-sticky-cta{display:none;}
+
+/* ---------- Testimonios ---------- */
+#hf-landing .hf-testi{width:100%;color:inherit;font:inherit;}
+#hf-landing #hf-quote{transition:opacity 220ms cubic-bezier(.2,.7,.3,1);}
+
+/* ---------- Tarjeta de ponencia sin foto ---------- */
+#hf-landing .hf-talk-cover{background:linear-gradient(135deg,var(--hf-purple-600) 0%,var(--hf-teal-600) 100%);aspect-ratio:4/3;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:10px;padding:22px 20px;color:#fff;}
+#hf-landing .hf-talk-cover span{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-orange-400);}
+#hf-landing .hf-talk-cover strong{font-weight:700;font-size:clamp(20px,2.2vw,24px);line-height:1.2;letter-spacing:-.01em;text-wrap:balance;}
+
+/* ---------- Tablet y menor ---------- */
+@media (max-width:1023px){
+#hf-landing .hf-stats{grid-template-columns:repeat(3,minmax(0,1fr)) !important;gap:10px !important;}
+#hf-landing .hf-stat{padding:18px 12px !important;}
+#hf-landing .hf-stat-n{font-size:clamp(24px,4.4vw,32px) !important;}
+}
+@media (min-width:640px) and (max-width:899px){
+#hf-landing .hf-zones>div:last-child,#hf-landing .hf-speakers>div:last-child{grid-column:1/-1;}
+}
+@media (min-width:900px){
+#hf-landing .hf-hero-grid{grid-template-columns:minmax(320px,.85fr) minmax(0,1.15fr) !important;}
+}
+@media (max-width:899px){
+#hf-landing .hf-hero{min-height:auto !important;}
+#hf-landing .hf-hero-grid{grid-template-columns:1fr !important;gap:32px !important;padding-top:44px !important;padding-bottom:52px !important;}
+#hf-landing .hf-hero-copy{order:1;}
+#hf-landing .hf-hero-card{order:2;max-width:520px !important;}
+#hf-landing .hf-card-cta{display:none !important;}
+#hf-landing .hf-hero-overlay{background:linear-gradient(165deg,rgba(2,129,131,.93) 0%,rgba(87,40,147,.94) 60%,rgba(74,34,128,.96) 100%) !important;}
+#hf-landing h1{max-width:100% !important;}
+#hf-landing [style*="font-weight:300"],#hf-landing [style*="font-weight: 300"]{font-weight:400 !important;}
+}
+
+/* ---------- Móvil ---------- */
+@media (max-width:767px){
+#hf-landing .hf-sticky-cta{display:flex;align-items:center;gap:12px;position:fixed;left:0;right:0;bottom:0;z-index:80;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--border-subtle);box-shadow:0 -10px 30px rgba(45,20,80,.14);transform:translateY(115%);transition:transform 260ms cubic-bezier(.2,.7,.3,1);}
+#hf-landing .hf-sticky-cta.is-on{transform:translateY(0);}
+#hf-landing .hf-sticky-cta a.hf-sticky-btn{flex:1 1 auto;display:flex;align-items:center;justify-content:center;height:52px;border-radius:999px;background:var(--action-primary);color:#fff;font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;box-shadow:0 10px 24px rgba(255,118,30,.34);}
+#hf-landing .hf-sticky-note{flex:0 0 auto;font-size:12px;line-height:1.25;font-weight:600;color:var(--hf-purple-600);}
+#hf-landing .hf-sticky-note small{display:block;font-weight:400;color:var(--text-muted);font-size:11px;}
+#hf-landing .hf-footer{padding-bottom:104px !important;}
+}
+@media (max-width:640px){
+#hf-landing .hf-hdr-in{min-height:52px;padding-top:6px;padding-bottom:6px;}
+#hf-landing .hf-logo img{height:34px;}
+#hf-landing .hf-hdr-cta{height:40px;padding:0 16px;font-size:11.5px;}
+#hf-landing .hf-hero-grid{gap:28px !important;padding-top:32px !important;padding-bottom:40px !important;}
+#hf-landing .hf-hero-card{padding:22px 18px 20px !important;border-radius:24px !important;}
+#hf-landing .hf-pill{font-size:11.5px !important;letter-spacing:.08em !important;padding:8px 14px !important;border-radius:18px !important;line-height:1.35;margin-bottom:20px !important;}
+#hf-landing .hf-btn-row{gap:10px !important;}
+#hf-landing .hf-btn-row>a{flex:1 1 100% !important;padding-left:20px !important;padding-right:20px !important;}
+#hf-landing [style*="font-size:10px"]{font-size:11px !important;}
+#hf-landing [style*="font-size:11px"]{font-size:12px !important;}
+#hf-landing .hf-orgs{gap:16px 22px !important;}
+#hf-landing .hf-vsep{display:none !important;}
+#hf-landing .hf-banner{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}
+#hf-landing .hf-banner>div{font-size:12px !important;padding:16px 6px !important;}
+#hf-landing .hf-stat div:last-child{font-size:12.5px !important;line-height:1.35;}
+#hf-landing .hf-form-pad{padding:6px 2px !important;}
+#hf-landing .hf-testi-list{position:relative;display:flex !important;gap:10px !important;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 calc(-1 * clamp(16px,4vw,48px));padding:4px clamp(16px,4vw,48px) 8px;}
+#hf-landing .hf-testi-list::-webkit-scrollbar{display:none;}
+#hf-landing .hf-testi-list .hf-testi{flex:0 0 78%;scroll-snap-align:center;}
+#hf-landing #hf-quote{font-size:clamp(20px,5.6vw,26px) !important;}
+}
+
+/* ---------- Movimiento reducido ---------- */
+@media (prefers-reduced-motion:reduce){
+#hf-landing *,#hf-landing *::before,#hf-landing *::after{animation:none !important;transition:none !important;}
+#hf-landing .hf-marquee-set[aria-hidden]{display:none !important;}
+#hf-landing .hf-marquee-track{width:auto !important;flex-wrap:wrap;justify-content:center;padding:0 16px;}
+#hf-landing .hf-marquee-set{flex-wrap:wrap;justify-content:center;gap:10px 28px !important;padding-right:0 !important;}
+}
+</style>
+<noscript><style>#hf-landing [data-reveal]{opacity:1 !important;transform:none !important;}</style></noscript>
+
+<div id="hf-landing">
+
+
+  <header class="hf-hdr" style="position:sticky;top:0;z-index:70;background:rgba(255,255,255,.94);backdrop-filter:saturate(130%) blur(10px);-webkit-backdrop-filter:saturate(130%) blur(10px);border-bottom:1px solid var(--border-subtle);">
+    <div style="height:3px;background:linear-gradient(90deg,#028183 0%,#572893 45%,#ff761e 100%);"></div>
+    <div class="hf-hdr-in">
+      <a class="hf-logo" href="#top" aria-label="Homeschool Fest, ir al inicio"><img src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa8a4668228b95da3946ddb.png" alt="Homeschool Fest"></a>
+      <nav class="hf-nav" aria-label="Secciones de la página">
+        <a href="#zonas">Zonas</a>
+        <a href="#ponentes">Ponentes</a>
+        <a href="#ruta-tutor">Ruta del Tutor</a>
+        <a href="#precio">Entrada</a>
+        <a href="#faq">Preguntas</a>
+        <a href="https://homeschoolfest.lat/agenda" target="_blank" rel="noopener">Agenda ↗</a>
+      </nav>
+      <a class="hfh7 hf-hdr-cta" href="#registro">Registrarme</a>
+    </div>
+  </header>
+
+  <section id="top" class="hf-hero" style="position:relative;display:flex;align-items:center;overflow:hidden;background:#3d1c6c;">
+    <img src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa966d9c73b042e140cfe41.jpg" alt="" fetchpriority="high" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:hf-heroZoom 2600ms cubic-bezier(.2,.7,.3,1) both;">
+    <div class="hf-hero-overlay" style="position: absolute; inset: 0; background: linear-gradient(100deg, #028183EB, rgba(87,40,147,.88) 42%, #FF761EC0, rgba(255,118,30,.35) 100%)"></div>
+    <div style="position:absolute;right:-110px;top:-120px;width:340px;height:340px;border-radius:999px;background:#ff761e;opacity:.22;animation:hf-drift 14s ease-in-out infinite;"></div>
+    <div style="position:absolute;right:140px;bottom:-160px;width:300px;height:300px;border-radius:999px;background:#17a8a8;opacity:.2;animation:hf-drift 18s ease-in-out infinite;"></div>
+    <div class="hf-hero-grid" style="position:relative;width:100%;max-width:1200px;margin:0 auto;padding:clamp(56px,7vw,96px) clamp(16px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(32px,5vw,64px);align-items:center;">
+      <div class="hf-hero-card" style="align-self:center;justify-self:center;width:100%;max-width:440px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.28);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);border-radius:28px;padding:30px 26px 26px;box-shadow:0 30px 70px rgba(45,20,80,.45);">
+        <img src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa9cc1498106dcc4e2465d1.png" alt="Homeschool Fest" style="width:100%;height:auto;display:block;margin:0 auto 18px;">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:18px;">
+          <span style="width:9px;height:9px;border-radius:999px;background:#ff9147;animation:hf-pulse 1.6s ease-in-out infinite;"></span>
+          <span id="hf-cd-label" style="font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#fff;">Faltan para el Homeschool Fest</span>
+        </div>
+        <div role="timer" aria-label="Cuenta regresiva al Homeschool Fest" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;">
+          <div style="border-radius:16px;padding:16px 4px;text-align:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);"><div style="font-weight:700;font-size:clamp(24px,3vw,38px);letter-spacing:-.03em;color:#fff;line-height:1;"><span id="hf-cd-d">0</span></div><div style="margin-top:8px;font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-purple-200);">Días</div></div>
+          <div style="border-radius:16px;padding:16px 4px;text-align:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);"><div style="font-weight:700;font-size:clamp(24px,3vw,38px);letter-spacing:-.03em;color:#fff;line-height:1;"><span id="hf-cd-h">00</span></div><div style="margin-top:8px;font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-purple-200);">Horas</div></div>
+          <div style="border-radius:16px;padding:16px 4px;text-align:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);"><div style="font-weight:700;font-size:clamp(24px,3vw,38px);letter-spacing:-.03em;color:#fff;line-height:1;"><span id="hf-cd-m">00</span></div><div style="margin-top:8px;font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-purple-200);">Min</div></div>
+          <div style="border-radius:16px;padding:16px 4px;text-align:center;background:var(--hf-orange-500);"><div style="font-weight:700;font-size:clamp(24px,3vw,38px);letter-spacing:-.03em;color:#fff;line-height:1;"><span id="hf-cd-s">00</span></div><div style="margin-top:8px;font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#fff;">Seg</div></div>
+        </div>
+        <div style="margin-top:20px;padding-top:18px;border-top:1px solid rgba(255,255,255,.22);display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:space-between;align-items:baseline;">
+          <span style="font-size: 14px; font-weight: 300; color: #fff; text-align: center; width: 100%">Zona Rental UNIMET · Caracas</span>
+        </div>
+        <a class="hfh0 hf-card-cta" href="#registro" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;height:50px;border-radius:999px;background:#fff;color:var(--hf-purple-600);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:var(--transition-control);">Quiero ir con mi familia →</a>
+      </div><div class="hf-hero-copy">
+        <div class="hf-pill" style="display:inline-flex;align-items:center;gap:10px;padding:8px 18px;border-radius:999px;border:1.5px solid rgba(255,255,255,.45);color:#fff;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:26px;">
+          <span style="width:8px;height:8px;border-radius:999px;background:#ff9147;animation:hf-pulse 1.8s ease-in-out infinite;"></span>II Edición · Caracas · 23 y 24 de octubre
+        </div>
+        <h1 style="color: #fff; font-weight: 700; font-size: clamp(34px,5.4vw,72px); line-height: 1.02; letter-spacing: -.025em; text-wrap: balance; margin-bottom: 20px; position: relative; max-width: 557px">Dos días para vivir el homeschool en familia</h1>
+        <p style="max-width:580px;color:#fff;font-weight:300;font-size:clamp(17px,1.5vw,20px);line-height:1.6;margin-bottom:30px;">Familias, niños, jóvenes, docentes, tutores, academias, escuelas y marcas se encuentran en la Zona Rental de la UNIMET para aprender, conectar y descubrir nuevas formas de educar.</p>
+        <div class="hf-btn-row hf-hero-ctas" style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:14px;">
+          <a class="hfh1" href="#registro" style="flex:1 1 auto;display:inline-flex;align-items:center;justify-content:center;gap:10px;height:58px;padding:0 32px;border-radius:999px;background:var(--action-primary);color:#fff;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 14px 34px rgba(255,118,30,.38);transition:var(--transition-control);">Registrar a mi familia →</a>
+          <a class="hfh2" href="https://homeschoolfest.lat/agenda" target="_blank" rel="noopener" style="flex:1 1 auto;display:inline-flex;align-items:center;justify-content:center;gap:10px;height:58px;padding:0 30px;border-radius:999px;border:1.5px solid rgba(255,255,255,.55);background:rgba(255,255,255,.1);color:#fff;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:var(--transition-control);">Ver agenda del evento ↗</a>
+        </div>
+        <span style="display: block; font-size: 14px; font-weight: 300; color: var(--hf-white)">Primero registras a tu familia. Después completas el pago.</span>
+      </div>
+
+
+    </div>
+  </section>
+
+  <div class="hf-marquee" style="background:var(--hf-purple-900);overflow:hidden;padding:14px 0;">
+    <div class="hf-marquee-track" style="display:flex;width:max-content;animation:hf-marquee 28s linear infinite;">
+      <div class="hf-marquee-set" style="display:flex;gap:44px;padding-right:44px;font-size:13px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--hf-purple-200);white-space:nowrap;">
+        <span>Charlas tipo TEDx</span><span style="color:var(--hf-orange-400);">·</span><span>Talleres inmersivos</span><span style="color:var(--hf-teal-500);">·</span><span>Stands de escuelas y academias</span><span style="color:var(--hf-orange-400);">·</span><span>+1.500 familias</span><span style="color:var(--hf-teal-500);">·</span><span>2 días · 3 zonas</span><span style="color:var(--hf-orange-400);">·</span>
+      </div>
+      <div class="hf-marquee-set" aria-hidden="true" style="display:flex;gap:44px;padding-right:44px;font-size:13px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--hf-purple-200);white-space:nowrap;">
+        <span>Charlas tipo TEDx</span><span style="color:var(--hf-orange-400);">·</span><span>Talleres inmersivos</span><span style="color:var(--hf-teal-500);">·</span><span>Stands de escuelas y academias</span><span style="color:var(--hf-orange-400);">·</span><span>+1.500 familias</span><span style="color:var(--hf-teal-500);">·</span><span>2 días · 3 zonas</span><span style="color:var(--hf-orange-400);">·</span>
+      </div>
+    </div>
+  </div>
+
+  <section style="padding:clamp(56px,6vw,80px) clamp(16px,4vw,48px);background:var(--surface-page);">
+    <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(28px,4vw,56px);align-items:center;">
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);">
+        <div style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-orange-500);margin-bottom:14px;">Una comunidad que ya existe</div>
+        <h2 style="font-weight:700;font-size:clamp(26px,3vw,38px);line-height:1.08;letter-spacing:-.02em;color:var(--text-strong);margin-bottom:16px;">En 2025 nos encontramos. En 2026 volvemos, más grandes.</h2>
+        <p style="font-weight:300;font-size:18px;line-height:1.7;color:var(--text-body);">La primera edición reunió a familias de toda Caracas. Esta segunda edición llega con más espacios, más aliados y más experiencias para toda la familia.</p>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 80ms,transform 420ms cubic-bezier(.2,.7,.3,1) 80ms;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;" class="hf-stats">
+        <div class="hf-stat" style="border-radius:18px;padding:26px 22px;background:var(--hf-purple-050);border-top:5px solid var(--hf-purple-600);"><div class="hf-stat-n" style="font-weight:700;font-size:38px;letter-spacing:-.03em;color:var(--hf-purple-600);line-height:1;">+1.500</div><div style="margin-top:8px;font-size:14px;color:var(--text-muted);">familias en la comunidad</div></div>
+        <div class="hf-stat" style="border-radius:18px;padding:26px 22px;background:var(--hf-orange-100);border-top:5px solid var(--hf-orange-500);"><div class="hf-stat-n" style="font-weight:700;font-size:38px;letter-spacing:-.03em;color:var(--hf-orange-600);line-height:1;">+3.000</div><div style="margin-top:8px;font-size:14px;color:var(--text-muted);">asistentes esperados</div></div>
+        <div class="hf-stat" style="border-radius:18px;padding:26px 22px;background:var(--hf-teal-100);border-top:5px solid var(--hf-teal-600);"><div class="hf-stat-n" style="font-weight:700;font-size:38px;letter-spacing:-.03em;color:var(--hf-teal-700);line-height:1;">2 días</div><div style="margin-top:8px;font-size:14px;color:var(--text-muted);">una sola entrada</div></div>
+      </div>
+    </div>
+    <div class="hf-orgs" data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);max-width:1200px;margin:clamp(36px,4vw,52px) auto 0;padding-top:32px;border-top:1px solid var(--border-subtle);display:flex;flex-wrap:wrap;align-items:center;gap:24px 30px;">
+      <span style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);">Organizado por</span>
+      <img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6a879367ad59e6cfedda7415.png" alt="Eduk Homes" style="height: 105px; width: 114px; object-fit: contain">
+      <img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa966db9f8b31b6ab26d2f9.png" alt="Dawere" style="height: 52px; width: 162px; object-fit: contain">
+      <span class="hf-vsep" style="width:1px;height:38px;background:var(--border-subtle);"></span>
+      <span style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);">En colaboración de</span>
+      <img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa966dbbc55ee8d569405a6.png" alt="D-Future EdTech" style="height:46px;width:auto;object-fit:contain;">
+    </div>
+  </section>
+
+  <section style="padding:clamp(56px,7vw,88px) clamp(16px,4vw,48px);background:var(--surface-page);">
+    <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(28px,4vw,56px);align-items:center;">
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);border-radius:18px;overflow:hidden;box-shadow:0 18px 40px rgba(45,20,80,.16);">
+        <img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa966db196984c408fea4d0.jpg" alt="Niños participando en actividades del Homeschool Fest" style="width:100%;height:100%;max-height:560px;object-fit:cover;display:block;">
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 80ms,transform 420ms cubic-bezier(.2,.7,.3,1) 80ms;">
+        <div style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-orange-500);margin-bottom:14px;">Para niños y jóvenes</div>
+        <h3 style="font-weight:700;font-size:clamp(26px,3vw,38px);line-height:1.08;letter-spacing:-.02em;color:var(--text-strong);margin-bottom:16px;">Tu hijo encuentra su propio espacio</h3>
+        <p style="font-weight:300;font-size:17px;line-height:1.7;color:var(--text-body);margin-bottom:22px;">Talleres y actividades educativas y recreativas donde podrán crear, experimentar, jugar y compartir con otros niños y jóvenes que viven lo mismo que ellos.</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; max-width: 474px">
+          <span style="display:inline-flex;align-items:center;height:34px;padding:0 15px;border-radius:999px;border:1.5px solid var(--border-subtle);background:#fff;color:var(--hf-purple-600);font-size:13px;font-weight:600;">Cuentacuentos</span>
+          <span style="display:inline-flex;align-items:center;height:34px;padding:0 15px;border-radius:999px;border:1.5px solid var(--border-subtle);background:#fff;color:var(--hf-purple-600);font-size:13px;font-weight:600;">Emprende Kids</span>
+          <span style="display:inline-flex;align-items:center;height:34px;padding:0 15px;border-radius:999px;border:1.5px solid var(--border-subtle);background:#fff;color:var(--hf-purple-600);font-size:13px;font-weight:600;">Arte</span>
+          <span style="display:inline-flex;align-items:center;height:34px;padding:0 15px;border-radius:999px;border:1.5px solid var(--border-subtle);background:#fff;color:var(--hf-purple-600);font-size:13px;font-weight:600;">Teatro</span>
+          <span style="display:inline-flex;align-items:center;height:34px;padding:0 15px;border-radius:999px;border:1.5px solid var(--border-subtle);background:#fff;color:var(--hf-purple-600);font-size:13px;font-weight:600;">Danza</span>
+          <span style="display:inline-flex;align-items:center;height:34px;padding:0 15px;border-radius:999px;border:1.5px solid var(--border-subtle);background:#fff;color:var(--hf-purple-600);font-size:13px;font-weight:600;">Aprendizaje al aire libre</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:clamp(56px,7vw,88px) clamp(16px,4vw,48px);background:var(--hf-neutral-050);">
+    <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(28px,4vw,56px);align-items:start;">
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);">
+        <div style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-teal-700);margin-bottom:14px;">Para padres y docentes</div>
+        <h3 style="font-weight:700;font-size:clamp(26px,3vw,38px);line-height:1.08;letter-spacing:-.02em;color:var(--text-strong);margin-bottom:16px;">Encuentra respuestas para tu camino</h3>
+        <p style="font-weight:300;font-size:17px;line-height:1.7;color:var(--text-body);margin-bottom:22px;">Escucha a personas que ya recorrieron este camino y conversa sobre los temas que realmente importan cuando educas en casa.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <span style="display:inline-flex;align-items:center;height:34px;padding:0 15px;border-radius:999px;border:1.5px solid var(--border-subtle);background:#fff;color:var(--hf-purple-600);font-size:13px;font-weight:600;">Ruta Home</span>
+          <span style="display:inline-flex;align-items:center;height:34px;padding:0 15px;border-radius:999px;border:1.5px solid var(--border-subtle);background:#fff;color:var(--hf-purple-600);font-size:13px;font-weight:600;">Currículums y tecnología</span>
+          <span style="display:inline-flex;align-items:center;height:34px;padding:0 15px;border-radius:999px;border:1.5px solid var(--border-subtle);background:#fff;color:var(--hf-purple-600);font-size:13px;font-weight:600;">Hijos conectados</span>
+          <span style="display:inline-flex;align-items:center;height:34px;padding:0 15px;border-radius:999px;border:1.5px solid var(--border-subtle);background:#fff;color:var(--hf-purple-600);font-size:13px;font-weight:600;">Finanzas y liderazgo</span>
+          <span style="display:inline-flex;align-items:center;height:34px;padding:0 15px;border-radius:999px;border:1.5px solid var(--border-subtle);background:#fff;color:var(--hf-purple-600);font-size:13px;font-weight:600;">Inteligencia Artificial</span>
+          <span style="display:inline-flex;align-items:center;height:34px;padding:0 15px;border-radius:999px;border:1.5px solid var(--border-subtle);background:#fff;color:var(--hf-purple-600);font-size:13px;font-weight:600;">Legalidad y portafolio</span>
+          <span style="display:inline-flex;align-items:center;height:34px;padding:0 15px;border-radius:999px;border:1.5px solid var(--border-subtle);background:#fff;color:var(--hf-purple-600);font-size:13px;font-weight:600;">Tutores homeschoolers</span>
+          <span style="display:inline-flex;align-items:center;height:34px;padding:0 15px;border-radius:999px;border:1.5px solid var(--border-subtle);background:#fff;color:var(--hf-purple-600);font-size:13px;font-weight:600;">Padres CONECT2</span>
+        </div>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 80ms,transform 420ms cubic-bezier(.2,.7,.3,1) 80ms;border-radius:18px;overflow:hidden;box-shadow:0 18px 40px rgba(45,20,80,.16);">
+        <img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa966d9196984c408fea496.jpg" alt="Familias conversando con expositores en los stands" style="width:100%;height:100%;max-height:480px;object-fit:cover;display:block;">
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:clamp(56px,7vw,88px) clamp(16px,4vw,48px);background:var(--surface-page);">
+    <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(28px,4vw,56px);align-items:center;">
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);">
+        <div style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-purple-600);margin-bottom:14px;">Escuelas · Academias · Marcas</div>
+        <h3 style="font-weight:700;font-size:clamp(26px,3vw,38px);line-height:1.08;letter-spacing:-.02em;color:var(--text-strong);margin-bottom:16px;">Descubre opciones que pueden acompañar a tu familia</h3>
+        <p style="font-weight:300;font-size:17px;line-height:1.7;color:var(--text-body);margin-bottom:14px;">Escuelas, academias, programas extracurriculares, organizaciones y marcas reunidas en un mismo lugar.</p>
+        <p style="font-weight:300;font-size:17px;line-height:1.7;color:var(--text-body);margin-bottom:24px;">Pregunta. Compara. Conversa directamente con sus representantes y descubre programas, recursos, becas y nuevas alternativas.</p>
+        <a class="hfh3" href="#zonas" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;height:52px;padding:0 28px;border-radius:999px;background:var(--action-secondary);color:#fff;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:var(--transition-control);">Quiero conocer las opciones →</a>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 80ms,transform 420ms cubic-bezier(.2,.7,.3,1) 80ms;display:grid;gap:14px;">
+        <div style="border-radius:18px;padding:24px;background:var(--hf-purple-050);border:1px solid var(--border-subtle);"><div style="font-weight:700;font-size:16px;color:var(--hf-purple-600);margin-bottom:6px;">Oferta educativa en un solo recorrido</div><p style="font-weight:300;font-size:15px;line-height:1.6;color:var(--text-body);">Compara currículums, precios y modalidades sin agendar diez reuniones.</p></div>
+        <div style="border-radius:18px;padding:24px;background:var(--hf-orange-100);border:1px solid var(--border-subtle);"><div style="font-weight:700;font-size:16px;color:var(--hf-orange-600);margin-bottom:6px;">Conversaciones uno a uno</div><p style="font-weight:300;font-size:15px;line-height:1.6;color:var(--text-body);">Las preguntas difíciles se responden mirando a la persona a los ojos.</p></div>
+        <div style="border-radius:18px;padding:24px;background:var(--hf-teal-100);border:1px solid var(--border-subtle);"><div style="font-weight:700;font-size:16px;color:var(--hf-teal-700);margin-bottom:6px;">Inscripciones y becas</div><p style="font-weight:300;font-size:15px;line-height:1.6;color:var(--text-body);">Muchas instituciones abren cupos y condiciones especiales durante el fest.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:clamp(48px,6vw,76px) clamp(16px,4vw,48px);background:var(--hf-neutral-800);text-align:center;">
+    <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);max-width:680px;margin:0 auto;">
+      <h3 style="font-weight:700;font-size:clamp(26px,3.2vw,38px);line-height:1.1;letter-spacing:-.02em;color:#fff;margin-bottom:14px;">¿Quieres vivir los dos días con tu familia?</h3>
+      <p style="font-weight:300;font-size:18px;line-height:1.6;color:var(--hf-neutral-200);margin-bottom:26px;">Una entrada. Dos días. Tres zonas. Toda una experiencia para compartir.</p>
+      <div class="hf-btn-row" style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px;">
+        <a class="hfh4" href="#registro" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;height:58px;padding:0 32px;border-radius:999px;background:var(--action-tertiary);color:#fff;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:var(--transition-control);">Registrar a mi familia →</a>
+        <a class="hfh5" href="https://homeschoolfest.lat/agenda" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;height:58px;padding:0 30px;border-radius:999px;border:1.5px solid rgba(255,255,255,.55);color:#fff;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:var(--transition-control);">Ver agenda ↗</a>
+      </div>
+      <div style="margin-top:14px;font-size:14px;font-weight:300;color:var(--hf-neutral-300);">Entrada válida para los dos días · $5 por persona</div>
+    </div>
+  </section>
+
+  <section id="zonas" style="background:var(--surface-page);padding:clamp(56px,7vw,88px) 0 0;">
+    <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);max-width:900px;margin:0 auto;padding:0 clamp(16px,4vw,48px) 44px;text-align:center;">
+      <h2 style="font-weight:700;font-size:clamp(30px,3.8vw,48px);line-height:1.05;letter-spacing:-.025em;color:var(--text-strong);margin-bottom:18px;">2 días · 3 zonas · muchas experiencias</h2>
+      <div style="width:88px;height:5px;border-radius:999px;background:linear-gradient(90deg,#028183 0%,#572893 45%,#ff761e 100%);margin:0 auto 26px;"></div>
+      <a class="hfh6" href="https://homeschoolfest.lat/agenda" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;height:50px;padding:0 26px;border-radius:999px;border:2px solid var(--hf-purple-600);color:var(--hf-purple-600);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:var(--transition-control);">Ver agenda del evento ↗</a>
+    </div>
+    <div class="hf-banner" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));">
+      <div style="background:var(--hf-teal-600);color:#fff;text-align:center;padding:22px 6px;font-weight:600;font-size:clamp(9px,1.1vw,13px);letter-spacing:.08em;text-transform:uppercase;">Recreación</div>
+      <div style="background:var(--hf-purple-600);color:#fff;text-align:center;padding:22px 6px;font-weight:600;font-size:clamp(9px,1.1vw,13px);letter-spacing:.08em;text-transform:uppercase;">Interacción</div>
+      <div style="background:var(--hf-orange-500);color:#fff;text-align:center;padding:22px 6px;font-weight:600;font-size:clamp(9px,1.1vw,13px);letter-spacing:.08em;text-transform:uppercase;">Planificación</div>
+      <div style="background:var(--hf-navy);color:#fff;text-align:center;padding:22px 6px;font-weight:600;font-size:clamp(9px,1.1vw,13px);letter-spacing:.08em;text-transform:uppercase;">Educación</div>
+    </div>
+    <div class="hf-zones" style="max-width:1200px;margin:0 auto;padding:48px clamp(16px,4vw,48px) clamp(56px,7vw,88px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:22px;">
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);border-radius:18px;overflow:hidden;border:1px solid var(--border-subtle);background:#fff;">
+        <div style="height:6px;background:var(--hf-purple-600);"></div>
+        <div style="padding:30px 26px;display:grid;gap:12px;">
+          <div style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-purple-600);">Zona 1 · Charlas</div>
+          <h3 style="font-weight:700;font-size:22px;line-height:1.2;color:var(--hf-purple-600);">Aprende de expertos</h3>
+          <p style="font-weight:300;font-size:16px;line-height:1.6;color:var(--text-body);">Charlas tipo TEDx para padres, estudiantes y docentes con especialistas invitados.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;">
+            <span style="display:inline-flex;align-items:center;height:30px;padding:0 13px;border-radius:999px;border:1.5px solid var(--border-subtle);color:var(--hf-purple-600);font-size:12px;font-weight:600;">Homeschool</span>
+            <span style="display:inline-flex;align-items:center;height:30px;padding:0 13px;border-radius:999px;border:1.5px solid var(--border-subtle);color:var(--hf-purple-600);font-size:12px;font-weight:600;">Currículums</span>
+            <span style="display:inline-flex;align-items:center;height:30px;padding:0 13px;border-radius:999px;border:1.5px solid var(--border-subtle);color:var(--hf-purple-600);font-size:12px;font-weight:600;">Legalidad</span>
+            <span style="display:inline-flex;align-items:center;height:30px;padding:0 13px;border-radius:999px;border:1.5px solid var(--border-subtle);color:var(--hf-purple-600);font-size:12px;font-weight:600;">Crianza</span>
+            <span style="display:inline-flex;align-items:center;height:30px;padding:0 13px;border-radius:999px;border:1.5px solid var(--border-subtle);color:var(--hf-purple-600);font-size:12px;font-weight:600;">Finanzas</span>
+          </div>
+        </div>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 60ms,transform 420ms cubic-bezier(.2,.7,.3,1) 60ms;border-radius:18px;overflow:hidden;border:1px solid var(--border-subtle);background:#fff;">
+        <div style="height:6px;background:var(--hf-orange-500);"></div>
+        <div style="padding:30px 26px;display:grid;gap:12px;">
+          <div style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-orange-600);">Zona 2 · Talleres</div>
+          <h3 style="font-weight:700;font-size:22px;line-height:1.2;color:var(--hf-orange-600);">Aprende haciendo</h3>
+          <p style="font-weight:300;font-size:16px;line-height:1.6;color:var(--text-body);">Actividades prácticas y lúdicas donde niños y jóvenes exploran, crean y comparten.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;">
+            <span style="display:inline-flex;align-items:center;height:30px;padding:0 13px;border-radius:999px;border:1.5px solid var(--border-subtle);color:var(--hf-purple-600);font-size:12px;font-weight:600;">Cuentacuentos</span>
+            <span style="display:inline-flex;align-items:center;height:30px;padding:0 13px;border-radius:999px;border:1.5px solid var(--border-subtle);color:var(--hf-purple-600);font-size:12px;font-weight:600;">Emprende Kids</span>
+            <span style="display:inline-flex;align-items:center;height:30px;padding:0 13px;border-radius:999px;border:1.5px solid var(--border-subtle);color:var(--hf-purple-600);font-size:12px;font-weight:600;">La Hora Wondy</span>
+            <span style="display:inline-flex;align-items:center;height:30px;padding:0 13px;border-radius:999px;border:1.5px solid var(--border-subtle);color:var(--hf-purple-600);font-size:12px;font-weight:600;">Pintores Nómadas</span>
+            <span style="display:inline-flex;align-items:center;height:30px;padding:0 13px;border-radius:999px;border:1.5px solid var(--border-subtle);color:var(--hf-purple-600);font-size:12px;font-weight:600;">Teatro y danza</span>
+          </div>
+        </div>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 120ms,transform 420ms cubic-bezier(.2,.7,.3,1) 120ms;border-radius:18px;overflow:hidden;border:1px solid var(--border-subtle);background:#fff;">
+        <div style="height:6px;background:var(--hf-teal-600);"></div>
+        <div style="padding:30px 26px;display:grid;gap:12px;">
+          <div style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-teal-700);">Zona 3 · Stands</div>
+          <h3 style="font-weight:700;font-size:22px;line-height:1.2;color:var(--hf-teal-700);">Descubre nuevas opciones</h3>
+          <p style="font-weight:300;font-size:16px;line-height:1.6;color:var(--text-body);">Escuelas, academias y programas presentan sus propuestas directamente a las familias.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;">
+            <span style="display:inline-flex;align-items:center;height:30px;padding:0 13px;border-radius:999px;border:1.5px solid var(--border-subtle);color:var(--hf-purple-600);font-size:12px;font-weight:600;">Oferta educativa</span>
+            <span style="display:inline-flex;align-items:center;height:30px;padding:0 13px;border-radius:999px;border:1.5px solid var(--border-subtle);color:var(--hf-purple-600);font-size:12px;font-weight:600;">Inscripciones</span>
+            <span style="display:inline-flex;align-items:center;height:30px;padding:0 13px;border-radius:999px;border:1.5px solid var(--border-subtle);color:var(--hf-purple-600);font-size:12px;font-weight:600;">Alianzas</span>
+            <span style="display:inline-flex;align-items:center;height:30px;padding:0 13px;border-radius:999px;border:1.5px solid var(--border-subtle);color:var(--hf-purple-600);font-size:12px;font-weight:600;">Becas</span>
+            <span style="display:inline-flex;align-items:center;height:30px;padding:0 13px;border-radius:999px;border:1.5px solid var(--border-subtle);color:var(--hf-purple-600);font-size:12px;font-weight:600;">Recursos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ponentes" style="padding:clamp(56px,7vw,88px) clamp(16px,4vw,48px);background:var(--hf-neutral-100);">
+    <div style="max-width:1200px;margin:0 auto;">
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);max-width:760px;margin-bottom:36px;">
+        <div style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-orange-500);margin-bottom:14px;">Ponentes confirmados</div>
+        <h2 style="font-weight:700;font-size:clamp(26px,3.2vw,40px);line-height:1.06;letter-spacing:-.02em;color:var(--text-strong);">Quienes han recorrido el camino, contándolo en primera persona</h2>
+      </div>
+      <div class="hf-speakers" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:22px;align-items:start;">
+        <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);border-radius:18px;background:#fff;overflow:hidden;border:1px solid var(--border-subtle);">
+          <div style="background:var(--hf-purple-050);aspect-ratio:4/3;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;"><img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa87cb29f8b31b6ab118418.png" alt="Nathali Perlaza" style="width:100%;height:100%;object-fit:contain;display:block;"></div>
+          <div style="padding:22px 20px;">
+            <h4 style="font-weight:700;font-size:19px;color:var(--hf-purple-600);margin-bottom:4px;">Nathali Perlaza</h4>
+            <div style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">CEO y fundadora · Eduk Homes</div>
+            <p style="font-size:14px;line-height:1.55;color:var(--text-body);">Tutores EdukHomes: aliados para el éxito.</p>
+            <div style="margin-top:10px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--hf-orange-600);">Viernes 23 · 9:00 a.m. · Auditorio</div>
+          </div>
+        </div>
+        <!-- PONENCIA NUEVA (reemplaza a Álvaro González).
+             Para agregar el nombre del ponente: pon su nombre y cargo en las dos líneas marcadas abajo. -->
+        <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 60ms,transform 420ms cubic-bezier(.2,.7,.3,1) 60ms;border-radius:18px;background:#fff;overflow:hidden;border:1px solid var(--border-subtle);">
+          <div class="hf-talk-cover"><span>Ponencia</span><strong>El sistema educativo nacional que necesitamos para el futuro</strong></div>
+          <div style="padding:22px 20px;">
+            <!-- NOMBRE DEL PONENTE: descomenta y completa
+            <h4 style="font-weight:700;font-size:19px;color:var(--hf-purple-600);margin-bottom:4px;">Nombre del ponente</h4>
+            <div style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Cargo · Organización</div>
+            -->
+            <h4 style="font-weight:700;font-size:19px;line-height:1.3;color:var(--hf-purple-600);margin-bottom:4px;">El sistema educativo nacional que necesitamos para el futuro</h4>
+            <div style="margin-top:10px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--hf-orange-600);">Viernes 23 · 11:20 a.m. · Tarima</div>
+          </div>
+        </div>
+        <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 120ms,transform 420ms cubic-bezier(.2,.7,.3,1) 120ms;border-radius:18px;background:var(--hf-purple-600);overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:30px 26px;min-height:240px;">
+          <div style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-orange-400);">Agenda completa</div>
+          <h4 style="font-weight:700;font-size:22px;line-height:1.2;color:#fff;">Todas las charlas, en un solo lugar</h4>
+          <p style="font-weight:300;font-size:15px;line-height:1.6;color:var(--hf-purple-200);">Revisa horarios, salones y temas de cada charla del viernes 23 y el sábado 24.</p>
+          <a class="hfh0" href="https://homeschoolfest.lat/agenda" target="_blank" rel="noopener" style="align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 22px;border-radius:999px;background:#fff;color:var(--hf-purple-600);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:var(--transition-control);">Ver agenda ↗</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ruta-tutor" style="position:relative;padding:clamp(64px,7vw,96px) clamp(16px,4vw,48px);background:var(--hf-purple-900);overflow:hidden;">
+    <div style="position:absolute;inset:0 0 auto 0;height:6px;background:linear-gradient(90deg,#028183 0%,#572893 45%,#ff761e 100%);"></div>
+    <div style="position:absolute;left:-140px;top:-120px;width:340px;height:340px;border-radius:999px;background:var(--hf-orange-500);opacity:.16;"></div>
+    <div style="position:absolute;right:-120px;bottom:-140px;width:320px;height:320px;border-radius:999px;background:var(--hf-teal-500);opacity:.16;"></div>
+    <div style="position:relative;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:clamp(32px,5vw,64px);align-items:start;">
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);">
+        <div style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-orange-400);margin-bottom:14px;">Programa para tutores · Viernes 23</div>
+        <h2 style="font-weight:700;font-size:clamp(36px,4.6vw,60px);line-height:1.02;letter-spacing:-.025em;color:#fff;margin-bottom:20px;">La Ruta del Tutor</h2>
+        <p style="font-weight:300;font-size:18px;line-height:1.7;color:#fff;margin-bottom:26px;text-wrap:pretty;">Al participar en la Ruta del Tutor <strong style="font-weight:600;">obtendrás un certificado de participación avalado por Eduk Homes y Dawere con 15 horas académicas</strong>, aportando valor a tu currículum y dándole inicio a tu camino como tutor homeschool.</p>
+        <div style="display:flex;align-items:baseline;gap:14px;padding:20px 0;border-top:1px solid rgba(255,255,255,.2);border-bottom:1px solid rgba(255,255,255,.2);margin-bottom:22px;">
+          <span style="font-weight:700;font-size:clamp(56px,6vw,80px);line-height:.9;letter-spacing:-.04em;color:#fff;">23</span>
+          <div style="display:grid;gap:4px;">
+            <span style="font-weight:700;font-size:20px;letter-spacing:.06em;text-transform:uppercase;color:#fff;">Octubre</span>
+            <span style="font-weight:300;font-size:15px;color:var(--hf-purple-200);">9:00 a.m. – 6:00 p.m. · Zona Rental UNIMET</span>
+          </div>
+        </div>
+        <div style="font-size:14px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#fff;margin-bottom:26px;">14 charlas · Un día completo</div>
+        <div class="hf-btn-row" style="display:flex;flex-wrap:wrap;gap:12px;">
+          <a class="hfh7" href="https://homeschoolfest.lat/agenda" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;height:56px;padding:0 28px;border-radius:999px;background:var(--action-primary);color:#fff;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 14px 34px rgba(255,118,30,.34);transition:var(--transition-control);">Ver agenda completa ↗</a>
+          <a class="hfh8" href="#registro" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;height:56px;padding:0 26px;border-radius:999px;border:1.5px solid rgba(255,255,255,.55);color:#fff;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:var(--transition-control);">Registrarme →</a>
+        </div>
+      </div>
+      <div style="display:grid;gap:10px;">
+
+          <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);display:grid;grid-template-columns:minmax(64px,auto) minmax(0,1fr);align-items:start;gap:14px;padding:16px clamp(14px,3vw,20px);border-radius:16px;background:#fff;box-shadow:0 8px 22px rgba(20,8,40,.22);">
+            <div style="display:flex;align-items:baseline;gap:3px;color:var(--hf-orange-600);"><span style="font-weight:700;font-size:clamp(19px,2.4vw,22px);letter-spacing:-.02em;line-height:1.2;">9:00</span><span style="font-weight:600;font-size:12px;">am</span></div>
+            <div style="min-width:0;">
+              <div style="font-weight:700;font-size:16px;line-height:1.3;color:var(--text-strong);text-wrap:pretty;">Tutores EdukHomes: aliados para el éxito</div>
+              <div style="margin-top:6px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;">
+                <span style="font-weight:300;font-size:14px;color:var(--text-muted);">Nathali Perlaza</span>
+                <span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;background:var(--hf-orange-100);color:var(--hf-orange-700);font-size:11px;font-weight:700;letter-spacing:.04em;white-space:nowrap;">Auditorio</span>
+              </div>
+            </div>
+          </div>
+
+          <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);display:grid;grid-template-columns:minmax(64px,auto) minmax(0,1fr);align-items:start;gap:14px;padding:16px clamp(14px,3vw,20px);border-radius:16px;background:#fff;box-shadow:0 8px 22px rgba(20,8,40,.22);">
+            <div style="display:flex;align-items:baseline;gap:3px;color:var(--hf-purple-600);"><span style="font-weight:700;font-size:clamp(19px,2.4vw,22px);letter-spacing:-.02em;line-height:1.2;">10:00</span><span style="font-weight:600;font-size:12px;">am</span></div>
+            <div style="min-width:0;">
+              <div style="font-weight:700;font-size:16px;line-height:1.3;color:var(--text-strong);text-wrap:pretty;">Las altas capacidades en la educación</div>
+              <div style="margin-top:6px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;">
+                <span style="font-weight:300;font-size:14px;color:var(--text-muted);">Jorge Díaz</span>
+                <span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;background:var(--hf-purple-050);color:var(--hf-purple-600);font-size:11px;font-weight:700;letter-spacing:.04em;white-space:nowrap;">Salón MET Espace</span>
+              </div>
+            </div>
+          </div>
+
+          <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);display:grid;grid-template-columns:minmax(64px,auto) minmax(0,1fr);align-items:start;gap:14px;padding:16px clamp(14px,3vw,20px);border-radius:16px;background:#fff;box-shadow:0 8px 22px rgba(20,8,40,.22);">
+            <div style="display:flex;align-items:baseline;gap:3px;color:var(--hf-purple-600);"><span style="font-weight:700;font-size:clamp(19px,2.4vw,22px);letter-spacing:-.02em;line-height:1.2;">11:00</span><span style="font-weight:600;font-size:12px;">am</span></div>
+            <div style="min-width:0;">
+              <div style="font-weight:700;font-size:16px;line-height:1.3;color:var(--text-strong);text-wrap:pretty;">Rescatar la autoridad docente</div>
+              <div style="margin-top:6px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;">
+                <span style="font-weight:300;font-size:14px;color:var(--text-muted);">Hilda Mar La Chica</span>
+                <span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;background:var(--hf-purple-050);color:var(--hf-purple-600);font-size:11px;font-weight:700;letter-spacing:.04em;white-space:nowrap;">Salón MET Espace</span>
+              </div>
+            </div>
+          </div>
+
+          <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);display:grid;grid-template-columns:minmax(64px,auto) minmax(0,1fr);align-items:start;gap:14px;padding:16px clamp(14px,3vw,20px);border-radius:16px;background:#fff;box-shadow:0 8px 22px rgba(20,8,40,.22);">
+            <div style="display:flex;align-items:baseline;gap:3px;color:var(--hf-purple-600);"><span style="font-weight:700;font-size:clamp(19px,2.4vw,22px);letter-spacing:-.02em;line-height:1.2;">12:00</span><span style="font-weight:600;font-size:12px;">pm</span></div>
+            <div style="min-width:0;">
+              <div style="font-weight:700;font-size:16px;line-height:1.3;color:var(--text-strong);text-wrap:pretty;">La ruta bursátil para padres, docentes e hijos</div>
+              <div style="margin-top:6px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;">
+                <span style="font-weight:300;font-size:14px;color:var(--text-muted);">Gibrán González · GoldGlobal</span>
+                <span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;background:var(--hf-purple-050);color:var(--hf-purple-600);font-size:11px;font-weight:700;letter-spacing:.04em;white-space:nowrap;">Salón MET Espace</span>
+              </div>
+            </div>
+          </div>
+
+          <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);display:grid;grid-template-columns:minmax(64px,auto) minmax(0,1fr);align-items:start;gap:14px;padding:16px clamp(14px,3vw,20px);border-radius:16px;background:#fff;box-shadow:0 8px 22px rgba(20,8,40,.22);">
+            <div style="display:flex;align-items:baseline;gap:3px;color:var(--hf-purple-600);"><span style="font-weight:700;font-size:clamp(19px,2.4vw,22px);letter-spacing:-.02em;line-height:1.2;">1:00</span><span style="font-weight:600;font-size:12px;">pm</span></div>
+            <div style="min-width:0;">
+              <div style="font-weight:700;font-size:16px;line-height:1.3;color:var(--text-strong);text-wrap:pretty;">Enseñar sin perder la calma</div>
+              <div style="margin-top:6px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;">
+                <span style="font-weight:300;font-size:14px;color:var(--text-muted);">Victoria Rodríguez</span>
+                <span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;background:var(--hf-purple-050);color:var(--hf-purple-600);font-size:11px;font-weight:700;letter-spacing:.04em;white-space:nowrap;">Salón MET Espace</span>
+              </div>
+            </div>
+          </div>
+
+          <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);display:grid;grid-template-columns:minmax(64px,auto) minmax(0,1fr);align-items:start;gap:14px;padding:16px clamp(14px,3vw,20px);border-radius:16px;background:#fff;box-shadow:0 8px 22px rgba(20,8,40,.22);">
+            <div style="display:flex;align-items:baseline;gap:3px;color:var(--hf-purple-600);"><span style="font-weight:700;font-size:clamp(19px,2.4vw,22px);letter-spacing:-.02em;line-height:1.2;">2:00</span><span style="font-weight:600;font-size:12px;">pm</span></div>
+            <div style="min-width:0;">
+              <div style="font-weight:700;font-size:16px;line-height:1.3;color:var(--text-strong);text-wrap:pretty;">Conectados contra el bullying</div>
+              <div style="margin-top:6px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;">
+                <span style="font-weight:300;font-size:14px;color:var(--text-muted);">Rodolfo Dordelly Matos</span>
+                <span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;background:var(--hf-purple-050);color:var(--hf-purple-600);font-size:11px;font-weight:700;letter-spacing:.04em;white-space:nowrap;">Salón MET Espace</span>
+              </div>
+            </div>
+          </div>
+
+          <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);display:grid;grid-template-columns:minmax(64px,auto) minmax(0,1fr);align-items:start;gap:14px;padding:16px clamp(14px,3vw,20px);border-radius:16px;background:#fff;box-shadow:0 8px 22px rgba(20,8,40,.22);">
+            <div style="display:flex;align-items:baseline;gap:3px;color:var(--hf-purple-600);"><span style="font-weight:700;font-size:clamp(19px,2.4vw,22px);letter-spacing:-.02em;line-height:1.2;">3:00</span><span style="font-weight:600;font-size:12px;">pm</span></div>
+            <div style="min-width:0;">
+              <div style="font-weight:700;font-size:16px;line-height:1.3;color:var(--text-strong);text-wrap:pretty;">El nuevo estándar de oro en el idioma</div>
+              <div style="margin-top:6px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;">
+                <span style="font-weight:300;font-size:14px;color:var(--text-muted);">Karolena Jensen · Scholar</span>
+                <span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;background:var(--hf-purple-050);color:var(--hf-purple-600);font-size:11px;font-weight:700;letter-spacing:.04em;white-space:nowrap;">Salón MET Espace</span>
+              </div>
+            </div>
+          </div>
+
+          <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);display:grid;grid-template-columns:minmax(64px,auto) minmax(0,1fr);align-items:start;gap:14px;padding:16px clamp(14px,3vw,20px);border-radius:16px;background:#fff;box-shadow:0 8px 22px rgba(20,8,40,.22);">
+            <div style="display:flex;align-items:baseline;gap:3px;color:var(--hf-purple-600);"><span style="font-weight:700;font-size:clamp(19px,2.4vw,22px);letter-spacing:-.02em;line-height:1.2;">3:30</span><span style="font-weight:600;font-size:12px;">pm</span></div>
+            <div style="min-width:0;">
+              <div style="font-weight:700;font-size:16px;line-height:1.3;color:var(--text-strong);text-wrap:pretty;">Aprender matemáticas jugando</div>
+              <div style="margin-top:6px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;">
+                <span style="font-weight:300;font-size:14px;color:var(--text-muted);">Jahnny Mora López · Aloha</span>
+                <span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;background:var(--hf-purple-050);color:var(--hf-purple-600);font-size:11px;font-weight:700;letter-spacing:.04em;white-space:nowrap;">Salón MET Espace</span>
+              </div>
+            </div>
+          </div>
+
+          <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);display:grid;grid-template-columns:minmax(64px,auto) minmax(0,1fr);align-items:start;gap:14px;padding:16px clamp(14px,3vw,20px);border-radius:16px;background:#fff;box-shadow:0 8px 22px rgba(20,8,40,.22);">
+            <div style="display:flex;align-items:baseline;gap:3px;color:var(--hf-orange-600);"><span style="font-weight:700;font-size:clamp(19px,2.4vw,22px);letter-spacing:-.02em;line-height:1.2;">4:00</span><span style="font-weight:600;font-size:12px;">pm</span></div>
+            <div style="min-width:0;">
+              <div style="font-weight:700;font-size:16px;line-height:1.3;color:var(--text-strong);text-wrap:pretty;">Legalidad y portafolio del homeschool</div>
+              <div style="margin-top:6px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;">
+                <span style="font-weight:300;font-size:14px;color:var(--text-muted);">Flor Zambrano</span>
+                <span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;background:var(--hf-orange-100);color:var(--hf-orange-700);font-size:11px;font-weight:700;letter-spacing:.04em;white-space:nowrap;">Auditorio</span>
+              </div>
+            </div>
+          </div>
+
+          <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);display:grid;grid-template-columns:minmax(64px,auto) minmax(0,1fr);align-items:start;gap:14px;padding:16px clamp(14px,3vw,20px);border-radius:16px;background:#fff;box-shadow:0 8px 22px rgba(20,8,40,.22);">
+            <div style="display:flex;align-items:baseline;gap:3px;color:var(--hf-purple-600);"><span style="font-weight:700;font-size:clamp(19px,2.4vw,22px);letter-spacing:-.02em;line-height:1.2;">4:00</span><span style="font-weight:600;font-size:12px;">pm</span></div>
+            <div style="min-width:0;">
+              <div style="font-weight:700;font-size:16px;line-height:1.3;color:var(--text-strong);text-wrap:pretty;">La aventura de escribir con PanHouse School</div>
+              <div style="margin-top:6px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;">
+                <span style="font-weight:300;font-size:14px;color:var(--text-muted);">Zoraya Fermín · PanHouse</span>
+                <span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;background:var(--hf-purple-050);color:var(--hf-purple-600);font-size:11px;font-weight:700;letter-spacing:.04em;white-space:nowrap;">Salón MET Espace</span>
+              </div>
+            </div>
+          </div>
+
+          <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);display:grid;grid-template-columns:minmax(64px,auto) minmax(0,1fr);align-items:start;gap:14px;padding:16px clamp(14px,3vw,20px);border-radius:16px;background:#fff;box-shadow:0 8px 22px rgba(20,8,40,.22);">
+            <div style="display:flex;align-items:baseline;gap:3px;color:var(--hf-purple-600);"><span style="font-weight:700;font-size:clamp(19px,2.4vw,22px);letter-spacing:-.02em;line-height:1.2;">4:30</span><span style="font-weight:600;font-size:12px;">pm</span></div>
+            <div style="min-width:0;">
+              <div style="font-weight:700;font-size:16px;line-height:1.3;color:var(--text-strong);text-wrap:pretty;">Claves del aprendizaje auténtico</div>
+              <div style="margin-top:6px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;">
+                <span style="font-weight:300;font-size:14px;color:var(--text-muted);">María Francia Arteaga · ARCA Learning</span>
+                <span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;background:var(--hf-purple-050);color:var(--hf-purple-600);font-size:11px;font-weight:700;letter-spacing:.04em;white-space:nowrap;">Salón MET Espace</span>
+              </div>
+            </div>
+          </div>
+
+          <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);display:grid;grid-template-columns:minmax(64px,auto) minmax(0,1fr);align-items:start;gap:14px;padding:16px clamp(14px,3vw,20px);border-radius:16px;background:#fff;box-shadow:0 8px 22px rgba(20,8,40,.22);">
+            <div style="display:flex;align-items:baseline;gap:3px;color:var(--hf-orange-600);"><span style="font-weight:700;font-size:clamp(19px,2.4vw,22px);letter-spacing:-.02em;line-height:1.2;">5:00</span><span style="font-weight:600;font-size:12px;">pm</span></div>
+            <div style="min-width:0;">
+              <div style="font-weight:700;font-size:16px;line-height:1.3;color:var(--text-strong);text-wrap:pretty;">Crea experiencias educativas con IA</div>
+              <div style="margin-top:6px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;">
+                <span style="font-weight:300;font-size:14px;color:var(--text-muted);">Sara Vanessa Rodríguez</span>
+                <span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;background:var(--hf-orange-100);color:var(--hf-orange-700);font-size:11px;font-weight:700;letter-spacing:.04em;white-space:nowrap;">Auditorio</span>
+              </div>
+            </div>
+          </div>
+
+          <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);display:grid;grid-template-columns:minmax(64px,auto) minmax(0,1fr);align-items:start;gap:14px;padding:16px clamp(14px,3vw,20px);border-radius:16px;background:#fff;box-shadow:0 8px 22px rgba(20,8,40,.22);">
+            <div style="display:flex;align-items:baseline;gap:3px;color:var(--hf-purple-600);"><span style="font-weight:700;font-size:clamp(19px,2.4vw,22px);letter-spacing:-.02em;line-height:1.2;">5:00</span><span style="font-weight:600;font-size:12px;">pm</span></div>
+            <div style="min-width:0;">
+              <div style="font-weight:700;font-size:16px;line-height:1.3;color:var(--text-strong);text-wrap:pretty;">Soporte Básico de Vida</div>
+              <div style="margin-top:6px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;">
+                <span style="font-weight:300;font-size:14px;color:var(--text-muted);">Fundación Venemergencia</span>
+                <span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;background:var(--hf-purple-050);color:var(--hf-purple-600);font-size:11px;font-weight:700;letter-spacing:.04em;white-space:nowrap;">Salón MET Espace</span>
+              </div>
+            </div>
+          </div>
+
+          <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);display:grid;grid-template-columns:minmax(64px,auto) minmax(0,1fr);align-items:start;gap:14px;padding:16px clamp(14px,3vw,20px);border-radius:16px;background:#fff;box-shadow:0 8px 22px rgba(20,8,40,.22);">
+            <div style="display:flex;align-items:baseline;gap:3px;color:var(--hf-purple-600);"><span style="font-weight:700;font-size:clamp(19px,2.4vw,22px);letter-spacing:-.02em;line-height:1.2;">5:30</span><span style="font-weight:600;font-size:12px;">pm</span></div>
+            <div style="min-width:0;">
+              <div style="font-weight:700;font-size:16px;line-height:1.3;color:var(--text-strong);text-wrap:pretty;">Cuidar a los que enseñan</div>
+              <div style="margin-top:6px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;">
+                <span style="font-weight:300;font-size:14px;color:var(--text-muted);">Daniel Álvarez Aserraf · CuidaSalud</span>
+                <span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;background:var(--hf-purple-050);color:var(--hf-purple-600);font-size:11px;font-weight:700;letter-spacing:.04em;white-space:nowrap;">Salón MET Espace</span>
+              </div>
+            </div>
+          </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section style="background:var(--surface-page);padding:clamp(56px,7vw,88px) clamp(16px,4vw,48px);">
+    <div style="max-width: 1200px; margin: 0 auto; max-width: 883px">
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);max-width:780px;margin:0 auto 44px;text-align:center;">
+        <h2 style="font-weight:700;font-size:clamp(28px,3.6vw,46px);line-height:1.04;letter-spacing:-.025em;color:var(--text-strong);text-wrap:balance;">Si algo de esto te suena familiar, este encuentro es para ti</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:18px;">
+        <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);border-radius:18px;padding:28px 24px;background:var(--hf-neutral-050);border-top:5px solid var(--hf-purple-600);"><div style="font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--hf-purple-600);margin-bottom:12px;">Ya educas en casa</div><p style="font-weight:300;font-size:16px;line-height:1.55;color:var(--text-body);">Comparte experiencias, descubre recursos y conecta con otras familias que viven lo mismo.</p></div>
+        <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 50ms,transform 420ms cubic-bezier(.2,.7,.3,1) 50ms;border-radius:18px;padding:28px 24px;background:var(--hf-neutral-050);border-top:5px solid var(--hf-orange-500);"><div style="font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--hf-orange-600);margin-bottom:12px;">Estás pensando comenzar</div><p style="font-weight:300;font-size:16px;line-height:1.55;color:var(--text-body);">Escucha a especialistas y descubre distintas formas de empezar sin improvisar.</p></div>
+        <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 100ms,transform 420ms cubic-bezier(.2,.7,.3,1) 100ms;border-radius:18px;padding:28px 24px;background:var(--hf-neutral-050);border-top:5px solid var(--hf-teal-600);"><div style="font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--hf-teal-700);margin-bottom:12px;">Eres docente o especialista</div><p style="font-weight:300;font-size:16px;line-height:1.55;color:var(--text-body);">Conecta con familias y profesionales que buscan nuevas formas de acompañar el aprendizaje.</p></div>
+        <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 150ms,transform 420ms cubic-bezier(.2,.7,.3,1) 150ms;border-radius:18px;padding:28px 24px;background:var(--hf-neutral-050);border-top:5px solid var(--hf-purple-600);"><div style="font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--hf-purple-600);margin-bottom:12px;">Tienes hijos o jóvenes</div><p style="font-weight:300;font-size:16px;line-height:1.55;color:var(--text-body);">Encuentra talleres y espacios pensados para que ellos también vivan el festival.</p></div>
+        <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 200ms,transform 420ms cubic-bezier(.2,.7,.3,1) 200ms;border-radius:18px;padding:28px 24px;background:var(--hf-neutral-050);border-top:5px solid var(--hf-orange-500);"><div style="font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--hf-orange-600);margin-bottom:12px;">Buscas alternativas</div><p style="font-weight:300;font-size:16px;line-height:1.55;color:var(--text-body);">Conoce escuelas, academias, programas y recursos reunidos en un mismo lugar.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="position:relative;padding:clamp(56px,7vw,88px) clamp(16px,4vw,48px);background:var(--hf-neutral-800);overflow:hidden;">
+    <div style="position:absolute;left:-120px;bottom:-120px;width:300px;height:300px;border-radius:999px;background:var(--hf-teal-500);opacity:.16;"></div>
+    <div style="position:relative;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(28px,4vw,56px);align-items:center;">
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);border-radius:18px;overflow:hidden;box-shadow:0 18px 40px rgba(45,20,80,.4);">
+        <img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa966d99f8b31b6ab26d2aa.jpg" alt="Familias en la primera edición del Homeschool Fest 2025" style="width:100%;height:100%;max-height:560px;object-fit:cover;display:block;">
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 80ms,transform 420ms cubic-bezier(.2,.7,.3,1) 80ms;">
+        <div style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-orange-400);margin-bottom:14px;">I Edición · 2025</div>
+        <h2 style="font-weight:700;font-size:clamp(26px,3.2vw,40px);line-height:1.08;letter-spacing:-.02em;color:#fff;margin-bottom:18px;">El año pasado nos encontramos. Este año queremos compartir contigo.</h2>
+        <p style="font-weight:300;font-size:17px;line-height:1.7;color:var(--hf-neutral-200);margin-bottom:24px;">La primera edición ocupó la terraza del Hotel Paseo Las Mercedes. Ahora el evento crece y llega a la Zona Rental de la UNIMET.</p>
+        <div style="display:flex;align-items:baseline;gap:16px;padding-top:20px;border-top:1px solid rgba(255,255,255,.2);margin-bottom:16px;">
+          <span style="font-weight:700;font-size:clamp(40px,5vw,64px);line-height:1;letter-spacing:-.04em;color:#fff;">23</span>
+          <span style="font-weight:300;font-size:clamp(34px,4vw,52px);line-height:1;color:var(--hf-orange-400);">|</span>
+          <span style="font-weight:700;font-size:clamp(40px,5vw,64px);line-height:1;letter-spacing:-.04em;color:#fff;">24</span>
+          <span style="font-weight:300;font-size:17px;color:var(--hf-neutral-200);">de octubre · Caracas</span>
+        </div>
+        <p style="font-weight:600;font-size:18px;line-height:1.5;color:#fff;">Más experiencias. Más espacios. Más comunidad.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="precio" style="background:var(--hf-neutral-100);padding:clamp(56px,7vw,88px) clamp(16px,4vw,48px);">
+    <div style="max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:clamp(28px,4vw,48px);align-items:center;">
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);">
+        <div style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-orange-500);margin-bottom:14px;">Entrada</div>
+        <h2 style="font-weight:700;font-size:clamp(28px,3.4vw,42px);line-height:1.06;letter-spacing:-.02em;color:var(--text-strong);margin-bottom:16px;">Un precio pensado para que ninguna familia se quede afuera</h2>
+        <p style="font-weight:300;font-size:17px;line-height:1.7;color:var(--text-body);">Cinco dólares por persona, los dos días completos, con acceso a las tres zonas. Lo mantenemos así a propósito: queremos que esta experiencia llegue a muchas más familias.</p>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 80ms,transform 420ms cubic-bezier(.2,.7,.3,1) 80ms;background:#fff;border-radius:28px;overflow:hidden;box-shadow:0 22px 50px rgba(45,20,80,.18);border:2px solid var(--hf-purple-600);">
+        <div style="height:6px;background:linear-gradient(90deg,#028183 0%,#572893 45%,#ff761e 100%);"></div>
+        <div style="padding:32px 28px;">
+          <div style="font-weight:700;font-size:20px;color:var(--hf-purple-600);margin-bottom:8px;">Entrada general</div>
+          <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px;"><span style="font-weight:700;font-size:44px;letter-spacing:-.03em;color:var(--hf-purple-600);line-height:1;">$5</span><span style="font-size:14px;color:var(--text-muted);">USD por persona</span></div>
+          <div style="font-size:14px;color:var(--text-muted);margin-bottom:22px;">Incluye los 2 días del Homeschool Fest.</div>
+          <ul style="padding:0;list-style:none;display:grid;gap:10px;font-size:15px;color:var(--text-body);margin-bottom:26px;">
+            <li>✓ Acceso durante los dos días</li>
+            <li>✓ Charlas tipo TEDx</li>
+            <li>✓ Talleres para niños y jóvenes</li>
+            <li>✓ Acceso a las 3 zonas</li>
+            <li>✓ Stands de escuelas y academias</li>
+            <li>✓ Espacios para padres y docentes</li>
+          </ul>
+          <a class="hfh7" href="#registro" style="display:flex;align-items:center;justify-content:center;gap:10px;height:56px;border-radius:999px;background:var(--action-primary);color:#fff;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:var(--transition-control);">Registrar a mi familia →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="position:relative;padding:clamp(56px,7vw,88px) clamp(16px,4vw,48px);background:var(--hf-orange-500);overflow:hidden;">
+    <div style="position:absolute;right:-110px;top:-110px;width:300px;height:300px;border-radius:999px;background:var(--hf-orange-700);opacity:.3;"></div>
+    <div style="position:relative;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(28px,4vw,56px);align-items:center;">
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);">
+        <div style="font-size: 15px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--hf-neutral-900); margin-bottom: 14px">Transformando realidades con propósito</div>
+        <h2 style="font-weight:700;font-size:clamp(26px,3.2vw,40px);line-height:1.08;letter-spacing:-.02em;color:#fff;margin-bottom:18px;">Tu familia también puede hacer espacio para otra familia</h2>
+        <p style="font-weight:300;font-size:17px;line-height:1.7;color:#fff;margin-bottom:14px;">200 niños y jóvenes afectados por el terremoto del 24 de junio tendrán acceso al festival y recibirán obsequios de nuestra parte.</p>
+        <p style="font-weight:300;font-size:17px;line-height:1.7;color:#fff;margin-bottom:22px;">Porque ninguna situación debería impedir que un niño tenga acceso a nuevas experiencias y oportunidades de aprendizaje.</p>
+        <p style="font-weight:600;font-size:19px;line-height:1.5;color:#fff;">Cuando vienes al Homeschool Fest, también ayudas a que ellos estén dentro.</p>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 80ms,transform 420ms cubic-bezier(.2,.7,.3,1) 80ms;border-radius:18px;overflow:hidden;box-shadow:0 18px 40px rgba(45,20,80,.4);">
+        <img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa966d99f8b31b6ab26d2a9.jpg" alt="Iniciativa social del Homeschool Fest" style="width:100%;height:100%;max-height:520px;object-fit:cover;object-position:center 25%;display:block;">
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" style="background:var(--surface-page);padding:clamp(56px,7vw,88px) clamp(16px,4vw,48px);">
+    <div style="max-width:820px;margin:0 auto;">
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);text-align:center;margin-bottom:40px;">
+        <h2 style="font-weight:700;font-size:clamp(28px,3.4vw,42px);line-height:1.06;letter-spacing:-.02em;color:var(--text-strong);text-wrap:balance;">Antes de registrarte, probablemente quieres saber esto</h2>
+      </div>
+      <div style="display:grid;gap:12px;">
+        <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);border:1px solid var(--border-subtle);border-radius:16px;background:var(--hf-neutral-050);overflow:hidden;">
+          <button type="button" id="hf-q-0" aria-expanded="true" aria-controls="hf-faq-0" onclick="hfFaq(0)" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 20px 20px 22px;min-height:60px;background:transparent;border:none;cursor:pointer;text-align:left;font-family:inherit;">
+            <span style="font-weight:700;font-size:17px;line-height:1.4;color:var(--hf-neutral-800);">¿Los $5 incluyen los dos días?</span>
+            <span style="flex:0 0 auto;width:28px;height:28px;border-radius:999px;background:var(--hf-purple-600);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;"><span id="hf-sign-0">−</span></span>
+          </button>
+          <div id="hf-faq-0" style="display:block;padding:0 24px 22px;font-weight:300;font-size:16px;line-height:1.7;color:var(--text-body);">Sí. La entrada general cuesta $5 USD por persona e incluye los dos días completos: 23 y 24 de octubre.</div>
+        </div>
+        <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 50ms,transform 420ms cubic-bezier(.2,.7,.3,1) 50ms;border:1px solid var(--border-subtle);border-radius:16px;background:var(--hf-neutral-050);overflow:hidden;">
+          <button type="button" id="hf-q-1" aria-expanded="false" aria-controls="hf-faq-1" onclick="hfFaq(1)" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 20px 20px 22px;min-height:60px;background:transparent;border:none;cursor:pointer;text-align:left;font-family:inherit;">
+            <span style="font-weight:700;font-size:17px;line-height:1.4;color:var(--hf-neutral-800);">¿Tengo que educar en casa para asistir?</span>
+            <span style="flex:0 0 auto;width:28px;height:28px;border-radius:999px;background:var(--hf-purple-600);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;"><span id="hf-sign-1">+</span></span>
+          </button>
+          <div id="hf-faq-1" style="display:none;padding:0 24px 22px;font-weight:300;font-size:16px;line-height:1.7;color:var(--text-body);">No. El evento está pensado tanto para familias que ya educan en casa como para quienes están explorando esta opción y quieren conocer herramientas y alternativas.</div>
+        </div>
+        <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 100ms,transform 420ms cubic-bezier(.2,.7,.3,1) 100ms;border:1px solid var(--border-subtle);border-radius:16px;background:var(--hf-neutral-050);overflow:hidden;">
+          <button type="button" id="hf-q-2" aria-expanded="false" aria-controls="hf-faq-2" onclick="hfFaq(2)" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 20px 20px 22px;min-height:60px;background:transparent;border:none;cursor:pointer;text-align:left;font-family:inherit;">
+            <span style="font-weight:700;font-size:17px;line-height:1.4;color:var(--hf-neutral-800);">¿Puedo llevar a mis hijos?</span>
+            <span style="flex:0 0 auto;width:28px;height:28px;border-radius:999px;background:var(--hf-purple-600);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;"><span id="hf-sign-2">+</span></span>
+          </button>
+          <div id="hf-faq-2" style="display:none;padding:0 24px 22px;font-weight:300;font-size:16px;line-height:1.7;color:var(--text-body);">Sí. Es una experiencia para toda la familia: habrá talleres y actividades para niños y jóvenes, además de espacios de formación para padres, estudiantes y docentes.</div>
+        </div>
+        <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 150ms,transform 420ms cubic-bezier(.2,.7,.3,1) 150ms;border:1px solid var(--border-subtle);border-radius:16px;background:var(--hf-neutral-050);overflow:hidden;">
+          <button type="button" id="hf-q-3" aria-expanded="false" aria-controls="hf-faq-3" onclick="hfFaq(3)" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 20px 20px 22px;min-height:60px;background:transparent;border:none;cursor:pointer;text-align:left;font-family:inherit;">
+            <span style="font-weight:700;font-size:17px;line-height:1.4;color:var(--hf-neutral-800);">¿Qué pasa después de registrar a mi familia?</span>
+            <span style="flex:0 0 auto;width:28px;height:28px;border-radius:999px;background:var(--hf-purple-600);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;"><span id="hf-sign-3">+</span></span>
+          </button>
+          <div id="hf-faq-3" style="display:none;padding:0 24px 22px;font-weight:300;font-size:16px;line-height:1.7;color:var(--text-body);">Al completar el registro serás dirigido a la página de pago del evento para finalizar tu compra.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="registro" style="position: relative; background: linear-gradient(180deg, #388486, #552C8E, #FE7624); padding: clamp(56px,8vw,96px) clamp(16px,4vw,48px); overflow: hidden">
+    <div style="position:absolute;left:-90px;top:-90px;width:260px;height:260px;border-radius:999px;background:var(--hf-teal-500);opacity:.18;"></div>
+    <div style="position:absolute;right:-90px;bottom:-90px;width:260px;height:260px;border-radius:999px;background:var(--hf-orange-500);opacity:.2;"></div>
+    <div style="position: relative; max-width: 1040px; margin: 0 auto; max-width: 949px">
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);max-width:760px;margin:0 auto 40px;text-align:center;">
+
+        <h2 style="font-weight:700;font-size:clamp(28px,3.6vw,46px);line-height:1.05;letter-spacing:-.025em;color:#fff;margin-bottom:16px;text-wrap:balance;">Que este año no te lo cuenten: vívelo con tu familia</h2><p style="font-weight: 300; font-size: 18px; line-height: 1.6; color: var(--hf-white); max-width: 677px; margin: 0 auto">Dos días para aprender, conectar y celebrar la educación en casa. Completa tus datos y reserva el lugar de tu familia.</p>
+
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 80ms,transform 420ms cubic-bezier(.2,.7,.3,1) 80ms;background:#fff;border-radius:28px;overflow:hidden;box-shadow:0 26px 60px rgba(0,0,0,.35);">
+        <div style="height:6px;background:linear-gradient(90deg,#028183 0%,#572893 45%,#ff761e 100%);"></div>
+        <div class="hf-form-pad" style="padding:clamp(16px,3vw,32px);">
+          <iframe src="https://api.leadconnectorhq.com/widget/form/QufmW6mjX3SbkIm1N9ql" id="inline-QufmW6mjX3SbkIm1N9ql" title="1 Registro Homeschool fest" data-layout="{'id':'INLINE'}" data-trigger-type="alwaysShow" data-activation-type="alwaysActivated" data-deactivation-type="neverDeactivate" data-form-name="1 Registro Homeschool fest" data-height="688" data-layout-iframe-id="inline-QufmW6mjX3SbkIm1N9ql" data-form-id="QufmW6mjX3SbkIm1N9ql" data-cookie-consent="true" data-cookie-consent-provider="auto" style="width:100%;height:688px;border:none;border-radius:8px;display:block;"></iframe>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:20px;font-size:14px;font-weight:300;color:var(--hf-purple-200);">Primero registras a tu familia. Después completas el pago de $5 por persona.</div>
+    </div>
+  </section>
+
+  <section id="ventajas" style="position:relative;padding:clamp(64px,7vw,96px) clamp(16px,4vw,48px);background:var(--hf-neutral-050);overflow:hidden;">
+    <div style="position:absolute;left:-140px;top:60px;width:300px;height:300px;border-radius:999px;background:var(--hf-teal-500);opacity:.08;"></div>
+    <div style="position: relative; max-width: 1200px; margin: 0 auto; max-width: 1070px">
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);max-width:760px;margin-bottom:clamp(36px,4vw,52px);">
+        <div style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-orange-500);margin-bottom:14px;">Ventajas del homeschool en Venezuela</div>
+        <h2 style="font-weight:700;font-size:clamp(30px,3.8vw,48px);line-height:1.04;letter-spacing:-.025em;color:var(--text-strong);margin-bottom:18px;text-wrap:balance;">Educar en casa aquí ya es un camino con respaldo</h2>
+        <div style="height:5px;width:88px;border-radius:999px;background:linear-gradient(90deg,#028183 0%,#572893 45%,#ff761e 100%);margin-bottom:20px;"></div>
+        <p style="font-weight:300;font-size:18px;line-height:1.7;color:var(--text-body);">Cada vez más familias venezolanas eligen el homeschool. No por moda: hay legalidad, ritmo, por bienestar y por continuidad. Estas son las razones que escuchamos una y otra vez.</p>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,280px),1fr)); gap: 20px">
+        <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);background:#fff;border:1px solid var(--border-subtle);border-radius:18px;overflow:hidden;">
+          <div style="height:5px;background:var(--hf-purple-600);"></div>
+          <div style="padding:28px 26px;">
+            <div style="font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--hf-purple-600);margin-bottom:10px;">01 · Legalidad y validez del título</div>
+            <p style="font-weight:300;font-size:16px;line-height:1.6;color:var(--text-body);">Tus hijos pueden cursar y certificar su bachillerato con programas reconocidos y portafolio en regla. El camino existe y se puede documentar.</p>
+          </div>
+        </div>
+        <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 60ms,transform 420ms cubic-bezier(.2,.7,.3,1) 60ms;background:#fff;border:1px solid var(--border-subtle);border-radius:18px;overflow:hidden;">
+          <div style="height:5px;background:var(--hf-orange-500);"></div>
+          <div style="padding:28px 26px;">
+            <div style="font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--hf-orange-600);margin-bottom:10px;">02 · Flexibilidad horaria y familiar</div>
+            <p style="font-weight:300;font-size:16px;line-height:1.6;color:var(--text-body);">El horario se adapta a la vida real: trabajo, deporte, música, viajes, horarios de luz o de agua. La familia decide cuándo se aprende.</p>
+          </div>
+        </div>
+        <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 120ms,transform 420ms cubic-bezier(.2,.7,.3,1) 120ms;background:#fff;border:1px solid var(--border-subtle);border-radius:18px;overflow:hidden;">
+          <div style="height:5px;background:var(--hf-teal-600);"></div>
+          <div style="padding:28px 26px;">
+            <div style="font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--hf-teal-700);margin-bottom:10px;">03 · Seguridad y bienestar emocional</div>
+            <p style="font-weight:300;font-size:16px;line-height:1.6;color:var(--text-body);">Menos traslados, menos exposición, más acompañamiento. Un entorno donde un niño puede equivocarse tranquilo y volver a intentarlo.</p>
+          </div>
+        </div>
+        <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);background:#fff;border:1px solid var(--border-subtle);border-radius:18px;overflow:hidden;">
+          <div style="height:5px;background:var(--hf-purple-600);"></div>
+          <div style="padding:28px 26px;">
+            <div style="font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--hf-purple-600);margin-bottom:10px;">04 · Ritmo propio de aprendizaje</div>
+            <p style="font-weight:300;font-size:16px;line-height:1.6;color:var(--text-body);">Avanzar donde hay talento y detenerse donde hace falta. Sin arrastrar vacíos ni frenar a quien ya entendió.</p>
+          </div>
+        </div>
+        <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 60ms,transform 420ms cubic-bezier(.2,.7,.3,1) 60ms;background:#fff;border:1px solid var(--border-subtle);border-radius:18px;overflow:hidden;">
+          <div style="height:5px;background:var(--hf-orange-500);"></div>
+          <div style="padding:28px 26px;">
+            <div style="font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--hf-orange-600);margin-bottom:10px;">05 · Educación bilingüe y tecnología</div>
+            <p style="font-weight:300;font-size:16px;line-height:1.6;color:var(--text-body);">Inglés, plataformas en línea e inteligencia artificial como herramientas de estudio, no como distracción. Habilidades que hoy abren puertas.</p>
+          </div>
+        </div>
+        <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1) 120ms,transform 420ms cubic-bezier(.2,.7,.3,1) 120ms;background:#fff;border:1px solid var(--border-subtle);border-radius:18px;overflow:hidden;">
+          <div style="height:5px;background:var(--hf-teal-600);"></div>
+          <div style="padding:28px 26px;">
+            <div style="font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--hf-teal-700);margin-bottom:10px;">06 · Continuidad si la familia migra</div>
+            <p style="font-weight:300;font-size:16px;line-height:1.6;color:var(--text-body);">Si cambian de ciudad o de país, el estudio no se interrumpe ni se pierde un año escolar. El colegio viaja con ustedes.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="testimonios" style="position:relative;padding:clamp(64px,7vw,96px) clamp(16px,4vw,48px);background:var(--hf-purple-900);overflow:hidden;">
+    <div style="position:absolute;right:-120px;top:-100px;width:320px;height:320px;border-radius:999px;background:var(--hf-orange-500);opacity:.16;animation:hf-drift 16s ease-in-out infinite;"></div>
+    <div style="position:absolute;left:-100px;bottom:-140px;width:280px;height:280px;border-radius:999px;background:var(--hf-teal-500);opacity:.16;animation:hf-drift 20s ease-in-out infinite;"></div>
+    <div style="position:relative;max-width:1100px;margin:0 auto;">
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-orange-400);margin-bottom:clamp(24px,3vw,36px);">Familias que ya lo viven</div>
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity 420ms cubic-bezier(.2,.7,.3,1),transform 420ms cubic-bezier(.2,.7,.3,1);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(28px,4vw,56px);align-items:center;">
+        <div>
+          <div style="font-size:64px;line-height:.6;color:var(--hf-orange-400);font-weight:700;margin-bottom:18px;">“</div>
+          <blockquote id="hf-quote" style="margin:0;color:#fff;font-weight:300;font-size:clamp(22px,2.8vw,34px);line-height:1.3;letter-spacing:-.015em;min-height:4.2em;transition:opacity 220ms cubic-bezier(.2,.7,.3,1);"></blockquote>
+          <div style="margin-top:26px;display:flex;align-items:center;gap:14px;">
+            <span style="width:44px;height:3px;border-radius:999px;background:var(--hf-orange-500);"></span>
+            <div>
+              <div id="hf-name" style="color:#fff;font-weight:700;font-size:17px;"></div>
+              <div id="hf-meta" style="color:var(--hf-purple-200);font-size:14px;font-weight:300;"></div>
+            </div>
+          </div>
+        </div>
+        <div style="display:grid;gap:12px;"><div class="hf-testi-list" role="group" aria-label="Elegir testimonio" style="display:grid;gap:12px;">
+
+            <button type="button" class="hf-testi" data-i="0" aria-pressed="true" onclick="hfTesti(0)" style="text-align:left;cursor:pointer;display:grid;gap:6px;padding:18px 20px;border-radius:16px;transition:background 220ms cubic-bezier(.2,.7,.3,1),border-color 220ms cubic-bezier(.2,.7,.3,1),transform 220ms cubic-bezier(.2,.7,.3,1);">
+              <span style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#fff;">Familia Ramírez · Caracas</span>
+              <span style="font-size:14px;font-weight:300;line-height:1.5;color:var(--hf-purple-200);">Dos años educando en casa a tres hijos.</span>
+            </button>
+
+            <button type="button" class="hf-testi" data-i="1" aria-pressed="false" onclick="hfTesti(1)" style="text-align:left;cursor:pointer;display:grid;gap:6px;padding:18px 20px;border-radius:16px;transition:background 220ms cubic-bezier(.2,.7,.3,1),border-color 220ms cubic-bezier(.2,.7,.3,1),transform 220ms cubic-bezier(.2,.7,.3,1);">
+              <span style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#fff;">Mariana G. · Valencia</span>
+              <span style="font-size:14px;font-weight:300;line-height:1.5;color:var(--hf-purple-200);">Empezó por el bienestar de su hija.</span>
+            </button>
+
+            <button type="button" class="hf-testi" data-i="2" aria-pressed="false" onclick="hfTesti(2)" style="text-align:left;cursor:pointer;display:grid;gap:6px;padding:18px 20px;border-radius:16px;transition:background 220ms cubic-bezier(.2,.7,.3,1),border-color 220ms cubic-bezier(.2,.7,.3,1),transform 220ms cubic-bezier(.2,.7,.3,1);">
+              <span style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#fff;">Familia Bermúdez · Maracaibo</span>
+              <span style="font-size:14px;font-weight:300;line-height:1.5;color:var(--hf-purple-200);">Se mudaron dos veces sin perder el año.</span>
+            </button>
+
+            <button type="button" class="hf-testi" data-i="3" aria-pressed="false" onclick="hfTesti(3)" style="text-align:left;cursor:pointer;display:grid;gap:6px;padding:18px 20px;border-radius:16px;transition:background 220ms cubic-bezier(.2,.7,.3,1),border-color 220ms cubic-bezier(.2,.7,.3,1),transform 220ms cubic-bezier(.2,.7,.3,1);">
+              <span style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#fff;">Prof. Daniela Ruiz</span>
+              <span style="font-size:14px;font-weight:300;line-height:1.5;color:var(--hf-purple-200);">Docente que hoy acompaña familias.</span>
+            </button></div>
+
+
+          <a class="hfh9" href="#registro" style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:6px;height:56px;border-radius:999px;background:var(--action-primary);color:#fff;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 14px 34px rgba(255,118,30,.34);transition:var(--transition-control);">Registrarme →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="hf-footer" style="padding:clamp(48px,6vw,76px) clamp(16px,4vw,48px) 32px;background:var(--surface-page);color:var(--text-body);">
+    <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:32px;">
+      <div>
+        <img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa8a4668228b95da3946ddb.png" alt="Homeschool Fest" style="height:64px;width:auto;display:block;margin-bottom:14px;">
+        <p style="font-weight:300;font-size:14px;line-height:1.6;color:var(--text-muted);margin-bottom:16px;">23 y 24 de octubre de 2026<br>Zona Rental de la UNIMET · Caracas</p>
+        <a class="hfh10" href="https://homeschoolfest.lat/agenda" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;height:42px;padding:0 20px;border-radius:999px;background:var(--hf-purple-600);color:#fff;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:var(--transition-control);">Ver agenda ↗</a>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-orange-500);margin-bottom:12px;">Organizan</div>
+        <div style="display:flex;align-items:center;gap:16px;border:1px solid var(--border-subtle);border-radius:12px;padding:12px 16px;width:fit-content;">
+          <img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa966dbc73b042e140cfe72.png" alt="Eduk Homes" style="height:48px;width:48px;object-fit:contain;">
+          <img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa966db9f8b31b6ab26d2f9.png" alt="Dawere" style="height:38px;width:auto;object-fit:contain;">
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-orange-500);margin-bottom:12px;">Colabora</div>
+        <div style="display:flex;align-items:center;border:1px solid var(--border-subtle);border-radius:12px;padding:12px 16px;width:fit-content;"><img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa966dbbc55ee8d569405a6.png" alt="D-Future EdTech" style="height:30px;width:auto;object-fit:contain;"></div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-orange-500);margin-bottom:12px;">Contáctanos</div>
+        <div style="font-size:15px;font-weight:300;line-height:1.8;color:var(--text-body);"><a href="mailto:homeschoolfest@dawere.com">homeschoolfest@dawere.com</a><br>@edukhomes<br>@dawereoficial</div>
+      </div>
+    </div>
+    <div style="max-width:1200px;margin:32px auto 0;padding-top:20px;border-top:1px solid var(--border-subtle);font-size:13px;font-weight:300;color:var(--text-muted);">Homeschool Fest 2026 · Una experiencia para toda la familia.</div>
+  </footer>
+
+  <div class="hf-sticky-cta" id="hf-sticky" role="region" aria-label="Registro rápido">
+    <a class="hf-sticky-btn" href="#registro">Registrar a mi familia →</a>
+    <div class="hf-sticky-note">$5 USD<small>por persona</small></div>
+  </div>
+
+</div>
+
+<script src="https://link.msgsndr.com/js/form_embed.js"></script>
+<script>
+(function(){
+  var root=document.getElementById('hf-landing');
+  if(!root||root.dataset.hfInit)return; root.dataset.hfInit='1';
+  var reduce=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  /* Ancho completo: se sale de la caja de GHL y ocupa todo el ancho visible (sin barra de scroll) */
+  function fullBleed(){
+    root.style.marginLeft='0';
+    root.style.width='auto';
+    var vw=document.documentElement.clientWidth||window.innerWidth;
+    var left=root.getBoundingClientRect().left;
+    root.style.width=vw+'px';
+    root.style.maxWidth='none';
+    root.style.marginLeft=(-left)+'px';
+  }
+  fullBleed();
+  window.addEventListener('load',fullBleed);
+  window.addEventListener('resize',fullBleed);
+  window.addEventListener('orientationchange',function(){setTimeout(fullBleed,200);});
+  setTimeout(fullBleed,400); setTimeout(fullBleed,1500);
+
+  /* Cuenta regresiva */
+  var TARGET=new Date('2026-10-23T09:00:00-04:00').getTime();
+  var ids={d:'hf-cd-d',h:'hf-cd-h',m:'hf-cd-m',s:'hf-cd-s'};
+  var cdTimer;
+  function pad(n){return String(n).padStart(2,'0');}
+  function tick(){
+    var t=Math.floor(Math.max(0,TARGET-Date.now())/1000),el;
+    if((el=document.getElementById(ids.d)))el.textContent=Math.floor(t/86400);
+    if((el=document.getElementById(ids.h)))el.textContent=pad(Math.floor(t/3600)%24);
+    if((el=document.getElementById(ids.m)))el.textContent=pad(Math.floor(t/60)%60);
+    if((el=document.getElementById(ids.s)))el.textContent=pad(t%60);
+    if(t===0){
+      if((el=document.getElementById('hf-cd-label')))el.textContent='El Homeschool Fest ya comenzó';
+      clearInterval(cdTimer);
+    }
+  }
+  tick(); cdTimer=setInterval(tick,1000);
+
+  /* Testimonios */
+  var TESTIMONIOS=[
+    {quote:'Llegamos al homeschool con más miedos que certezas. Salimos con un plan, un currículum y tres familias del mismo urbanismo a las que hoy llamamos cuando algo no nos cuadra.',name:'Familia Ramírez · Caracas',meta:'Mamá de tres · 2 años en homeschool'},
+    {quote:'Mi hija dejó de llorar los domingos. Eso fue lo primero. Después vinieron las notas, el inglés y las ganas de estudiar sin que yo tenga que empujarla.',name:'Mariana G. · Valencia',meta:'Mamá de una adolescente · 3 años en homeschool'},
+    {quote:'Nos mudamos dos veces en un año y medio y mis hijos no perdieron un solo trimestre. El colegio se vino con nosotros en la maleta.',name:'Familia Bermúdez · Maracaibo',meta:'Papá de dos · 4 años en homeschool'},
+    {quote:'Vine como docente a ver de qué se trataba y me fui con seis familias pidiéndome tutorías. Aquí entendí que esto no compite con la escuela: la complementa.',name:'Prof. Daniela Ruiz',meta:'Tutora homeschooler · Caracas'}
+  ];
+  var rot=null, active=0, paused=false, inView=false, stopped=false;
+  var qEl=document.getElementById('hf-quote'), nmEl=document.getElementById('hf-name'), mtEl=document.getElementById('hf-meta');
+  var list=root.querySelector('.hf-testi-list');
+  var btns=[].slice.call(root.querySelectorAll('.hf-testi'));
+
+  function fitQuote(){
+    if(!qEl)return;
+    var cur=qEl.textContent, max=0;
+    qEl.style.minHeight='0';
+    TESTIMONIOS.forEach(function(t){qEl.textContent=t.quote; max=Math.max(max,qEl.offsetHeight);});
+    qEl.textContent=cur; qEl.style.minHeight=max+'px';
+  }
+  function paint(i){
+    var t=TESTIMONIOS[i]; if(!t)return;
+    if(qEl)qEl.textContent=t.quote; if(nmEl)nmEl.textContent=t.name; if(mtEl)mtEl.textContent=t.meta;
+    if(qEl)qEl.style.opacity='1';
+  }
+  function centerChip(b){
+    if(!list||list.scrollWidth<=list.clientWidth+2)return;
+    list.scrollTo({left:b.offsetLeft-(list.clientWidth-b.offsetWidth)/2,behavior:reduce?'auto':'smooth'});
+  }
+  window.hfTesti=function(i,auto){
+    if(!TESTIMONIOS[i])return;
+    active=i;
+    btns.forEach(function(b){
+      var on=b.getAttribute('data-i')==String(i);
+      b.setAttribute('data-active',on?'1':'0'); b.setAttribute('aria-pressed',on?'true':'false');
+      if(on)centerChip(b);
+    });
+    if(!auto){stopped=true; if(rot){clearInterval(rot);rot=null;}}
+    if(reduce||!qEl){paint(i);return;}
+    qEl.style.opacity='0';
+    setTimeout(function(){paint(i);},180);
+  };
+  paint(0); hfTesti(0,true);
+  fitQuote();
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitQuote);
+  var rz; window.addEventListener('resize',function(){clearTimeout(rz);rz=setTimeout(fitQuote,150);});
+  if(!reduce){
+    rot=setInterval(function(){
+      if(stopped||paused||!inView||document.hidden)return;
+      hfTesti((active+1)%TESTIMONIOS.length,true);
+    },8000);
+  }
+  var sec=document.getElementById('testimonios');
+  if(sec){
+    sec.addEventListener('mouseenter',function(){paused=true;});
+    sec.addEventListener('mouseleave',function(){paused=false;});
+    sec.addEventListener('focusin',function(){paused=true;});
+    sec.addEventListener('focusout',function(){paused=false;});
+  }
+
+  /* FAQ */
+  window.hfFaq=function(i){
+    var p=document.getElementById('hf-faq-'+i),sg=document.getElementById('hf-sign-'+i),b=document.getElementById('hf-q-'+i);
+    if(!p)return; var open=p.style.display!=='none';
+    p.style.display=open?'none':'block'; if(sg)sg.textContent=open?'+':'−';
+    if(b)b.setAttribute('aria-expanded',open?'false':'true');
+  };
+
+  /* Reveal + observadores */
+  var els=[].slice.call(root.querySelectorAll('[data-reveal]'));
+  function show(el){el.style.opacity='1';el.style.transform='none';}
+  var hasIO='IntersectionObserver' in window;
+  if(reduce||!hasIO){els.forEach(show);}
+  else{
+    var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){show(x.target);io.unobserve(x.target);}});},{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+    els.forEach(function(el){io.observe(el);});
+    setTimeout(function(){els.forEach(show);},4000);
+  }
+  if(hasIO&&sec){
+    new IntersectionObserver(function(en){inView=en[0].isIntersecting;},{threshold:.2}).observe(sec);
+  } else { inView=true; }
+
+  /* CTA fija en móvil: aparece cuando el botón del hero sale de vista y se oculta en el formulario */
+  var bar=document.getElementById('hf-sticky');
+  var heroCta=root.querySelector('.hf-hero-ctas'), reg=document.getElementById('registro');
+  if(bar&&hasIO&&heroCta&&reg){
+    var heroVisible=true, regVisible=false;
+    var upd=function(){bar.classList.toggle('is-on',!heroVisible&&!regVisible);};
+    new IntersectionObserver(function(en){heroVisible=en[0].isIntersecting;upd();},{threshold:0}).observe(heroCta);
+    new IntersectionObserver(function(en){regVisible=en[0].isIntersecting;upd();},{threshold:0,rootMargin:'0px 0px -20% 0px'}).observe(reg);
+  }
+
+  /* Anclas con compensación del header */
+  root.addEventListener('click',function(ev){
+    var a=ev.target.closest&&ev.target.closest('a[href^="#"]');
+    if(!a)return; var id=a.getAttribute('href').slice(1); if(!id)return;
+    var t=document.getElementById(id); if(!t)return; ev.preventDefault();
+    var h=root.querySelector('.hf-hdr'), off=(h?h.offsetHeight:0)+8;
+    window.scrollTo({top:t.getBoundingClientRect().top+(window.pageYOffset||0)-off,behavior:reduce?'auto':'smooth'});
+  });
+})();
+</script>
