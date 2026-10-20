@@ -686,7 +686,7 @@ html,body{overflow-x:clip !important;}
       <div class="hf-form" data-reveal="zoom">
         <div style="height:6px;background:var(--grad)"></div>
         <div class="hf-form-in">
-          <iframe src="https://api.leadconnectorhq.com/widget/form/QufmW6mjX3SbkIm1N9ql" id="inline-QufmW6mjX3SbkIm1N9ql" title="1 Registro Homeschool fest" loading="lazy" data-layout="{'id':'INLINE'}" data-trigger-type="alwaysShow" data-activation-type="alwaysActivated" data-deactivation-type="neverDeactivate" data-form-name="1 Registro Homeschool fest" data-height="688" data-layout-iframe-id="inline-QufmW6mjX3SbkIm1N9ql" data-form-id="QufmW6mjX3SbkIm1N9ql" data-cookie-consent="true" data-cookie-consent-provider="auto"></iframe>
+          <iframe src="https://api.leadconnectorhq.com/widget/form/QufmW6mjX3SbkIm1N9ql" id="inline-QufmW6mjX3SbkIm1N9ql" title="1 Registro Homeschool fest" data-layout="{'id':'INLINE'}" data-trigger-type="alwaysShow" data-activation-type="alwaysActivated" data-deactivation-type="neverDeactivate" data-form-name="1 Registro Homeschool fest" data-height="688" data-layout-iframe-id="inline-QufmW6mjX3SbkIm1N9ql" data-form-id="QufmW6mjX3SbkIm1N9ql" data-cookie-consent="true" data-cookie-consent-provider="auto" style="width:100%;height:688px;border:none;border-radius:8px;display:block;min-height:688px;"></iframe>
         </div>
       </div>
       <p class="hf-reg-note">Primero registras a tu familia. Después completas el pago de $5 por persona.</p>
