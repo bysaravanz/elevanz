@@ -1,0 +1,884 @@
+<!-- ============================================================
+     HOMESCHOOL FEST 2026 · Landing completa
+     Pegar en GoHighLevel: Custom Code / HTML element (full width)
+     Requiere conexión (fuente Jost, imágenes CDN, formulario LC)
+     ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{--hf-purple:#572893;--hf-orange:#ff761e;--hf-teal:#028183;--hf-navy:#00006e;--hf-purple-900:#2d1450;--hf-purple-800:#3d1c6c;--hf-purple-700:#4a2280;--hf-purple-600:#572893;--hf-purple-300:#b394da;--hf-purple-200:#d7c6ec;--hf-purple-100:#ece4f6;--hf-purple-050:#f6f1fb;--hf-orange-700:#c9540c;--hf-orange-600:#e66412;--hf-orange-500:#ff761e;--hf-orange-400:#ff9147;--hf-orange-100:#ffece0;--hf-teal-700:#01605f;--hf-teal-600:#028183;--hf-teal-500:#17a8a8;--hf-teal-100:#e6f6f6;--hf-neutral-050:#f6f8f8;--hf-neutral-100:#e7ebeb;--hf-neutral-200:#d3d9d9;--hf-neutral-300:#b3bcbc;--hf-neutral-800:#1f2323;--hf-neutral-900:#101212;--text-strong:#572893;--text-body:#343a3a;--text-muted:#5d6666;--border-subtle:#d3d9d9;--ease:cubic-bezier(.2,.7,.3,1);--ease-out:cubic-bezier(.16,.84,.44,1);--grad:linear-gradient(90deg,#028183 0%,#572893 45%,#ff761e 100%)}
+
+/* ---------- Ancho completo + base ---------- */
+html,body{overflow-x:clip !important;}
+#hf-landing{position:relative;width:100vw;max-width:100vw;margin-left:calc(50% - 50vw);margin-right:0;padding:0;float:none;clear:both;font-family:'Jost',system-ui,-apple-system,sans-serif;font-size:17px;line-height:1.55;color:var(--text-body);background:#fff;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;text-size-adjust:100%;overflow-x:hidden;}
+@supports (overflow:clip){#hf-landing{overflow:visible;overflow-x:clip;}}
+#hf-landing *,#hf-landing *::before,#hf-landing *::after{box-sizing:border-box;}
+#hf-landing h1,#hf-landing h2,#hf-landing h3,#hf-landing h4,#hf-landing p,#hf-landing ul,#hf-landing ol,#hf-landing blockquote{margin:0;padding:0;}
+#hf-landing ul,#hf-landing ol{list-style:none;}
+#hf-landing a{color:var(--hf-purple-600);text-decoration:none;}
+#hf-landing img{max-width:100%;display:block;}
+#hf-landing button{font-family:inherit;}
+#hf-landing a,#hf-landing button{touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+#hf-landing a:focus-visible,#hf-landing button:focus-visible{outline:3px solid var(--hf-orange-400);outline-offset:3px;border-radius:12px;}
+
+/* ---------- Tipografía (más grande) ---------- */
+#hf-landing .hf-eyebrow{font-size:13.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-orange-700);margin-bottom:14px;}
+#hf-landing .hf-h2{font-weight:700;font-size:clamp(30px,3.7vw,48px);line-height:1.06;letter-spacing:-.02em;color:var(--text-strong);text-wrap:balance;}
+#hf-landing .hf-p{font-size:clamp(17.5px,1vw + .8rem,20px);line-height:1.65;font-weight:400;color:var(--text-body);text-wrap:pretty;}
+#hf-landing .hf-bar3{display:block;width:88px;height:5px;border-radius:999px;background:var(--grad);transform-origin:left;}
+#hf-landing .hf-wrap{max-width:1200px;margin:0 auto;padding-inline:clamp(16px,4vw,48px);}
+#hf-landing .hf-sec{padding-block:clamp(60px,7vw,96px);}
+#hf-landing .hf-center{text-align:center;}
+#hf-landing .hf-center .hf-bar3{margin-inline:auto;transform-origin:center;}
+@media (min-width:1600px){#hf-landing .hf-wrap{max-width:1360px;}}
+
+/* ---------- Botones ---------- */
+#hf-landing .hf-btn{position:relative;overflow:hidden;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:0 30px;border-radius:999px;font-size:14.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;line-height:1.2;transition:background-color 180ms var(--ease),color 180ms var(--ease),box-shadow 260ms var(--ease),transform 260ms var(--ease),border-color 180ms var(--ease);}
+#hf-landing .hf-btn:active{transform:scale(.97);}
+#hf-landing .hf-btn-or{background:var(--hf-orange-500);color:#fff;box-shadow:0 14px 34px rgba(255,118,30,.38);}
+#hf-landing .hf-btn-or::after,#hf-landing .hf-shine::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.5) 50%,transparent 70%);transform:translateX(-130%);animation:hf-shine 5s var(--ease) infinite 1.8s;pointer-events:none;}
+#hf-landing .hf-btn-gh{border:1.5px solid rgba(255,255,255,.6);background:rgba(255,255,255,.1);color:#fff;}
+#hf-landing .hf-btn-pu{background:var(--hf-purple-600);color:#fff;}
+#hf-landing .hf-btn-te{background:var(--hf-teal-600);color:#fff;}
+#hf-landing .hf-btn-wh{background:#fff;color:var(--hf-purple-600);}
+#hf-landing .hf-btn-ol{border:2px solid var(--hf-purple-600);color:var(--hf-purple-600);}
+#hf-landing .hf-pulse-ring{animation:hf-ring 2.6s ease-out infinite;}
+@media (hover:hover){
+#hf-landing .hf-btn:hover{transform:translateY(-3px);}
+#hf-landing .hf-btn-or:hover{background:var(--hf-orange-600);color:#fff;box-shadow:0 20px 44px rgba(255,118,30,.5);}
+#hf-landing .hf-btn-gh:hover{background:rgba(255,255,255,.22);color:#fff;}
+#hf-landing .hf-btn-pu:hover{background:var(--hf-purple-700);color:#fff;}
+#hf-landing .hf-btn-te:hover{background:var(--hf-teal-700);color:#fff;}
+#hf-landing .hf-btn-wh:hover{background:var(--hf-neutral-100);color:var(--hf-purple-600);}
+#hf-landing .hf-btn-ol:hover{background:var(--hf-purple-600);color:#fff;}
+}
+
+/* ---------- Animaciones ---------- */
+@keyframes hf-pulse{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes hf-heroZoom{from{transform:scale(1.1)}to{transform:scale(1)}}
+@keyframes hf-drift{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-22px,0)}}
+@keyframes hf-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes hf-rise{from{opacity:0;transform:translate3d(0,28px,0)}to{opacity:1;transform:none}}
+@keyframes hf-shine{0%{transform:translateX(-130%)}28%,100%{transform:translateX(130%)}}
+@keyframes hf-ring{0%{box-shadow:0 14px 34px rgba(255,118,30,.38),0 0 0 0 rgba(255,118,30,.55)}70%,100%{box-shadow:0 14px 34px rgba(255,118,30,.38),0 0 0 18px rgba(255,118,30,0)}}
+@keyframes hf-border{from{background-position:0 0}to{background-position:300% 0}}
+@keyframes hf-bump{0%{transform:translateY(-35%);opacity:0}100%{transform:none;opacity:1}}
+@keyframes hf-draw{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.hf-in{animation:hf-rise .95s var(--ease-out) both;animation-delay:calc(var(--i,0) * 100ms + 150ms);}
+.hf-js [data-reveal]{opacity:0;transform:translate3d(0,32px,0);transition:opacity .9s var(--ease-out) var(--d,0ms),transform .9s var(--ease-out) var(--d,0ms);}
+.hf-js [data-reveal="left"]{transform:translate3d(-40px,0,0);}
+.hf-js [data-reveal="right"]{transform:translate3d(40px,0,0);}
+.hf-js [data-reveal="zoom"]{transform:scale(.93);}
+.hf-js [data-reveal].is-in{opacity:1;transform:none;}
+.hf-js .hf-bar3[data-reveal]{transform:scaleX(0);}
+.hf-js .hf-bar3[data-reveal].is-in{transform:scaleX(1);}
+#hf-landing .hf-bump{display:inline-block;animation:hf-bump .45s var(--ease-out);}
+
+/* ---------- Header ---------- */
+#hf-landing .hf-hdr{position:sticky;top:0;z-index:70;background:rgba(255,255,255,.94);backdrop-filter:saturate(130%) blur(10px);-webkit-backdrop-filter:saturate(130%) blur(10px);border-bottom:1px solid var(--border-subtle);transition:box-shadow 260ms var(--ease);}
+#hf-landing .hf-hdr.is-stuck{box-shadow:0 10px 30px rgba(45,20,80,.12);}
+#hf-landing .hf-hdr-line{height:3px;background:var(--grad);}
+#hf-landing .hf-prog{position:absolute;left:0;right:0;bottom:-1px;height:3px;background:var(--hf-orange-500);transform:scaleX(0);transform-origin:left;pointer-events:none;}
+#hf-landing .hf-hdr-in{max-width:1200px;margin:0 auto;padding:8px clamp(16px,4vw,48px);display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:60px;}
+#hf-landing .hf-logo img{height:42px;width:auto;}
+#hf-landing .hf-nav{display:none;align-items:center;gap:2px;margin-left:auto;}
+#hf-landing .hf-nav a{display:inline-flex;align-items:center;height:42px;padding:0 13px;border-radius:999px;font-size:14px;font-weight:600;letter-spacing:.03em;color:var(--hf-neutral-800);transition:color 160ms var(--ease),background-color 160ms var(--ease);}
+#hf-landing .hf-nav a.is-ag{color:var(--hf-purple-600);}
+#hf-landing .hf-hdr-cta{display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 22px;border-radius:999px;background:var(--hf-orange-500);color:#fff;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;box-shadow:0 8px 20px rgba(255,118,30,.3);transition:background-color 160ms var(--ease),transform 200ms var(--ease);}
+@media (min-width:1024px){#hf-landing .hf-nav{display:flex;}}
+@media (hover:hover){#hf-landing .hf-nav a:hover{color:var(--hf-orange-600);background:var(--hf-orange-100);}#hf-landing .hf-hdr-cta:hover{background:var(--hf-orange-600);color:#fff;transform:translateY(-1px);}}
+
+/* ---------- Hero ---------- */
+#hf-landing .hf-hero{position:relative;display:flex;align-items:center;overflow:hidden;background:var(--hf-purple-800);min-height:min(900px,calc(100vh - 64px));}
+@supports (height:100svh){#hf-landing .hf-hero{min-height:min(900px,calc(100svh - 64px));}}
+#hf-landing .hf-par{position:absolute;inset:-6% 0;transform:translate3d(0,var(--py,0px),0);will-change:transform;}
+#hf-landing .hf-par img{width:100%;height:100%;object-fit:cover;animation:hf-heroZoom 2800ms var(--ease) both;}
+#hf-landing .hf-hero-ov{position:absolute;inset:0;background:linear-gradient(100deg,rgba(2,129,131,.92),rgba(87,40,147,.88) 42%,rgba(255,118,30,.75),rgba(255,118,30,.35) 100%);}
+#hf-landing .hf-hero-ov::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(45,20,80,.34),rgba(45,20,80,0) 60%);}
+#hf-landing .hf-blob{position:absolute;border-radius:999px;pointer-events:none;}
+#hf-landing .hf-hero-grid{position:relative;width:100%;max-width:1200px;margin:0 auto;padding:clamp(56px,7vw,96px) clamp(16px,4vw,48px);display:grid;grid-template-columns:minmax(320px,.85fr) minmax(0,1.15fr);gap:clamp(32px,5vw,64px);align-items:center;}
+@media (min-width:1600px){#hf-landing .hf-hero-grid{max-width:1360px;}}
+#hf-landing .hf-hero-card{position:relative;align-self:center;justify-self:center;width:100%;max-width:450px;background:rgba(255,255,255,.1);border-radius:28px;padding:30px 26px 26px;backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);box-shadow:0 30px 70px rgba(45,20,80,.45);}
+#hf-landing .hf-hero-card::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;background:linear-gradient(120deg,#17a8a8,#ff9147,#b394da,#17a8a8);background-size:300% 100%;animation:hf-border 9s linear infinite;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);pointer-events:none;}
+#hf-landing .hf-hero-card>img{width:100%;height:auto;margin:0 auto 18px;}
+#hf-landing .hf-cd-top{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+#hf-landing .hf-dot{width:10px;height:10px;border-radius:999px;background:var(--hf-orange-400);animation:hf-pulse 1.6s ease-in-out infinite;flex:none;}
+#hf-landing .hf-cd-lab{font-size:12.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#fff;}
+#hf-landing .hf-cd{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;}
+#hf-landing .hf-cd>div{border-radius:16px;padding:16px 4px 14px;text-align:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);overflow:hidden;}
+#hf-landing .hf-cd>div:last-child{background:var(--hf-orange-500);border-color:transparent;}
+#hf-landing .hf-cd b{display:block;font-weight:700;font-size:clamp(28px,3.2vw,40px);letter-spacing:-.03em;color:#fff;line-height:1;font-variant-numeric:tabular-nums;}
+#hf-landing .hf-cd small{display:block;margin-top:8px;font-size:11.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--hf-purple-200);}
+#hf-landing .hf-cd>div:last-child small{color:#fff;}
+#hf-landing .hf-cd-where{margin-top:20px;padding-top:18px;border-top:1px solid rgba(255,255,255,.22);text-align:center;font-size:16px;font-weight:500;color:#fff;}
+#hf-landing .hf-card-cta{margin-top:16px;width:100%;}
+#hf-landing .hf-pill{display:inline-flex;align-items:center;gap:10px;padding:9px 18px;border-radius:999px;border:1.5px solid rgba(255,255,255,.5);color:#fff;font-size:13.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:26px;}
+#hf-landing .hf-hero h1{color:#fff;font-weight:700;font-size:clamp(38px,5.6vw,76px);line-height:1.02;letter-spacing:-.025em;text-wrap:balance;margin-bottom:22px;max-width:620px;text-shadow:0 1px 18px rgba(45,20,80,.35);}
+#hf-landing .hf-hero-lead{max-width:580px;color:#fff;font-weight:400;font-size:clamp(18px,1.4vw + .6rem,22px);line-height:1.55;margin-bottom:30px;text-shadow:0 1px 14px rgba(45,20,80,.35);}
+#hf-landing .hf-hero-lead strong{font-weight:700;}
+#hf-landing .hf-btn-row{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:16px;}
+#hf-landing .hf-btn-row .hf-btn{flex:1 1 auto;min-height:60px;}
+#hf-landing .hf-micro{display:block;font-size:15px;font-weight:400;color:#fff;opacity:.95;}
+@media (max-width:899px){
+#hf-landing .hf-hero{min-height:auto;}
+#hf-landing .hf-hero-grid{grid-template-columns:1fr;gap:32px;padding-top:44px;padding-bottom:52px;}
+#hf-landing .hf-hero-copy{order:1;}
+#hf-landing .hf-hero-card{order:2;max-width:520px;}
+#hf-landing .hf-card-cta{display:none;}
+#hf-landing .hf-hero-ov{background:linear-gradient(165deg,rgba(2,129,131,.93) 0%,rgba(87,40,147,.94) 60%,rgba(74,34,128,.96) 100%);}
+}
+@media (max-width:640px){
+#hf-landing .hf-logo img{height:36px;}
+#hf-landing .hf-hdr-in{min-height:54px;}
+#hf-landing .hf-hdr-cta{height:42px;padding:0 16px;font-size:12px;}
+#hf-landing .hf-pill{font-size:12px;letter-spacing:.08em;padding:8px 14px;border-radius:18px;line-height:1.35;margin-bottom:20px;}
+#hf-landing .hf-btn-row .hf-btn{flex:1 1 100%;}
+#hf-landing .hf-hero-card{padding:22px 18px 20px;border-radius:24px;}
+}
+
+/* ---------- Marquee ---------- */
+#hf-landing .hf-marquee{background:var(--hf-purple-900);overflow:hidden;padding:16px 0;}
+#hf-landing .hf-marquee-track{display:flex;width:max-content;animation:hf-marquee 30s linear infinite;}
+#hf-landing .hf-marquee-set{display:flex;gap:44px;padding-right:44px;font-size:14px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--hf-purple-200);white-space:nowrap;}
+#hf-landing .hf-marquee-set .o{color:var(--hf-orange-400);}
+#hf-landing .hf-marquee-set .t{color:var(--hf-teal-500);}
+
+/* ---------- Comunidad / stats ---------- */
+#hf-landing .hf-two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(28px,4vw,56px);align-items:center;}
+#hf-landing .hf-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;}
+#hf-landing .hf-stat{border-radius:20px;padding:26px 18px;border-top:5px solid;transition:transform 320ms var(--ease),box-shadow 320ms var(--ease);}
+#hf-landing .hf-stat .n{display:block;font-weight:700;font-size:clamp(28px,3.6vw,42px);letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums;}
+#hf-landing .hf-stat .l{display:block;margin-top:10px;font-size:15px;line-height:1.35;color:var(--text-muted);}
+#hf-landing .hf-stat.s1{background:var(--hf-purple-050);border-color:var(--hf-purple-600);}.hf-stat.s1 .n{color:var(--hf-purple-600);}
+#hf-landing .hf-stat.s2{background:var(--hf-orange-100);border-color:var(--hf-orange-500);}.hf-stat.s2 .n{color:var(--hf-orange-600);}
+#hf-landing .hf-stat.s3{background:var(--hf-teal-100);border-color:var(--hf-teal-600);}.hf-stat.s3 .n{color:var(--hf-teal-700);}
+#hf-landing .hf-orgs{margin-top:clamp(36px,4vw,52px);padding-top:30px;border-top:1px solid var(--border-subtle);display:flex;flex-wrap:wrap;align-items:center;gap:22px 30px;}
+#hf-landing .hf-orgs span.k{font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);}
+#hf-landing .hf-orgs img{object-fit:contain;}
+#hf-landing .hf-vsep{width:1px;height:38px;background:var(--border-subtle);}
+@media (max-width:640px){#hf-landing .hf-vsep{display:none;}#hf-landing .hf-orgs{gap:16px 22px;}#hf-landing .hf-stats{gap:10px;}#hf-landing .hf-stat{padding:20px 10px;}}
+@media (hover:hover){#hf-landing .hf-stat:hover{transform:translateY(-6px);box-shadow:0 18px 36px rgba(45,20,80,.12);}}
+
+/* ---------- Banda de agenda ---------- */
+#hf-landing .hf-agenda{position:relative;overflow:hidden;background:linear-gradient(120deg,var(--hf-teal-700),var(--hf-purple-700) 55%,var(--hf-purple-900));padding-block:clamp(48px,6vw,80px);color:#fff;text-align:center;}
+#hf-landing .hf-agenda .hf-eyebrow{color:var(--hf-orange-400);}
+#hf-landing .hf-agenda h2{font-weight:700;font-size:clamp(30px,4vw,52px);line-height:1.05;letter-spacing:-.025em;text-wrap:balance;margin-bottom:16px;}
+#hf-landing .hf-agenda p{max-width:620px;margin:0 auto 28px;font-size:clamp(18px,1vw + .8rem,21px);line-height:1.55;color:#fff;}
+#hf-landing .hf-agenda .hf-btn-row{justify-content:center;}
+#hf-landing .hf-agenda .hf-btn-row .hf-btn{flex:0 1 auto;}
+@media (max-width:640px){#hf-landing .hf-agenda .hf-btn-row .hf-btn{flex:1 1 100%;}}
+
+/* ---------- Zonas ---------- */
+#hf-landing .hf-banner{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:36px;}
+#hf-landing .hf-banner div{color:#fff;text-align:center;padding:22px 6px;font-weight:600;font-size:clamp(11px,1.2vw,14px);letter-spacing:.08em;text-transform:uppercase;}
+#hf-landing .hf-zones{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:24px;}
+#hf-landing .hf-zcard{display:flex;flex-direction:column;border-radius:22px;overflow:hidden;border:1px solid var(--border-subtle);background:#fff;transition:transform 380ms var(--ease),box-shadow 380ms var(--ease);}
+#hf-landing .hf-zimg{position:relative;overflow:hidden;aspect-ratio:16/10;background:linear-gradient(135deg,var(--hf-purple-600),var(--hf-teal-600));}
+#hf-landing .hf-zimg img{width:100%;height:100%;object-fit:cover;transition:transform 900ms var(--ease-out);}
+#hf-landing .hf-zimg .big{position:absolute;inset:0;display:flex;align-items:flex-end;padding:22px;font-weight:700;font-size:clamp(26px,3vw,34px);line-height:1.1;letter-spacing:-.02em;color:#fff;}
+#hf-landing .hf-zbar{height:6px;}
+#hf-landing .hf-zbody{padding:26px 24px 28px;display:flex;flex-direction:column;gap:12px;flex:1;}
+#hf-landing .hf-zbody .z{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;}
+#hf-landing .hf-zbody h3{font-weight:700;font-size:clamp(23px,2.2vw,27px);line-height:1.15;}
+#hf-landing .hf-zbody p{font-size:17px;line-height:1.55;color:var(--text-body);}
+#hf-landing .hf-chips{display:flex;flex-wrap:wrap;gap:8px;}
+#hf-landing .hf-chip{display:inline-flex;align-items:center;min-height:34px;padding:0 14px;border-radius:999px;border:1.5px solid var(--border-subtle);background:#fff;color:var(--hf-purple-600);font-size:14px;font-weight:600;line-height:1.2;}
+#hf-landing .hf-zlink{margin-top:auto;padding-top:6px;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+@media (hover:hover){#hf-landing .hf-zcard:hover{transform:translateY(-8px);box-shadow:0 26px 50px rgba(45,20,80,.16);}#hf-landing .hf-zcard:hover .hf-zimg img{transform:scale(1.07);}}
+
+/* ---------- Ponentes ---------- */
+#hf-landing .hf-speakers{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:22px;align-items:stretch;}
+#hf-landing .hf-spk{border-radius:22px;background:#fff;overflow:hidden;border:1px solid var(--border-subtle);display:flex;flex-direction:column;transition:transform 380ms var(--ease),box-shadow 380ms var(--ease);}
+#hf-landing .hf-spk-img{background:var(--hf-purple-050);aspect-ratio:4/3;overflow:hidden;}
+#hf-landing .hf-spk-img img{width:100%;height:100%;object-fit:contain;transition:transform 700ms var(--ease-out);}
+#hf-landing .hf-spk-b{padding:22px 22px 24px;}
+#hf-landing .hf-spk h3{font-weight:700;font-size:21px;color:var(--hf-purple-600);margin-bottom:4px;}
+#hf-landing .hf-spk .r{font-size:15px;color:var(--text-muted);margin-bottom:12px;}
+#hf-landing .hf-spk .t{font-size:16px;line-height:1.5;}
+#hf-landing .hf-spk .w{margin-top:12px;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--hf-orange-700);}
+#hf-landing .hf-spk-cta{background:var(--hf-purple-600);justify-content:center;gap:12px;padding:30px 26px;min-height:260px;}
+#hf-landing .hf-spk-cta .e{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-orange-400);}
+#hf-landing .hf-spk-cta h3{color:#fff;font-size:25px;line-height:1.15;margin:0;}
+#hf-landing .hf-spk-cta p{font-size:17px;color:var(--hf-purple-200);}
+#hf-landing .hf-spk-cta .hf-btn{align-self:flex-start;min-height:48px;padding:0 24px;font-size:13px;}
+@media (hover:hover){#hf-landing .hf-spk:hover{transform:translateY(-8px);box-shadow:0 26px 50px rgba(45,20,80,.16);}#hf-landing .hf-spk:hover .hf-spk-img img{transform:scale(1.05);}}
+
+/* ---------- Ruta del Tutor ---------- */
+#hf-landing .hf-ruta{position:relative;overflow:hidden;background:var(--hf-purple-900);color:#fff;}
+#hf-landing .hf-ruta::before{content:"";position:absolute;inset:0 0 auto 0;height:6px;background:var(--grad);}
+#hf-landing .hf-ruta-grid{position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:clamp(32px,5vw,64px);align-items:start;}
+#hf-landing .hf-ruta h2{font-weight:700;font-size:clamp(40px,5vw,66px);line-height:1;letter-spacing:-.03em;margin-bottom:20px;}
+#hf-landing .hf-ruta .lead{font-size:clamp(18px,1vw + .8rem,21px);line-height:1.6;color:#fff;margin-bottom:26px;}
+#hf-landing .hf-ruta .lead strong{font-weight:700;}
+#hf-landing .hf-when{display:flex;align-items:center;gap:18px;padding:20px 0;border-block:1px solid rgba(255,255,255,.2);margin-bottom:22px;}
+#hf-landing .hf-when .d{font-weight:700;font-size:clamp(60px,7vw,88px);line-height:.9;letter-spacing:-.04em;}
+#hf-landing .hf-when .m{display:grid;gap:4px;}
+#hf-landing .hf-when .m b{font-size:22px;letter-spacing:.06em;text-transform:uppercase;}
+#hf-landing .hf-when .m span{font-size:17px;color:var(--hf-purple-200);}
+#hf-landing .hf-ruta .cnt{font-size:15px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:26px;}
+#hf-landing .hf-rlist{position:relative;display:grid;gap:10px;}
+#hf-landing .hf-rr{display:grid;grid-template-columns:minmax(70px,auto) minmax(0,1fr);align-items:start;gap:14px;padding:16px clamp(14px,3vw,20px);border-radius:16px;background:#fff;color:var(--text-strong);box-shadow:0 8px 22px rgba(20,8,40,.22);transition:transform 300ms var(--ease),box-shadow 300ms var(--ease);}
+#hf-landing .hf-rt{display:flex;align-items:baseline;gap:3px;color:var(--hf-purple-600);}
+#hf-landing .hf-rt b{font-weight:700;font-size:clamp(22px,2.4vw,25px);letter-spacing:-.02em;line-height:1.15;}
+#hf-landing .hf-rt i{font-style:normal;font-weight:600;font-size:13px;}
+#hf-landing .hf-rr.au .hf-rt{color:var(--hf-orange-600);}
+#hf-landing .hf-rr strong{display:block;font-weight:700;font-size:17.5px;line-height:1.3;color:var(--text-strong);text-wrap:pretty;}
+#hf-landing .hf-rm{margin-top:7px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;}
+#hf-landing .hf-rs{font-size:15.5px;color:var(--text-muted);}
+#hf-landing .hf-tag{display:inline-flex;align-items:center;height:26px;padding:0 11px;border-radius:999px;background:var(--hf-purple-050);color:var(--hf-purple-600);font-size:12px;font-weight:700;letter-spacing:.04em;white-space:nowrap;}
+#hf-landing .hf-rr.au .hf-tag{background:var(--hf-orange-100);color:var(--hf-orange-700);}
+#hf-landing .hf-rr.is-close{background:linear-gradient(120deg,var(--hf-orange-500),var(--hf-orange-400));box-shadow:0 14px 34px rgba(255,118,30,.35);}
+#hf-landing .hf-rr.is-close .hf-rt,#hf-landing .hf-rr.is-close strong{color:#fff;}
+#hf-landing .hf-rr.is-close strong{font-size:19px;align-self:center;}
+@media (hover:hover){#hf-landing .hf-rr:hover{transform:translateX(6px);box-shadow:0 14px 30px rgba(20,8,40,.34);}}
+
+/* ---------- Entrada ---------- */
+#hf-landing .hf-price{background:var(--hf-neutral-100);}
+#hf-landing .hf-pcard{background:#fff;border-radius:28px;overflow:hidden;box-shadow:0 22px 50px rgba(45,20,80,.18);border:2px solid var(--hf-purple-600);}
+#hf-landing .hf-pcard-b{padding:32px 28px;}
+#hf-landing .hf-pcard h3{font-weight:700;font-size:22px;color:var(--hf-purple-600);margin-bottom:8px;}
+#hf-landing .hf-amt{display:flex;align-items:baseline;gap:10px;margin-bottom:6px;}
+#hf-landing .hf-amt b{font-weight:700;font-size:56px;letter-spacing:-.03em;color:var(--hf-purple-600);line-height:1;}
+#hf-landing .hf-amt span{font-size:16px;color:var(--text-muted);}
+#hf-landing .hf-pcard ul{display:grid;gap:11px;font-size:17px;margin:20px 0 26px;}
+#hf-landing .hf-pcard li{display:flex;gap:10px;align-items:flex-start;}
+#hf-landing .hf-pcard li::before{content:"✓";flex:none;color:var(--hf-teal-600);font-weight:700;}
+#hf-landing .hf-pcard .hf-btn{width:100%;min-height:60px;}
+
+/* ---------- Ventajas ---------- */
+#hf-landing .hf-adv{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px;}
+#hf-landing .hf-advc{background:#fff;border:1px solid var(--border-subtle);border-radius:20px;overflow:hidden;transition:transform 340ms var(--ease),box-shadow 340ms var(--ease);}
+#hf-landing .hf-advc i{display:block;height:5px;}
+#hf-landing .hf-advc div{padding:24px 24px 26px;}
+#hf-landing .hf-advc h3{font-weight:700;font-size:17px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;line-height:1.3;}
+#hf-landing .hf-advc p{font-size:17px;line-height:1.5;color:var(--text-body);}
+@media (hover:hover){#hf-landing .hf-advc:hover{transform:translateY(-6px);box-shadow:0 20px 40px rgba(45,20,80,.12);}}
+
+/* ---------- Propósito y 2025 ---------- */
+#hf-landing .hf-photo{border-radius:22px;overflow:hidden;box-shadow:0 18px 40px rgba(45,20,80,.35);}
+#hf-landing .hf-photo img{width:100%;height:100%;max-height:540px;object-fit:cover;transition:transform 1000ms var(--ease-out);}
+@media (hover:hover){#hf-landing .hf-photo:hover img{transform:scale(1.04);}}
+#hf-landing .hf-edic{position:relative;overflow:hidden;background:var(--hf-neutral-800);color:#fff;}
+#hf-landing .hf-edic .hf-h2{color:#fff;}
+#hf-landing .hf-edic .hf-p{color:var(--hf-neutral-200);}
+#hf-landing .hf-dates{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;padding-top:20px;border-top:1px solid rgba(255,255,255,.2);margin-top:22px;}
+#hf-landing .hf-dates b{font-weight:700;font-size:clamp(44px,5.4vw,68px);line-height:1;letter-spacing:-.04em;}
+#hf-landing .hf-dates em{font-style:normal;font-weight:300;font-size:clamp(36px,4vw,54px);line-height:1;color:var(--hf-orange-400);}
+#hf-landing .hf-dates span{font-size:18px;color:var(--hf-neutral-200);}
+#hf-landing .hf-cause{position:relative;overflow:hidden;background:var(--hf-orange-500);color:#fff;}
+#hf-landing .hf-cause .hf-eyebrow{color:var(--hf-neutral-900);}
+#hf-landing .hf-cause .hf-h2{color:#fff;margin-bottom:18px;}
+#hf-landing .hf-cause .hf-p{color:#fff;margin-bottom:14px;}
+#hf-landing .hf-cause .hf-p strong{font-weight:700;}
+
+/* ---------- Testimonios ---------- */
+#hf-landing .hf-testis{position:relative;overflow:hidden;background:var(--hf-purple-900);}
+#hf-landing .hf-tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(28px,4vw,56px);align-items:center;}
+#hf-landing .hf-qm{font-size:72px;line-height:.6;color:var(--hf-orange-400);font-weight:700;margin-bottom:18px;}
+#hf-landing #hf-quote{color:#fff;font-weight:400;font-size:clamp(22px,2.7vw,33px);line-height:1.32;letter-spacing:-.012em;min-height:4.2em;transition:opacity 220ms var(--ease);}
+#hf-landing .hf-by{margin-top:26px;display:flex;align-items:center;gap:14px;}
+#hf-landing .hf-by i{width:44px;height:3px;border-radius:999px;background:var(--hf-orange-500);}
+#hf-landing #hf-name{color:#fff;font-weight:700;font-size:18px;}
+#hf-landing #hf-meta{color:var(--hf-purple-200);font-size:15.5px;}
+#hf-landing .hf-testi-list{display:grid;gap:12px;}
+#hf-landing .hf-testi{width:100%;text-align:left;cursor:pointer;display:grid;gap:6px;padding:18px 20px;border-radius:16px;color:inherit;font:inherit;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.16);transition:background 220ms var(--ease),border-color 220ms var(--ease),transform 220ms var(--ease);}
+#hf-landing .hf-testi[data-active="1"]{background:rgba(255,255,255,.16);border-color:rgba(255,145,71,.9);}
+#hf-landing .hf-testi b{font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#fff;}
+#hf-landing .hf-testi span{font-size:15.5px;line-height:1.45;color:var(--hf-purple-200);}
+#hf-landing .hf-tgo{margin-top:6px;width:100%;}
+@media (hover:hover){#hf-landing .hf-testi:hover{transform:translateY(-3px);background:rgba(255,255,255,.14);}}
+@media (max-width:640px){
+#hf-landing .hf-testi-list{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 calc(-1 * clamp(16px,4vw,48px));padding:4px clamp(16px,4vw,48px) 8px;}
+#hf-landing .hf-testi-list::-webkit-scrollbar{display:none;}
+#hf-landing .hf-testi-list .hf-testi{flex:0 0 80%;scroll-snap-align:center;}
+}
+
+/* ---------- FAQ ---------- */
+#hf-landing .hf-faq{display:grid;gap:12px;max-width:840px;margin:0 auto;}
+#hf-landing .hf-fq{border:1px solid var(--border-subtle);border-radius:18px;background:var(--hf-neutral-050);overflow:hidden;transition:border-color 220ms var(--ease),box-shadow 220ms var(--ease);}
+#hf-landing .hf-fq.is-open{border-color:var(--hf-purple-300);box-shadow:0 12px 28px rgba(87,40,147,.1);}
+#hf-landing .hf-fq button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 20px 20px 22px;min-height:64px;background:transparent;border:0;cursor:pointer;text-align:left;font-weight:700;font-size:18px;line-height:1.35;color:var(--hf-neutral-800);}
+#hf-landing .hf-fq .pm{flex:none;width:30px;height:30px;border-radius:999px;background:var(--hf-purple-600);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;transition:transform 320ms var(--ease);}
+#hf-landing .hf-fq.is-open .pm{transform:rotate(180deg);}
+#hf-landing .hf-fb{display:grid;grid-template-rows:0fr;transition:grid-template-rows 360ms var(--ease);}
+#hf-landing .hf-fq.is-open .hf-fb{grid-template-rows:1fr;}
+#hf-landing .hf-fb>div{overflow:hidden;min-height:0;}
+#hf-landing .hf-fb p{padding:0 24px 22px;font-size:17.5px;line-height:1.65;color:var(--text-body);}
+
+/* ---------- Registro ---------- */
+#hf-landing .hf-reg{position:relative;overflow:hidden;background:linear-gradient(180deg,#388486,#552C8E,#FE7624);}
+#hf-landing .hf-reg .hf-h2{color:#fff;margin-bottom:14px;}
+#hf-landing .hf-reg .hf-p{color:#fff;max-width:640px;margin:0 auto;}
+#hf-landing .hf-form{margin-top:36px;background:#fff;border-radius:28px;overflow:hidden;box-shadow:0 26px 60px rgba(0,0,0,.35);}
+#hf-landing .hf-form-in{padding:clamp(16px,3vw,32px);}
+#hf-landing .hf-form iframe{width:100%;height:688px;border:none;border-radius:8px;display:block;}
+#hf-landing .hf-reg-note{text-align:center;margin-top:20px;font-size:16px;color:#fff;}
+
+/* ---------- Footer ---------- */
+#hf-landing .hf-footer{padding:clamp(48px,6vw,76px) clamp(16px,4vw,48px) 32px;background:#fff;}
+#hf-landing .hf-foot-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:32px;}
+#hf-landing .hf-footer .k{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--hf-orange-700);margin-bottom:12px;}
+#hf-landing .hf-footer p,#hf-landing .hf-footer .c{font-size:16px;line-height:1.7;color:var(--text-body);}
+#hf-landing .hf-lgbox{display:flex;align-items:center;gap:16px;border:1px solid var(--border-subtle);border-radius:12px;padding:12px 16px;width:fit-content;}
+#hf-landing .hf-foot-end{max-width:1200px;margin:32px auto 0;padding-top:20px;border-top:1px solid var(--border-subtle);font-size:14px;color:var(--text-muted);}
+
+/* ---------- CTA fija móvil ---------- */
+#hf-landing .hf-sticky{display:none;}
+@media (max-width:767px){
+#hf-landing .hf-sticky{display:flex;align-items:center;gap:10px;position:fixed;left:0;right:0;bottom:0;z-index:80;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.97);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--border-subtle);box-shadow:0 -10px 30px rgba(45,20,80,.14);transform:translateY(115%);transition:transform 320ms var(--ease);}
+#hf-landing .hf-sticky.is-on{transform:translateY(0);}
+#hf-landing .hf-sticky .a{flex:1 1 auto;display:flex;align-items:center;justify-content:center;height:52px;border-radius:999px;background:var(--hf-orange-500);color:#fff;font-size:14px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;box-shadow:0 10px 24px rgba(255,118,30,.34);}
+#hf-landing .hf-sticky .b{flex:0 0 auto;display:flex;align-items:center;justify-content:center;height:52px;padding:0 18px;border-radius:999px;border:2px solid var(--hf-purple-600);color:var(--hf-purple-600);font-size:14px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
+#hf-landing .hf-footer{padding-bottom:110px;}
+}
+
+/* ---------- Movimiento reducido ---------- */
+@media (prefers-reduced-motion:reduce){
+#hf-landing *,#hf-landing *::before,#hf-landing *::after{animation:none !important;transition:none !important;}
+.hf-js [data-reveal]{opacity:1 !important;transform:none !important;}
+#hf-landing .hf-marquee-set[aria-hidden]{display:none !important;}
+#hf-landing .hf-marquee-track{width:auto;flex-wrap:wrap;justify-content:center;padding:0 16px;}
+#hf-landing .hf-marquee-set{flex-wrap:wrap;justify-content:center;gap:10px 28px;padding-right:0;}
+}
+</style>
+
+<div id="hf-landing">
+
+  <header class="hf-hdr" id="hf-hdr">
+    <div class="hf-hdr-line"></div>
+    <div class="hf-hdr-in">
+      <a class="hf-logo" href="#top" aria-label="Homeschool Fest, ir al inicio"><img src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa8a4668228b95da3946ddb.png" alt="Homeschool Fest" width="126" height="42"></a>
+      <nav class="hf-nav" aria-label="Secciones de la página">
+        <a href="#zonas">Zonas</a>
+        <a href="#ponentes">Ponentes</a>
+        <a href="#ruta-tutor">Ruta del Tutor</a>
+        <a href="#precio">Entrada</a>
+        <a href="#faq">Preguntas</a>
+        <a class="is-ag" href="https://homeschoolfest.lat/agenda" target="_blank" rel="noopener">Agenda ↗</a>
+      </nav>
+      <a class="hf-hdr-cta" href="#registro">Registrarme</a>
+    </div>
+    <div class="hf-prog" id="hf-prog"></div>
+  </header>
+
+  <section id="top" class="hf-hero">
+    <div class="hf-par" id="hf-par"><img src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa966d9c73b042e140cfe41.jpg" alt="" fetchpriority="high" decoding="async"></div>
+    <div class="hf-hero-ov"></div>
+    <div class="hf-blob" style="right:-110px;top:-120px;width:340px;height:340px;background:#ff761e;opacity:.22;animation:hf-drift 14s ease-in-out infinite;"></div>
+    <div class="hf-blob" style="right:140px;bottom:-160px;width:300px;height:300px;background:#17a8a8;opacity:.2;animation:hf-drift 18s ease-in-out infinite;"></div>
+    <div class="hf-hero-grid">
+      <div class="hf-hero-card hf-in" style="--i:2">
+        <img src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa9cc1498106dcc4e2465d1.png" alt="Homeschool Fest" width="400" height="160">
+        <div class="hf-cd-top"><span class="hf-dot"></span><span id="hf-cd-label" class="hf-cd-lab">Faltan para el Homeschool Fest</span></div>
+        <div class="hf-cd" role="timer" aria-label="Cuenta regresiva al Homeschool Fest">
+          <div><b id="hf-cd-d">0</b><small>Días</small></div>
+          <div><b id="hf-cd-h">00</b><small>Horas</small></div>
+          <div><b id="hf-cd-m">00</b><small>Min</small></div>
+          <div><b id="hf-cd-s">00</b><small>Seg</small></div>
+        </div>
+        <div class="hf-cd-where">Zona Rental UNIMET · Caracas</div>
+        <a class="hf-btn hf-btn-wh hf-card-cta" href="#registro">Quiero ir con mi familia →</a>
+      </div>
+      <div class="hf-hero-copy">
+        <div class="hf-pill hf-in" style="--i:0"><span class="hf-dot"></span>II Edición · Caracas · 23 y 24 de octubre</div>
+        <h1 class="hf-in" style="--i:1">Dos días para vivir el homeschool en familia</h1>
+        <p class="hf-hero-lead hf-in" style="--i:2">Charlas, talleres y stands de escuelas y academias en la UNIMET. <strong>Una entrada de $5 abre los dos días.</strong></p>
+        <div class="hf-btn-row hf-hero-ctas hf-in" style="--i:3">
+          <a class="hf-btn hf-btn-or hf-pulse-ring" href="#registro">Registrar a mi familia →</a>
+          <a class="hf-btn hf-btn-gh" href="https://homeschoolfest.lat/agenda" target="_blank" rel="noopener">Ver agenda del evento ↗</a>
+        </div>
+        <span class="hf-micro hf-in" style="--i:4">Primero registras a tu familia. Después completas el pago.</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="hf-marquee" aria-hidden="true">
+    <div class="hf-marquee-track">
+      <div class="hf-marquee-set"><span>Charlas tipo TEDx</span><span class="o">·</span><span>Talleres inmersivos</span><span class="t">·</span><span>Stands de escuelas y academias</span><span class="o">·</span><span>+1.500 familias</span><span class="t">·</span><span>2 días · 3 zonas</span><span class="o">·</span></div>
+      <div class="hf-marquee-set" aria-hidden="true"><span>Charlas tipo TEDx</span><span class="o">·</span><span>Talleres inmersivos</span><span class="t">·</span><span>Stands de escuelas y academias</span><span class="o">·</span><span>+1.500 familias</span><span class="t">·</span><span>2 días · 3 zonas</span><span class="o">·</span></div>
+    </div>
+  </div>
+
+  <section class="hf-sec">
+    <div class="hf-wrap">
+      <div class="hf-two">
+        <div data-reveal>
+          <div class="hf-eyebrow">Una comunidad que ya existe</div>
+          <h2 class="hf-h2" style="margin-bottom:16px">En 2025 nos encontramos. En 2026 volvemos, más grandes.</h2>
+          <p class="hf-p">Más espacios, más aliados y más experiencias para toda la familia.</p>
+        </div>
+        <div class="hf-stats" data-stagger>
+          <div class="hf-stat s1" data-reveal="zoom"><span class="n"><span data-count="1500" data-prefix="+">+1.500</span></span><span class="l">familias en la comunidad</span></div>
+          <div class="hf-stat s2" data-reveal="zoom"><span class="n"><span data-count="3000" data-prefix="+">+3.000</span></span><span class="l">asistentes esperados</span></div>
+          <div class="hf-stat s3" data-reveal="zoom"><span class="n">2 días</span><span class="l">una sola entrada</span></div>
+        </div>
+      </div>
+      <div class="hf-orgs" data-reveal>
+        <span class="k">Organizado por</span>
+        <img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6a879367ad59e6cfedda7415.png" alt="Eduk Homes" style="height:105px;width:114px">
+        <img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa966db9f8b31b6ab26d2f9.png" alt="Dawere" style="height:52px;width:162px">
+        <span class="hf-vsep"></span>
+        <span class="k">En colaboración de</span>
+        <img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa966dbbc55ee8d569405a6.png" alt="D-Future EdTech" style="height:46px;width:auto">
+      </div>
+    </div>
+  </section>
+
+  <section class="hf-agenda">
+    <div class="hf-wrap" data-reveal>
+      <div class="hf-eyebrow">Agenda</div>
+      <h2>Mira qué te espera cada día</h2>
+      <p>Charlas, talleres y stands con horarios y salones. Planifica tu visita antes de llegar.</p>
+      <div class="hf-btn-row">
+        <a class="hf-btn hf-btn-or" href="https://homeschoolfest.lat/agenda" target="_blank" rel="noopener">Ver agenda completa ↗</a>
+        <a class="hf-btn hf-btn-gh" href="#registro">Registrar a mi familia →</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="zonas" class="hf-sec" style="padding-bottom:0">
+    <div class="hf-wrap hf-center" data-reveal style="padding-bottom:8px">
+      <h2 class="hf-h2" style="margin-bottom:18px">2 días · 3 zonas · muchas experiencias</h2>
+      <span class="hf-bar3" data-reveal></span>
+    </div>
+    <div class="hf-banner" data-reveal>
+      <div style="background:var(--hf-teal-600)">Recreación</div>
+      <div style="background:var(--hf-purple-600)">Interacción</div>
+      <div style="background:var(--hf-orange-500)">Planificación</div>
+      <div style="background:var(--hf-navy)">Educación</div>
+    </div>
+    <div class="hf-wrap" style="padding-block:48px clamp(60px,7vw,96px)">
+      <div class="hf-zones" data-stagger>
+        <article class="hf-zcard" data-reveal>
+          <div class="hf-zimg"><img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa966d9196984c408fea496.jpg" alt="Familias conversando con expositores"></div>
+          <div class="hf-zbar" style="background:var(--hf-purple-600)"></div>
+          <div class="hf-zbody">
+            <div class="z" style="color:var(--hf-purple-600)">Zona 1 · Charlas</div>
+            <h3 style="color:var(--hf-purple-600)">Aprende de expertos</h3>
+            <p>Charlas tipo TEDx para padres, estudiantes y docentes.</p>
+            <div class="hf-chips"><span class="hf-chip">Homeschool</span><span class="hf-chip">Currículums</span><span class="hf-chip">Legalidad</span><span class="hf-chip">Finanzas</span><span class="hf-chip">Inteligencia Artificial</span></div>
+            <a class="hf-zlink" href="https://homeschoolfest.lat/agenda" target="_blank" rel="noopener">Ver charlas en la agenda ↗</a>
+          </div>
+        </article>
+        <article class="hf-zcard" data-reveal>
+          <div class="hf-zimg"><img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa966db196984c408fea4d0.jpg" alt="Niños participando en talleres"></div>
+          <div class="hf-zbar" style="background:var(--hf-orange-500)"></div>
+          <div class="hf-zbody">
+            <div class="z" style="color:var(--hf-orange-700)">Zona 2 · Talleres</div>
+            <h3 style="color:var(--hf-orange-700)">Aprende haciendo</h3>
+            <p>Actividades para niños y jóvenes: crear, explorar y compartir.</p>
+            <div class="hf-chips"><span class="hf-chip">Cuentacuentos</span><span class="hf-chip">Emprende Kids</span><span class="hf-chip">Arte</span><span class="hf-chip">Teatro y danza</span><span class="hf-chip">Pintores Nómadas</span></div>
+            <a class="hf-zlink" href="https://homeschoolfest.lat/agenda" target="_blank" rel="noopener" style="color:var(--hf-orange-700)">Ver talleres en la agenda ↗</a>
+          </div>
+        </article>
+        <article class="hf-zcard" data-reveal>
+          <div class="hf-zimg"><div class="big">Escuelas, academias y marcas</div></div>
+          <div class="hf-zbar" style="background:var(--hf-teal-600)"></div>
+          <div class="hf-zbody">
+            <div class="z" style="color:var(--hf-teal-700)">Zona 3 · Stands</div>
+            <h3 style="color:var(--hf-teal-700)">Descubre nuevas opciones</h3>
+            <p>Conversa cara a cara con escuelas, academias y programas.</p>
+            <div class="hf-chips"><span class="hf-chip">Oferta educativa</span><span class="hf-chip">Inscripciones</span><span class="hf-chip">Becas</span><span class="hf-chip">Recursos</span></div>
+            <a class="hf-zlink" href="#registro" style="color:var(--hf-teal-700)">Quiero conocer las opciones →</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="ponentes" class="hf-sec" style="background:var(--hf-neutral-100)">
+    <div class="hf-wrap">
+      <div data-reveal style="max-width:760px;margin-bottom:36px">
+        <div class="hf-eyebrow">Ponentes confirmados</div>
+        <h2 class="hf-h2">Quienes han recorrido el camino, contándolo en primera persona</h2>
+      </div>
+      <div class="hf-speakers" data-stagger>
+        <article class="hf-spk" data-reveal>
+          <div class="hf-spk-img"><img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa87cb29f8b31b6ab118418.png" alt="Nathali Perlaza"></div>
+          <div class="hf-spk-b"><h3>Nathali Perlaza</h3><div class="r">CEO y fundadora · Eduk Homes</div><p class="t">Tutores EdukHomes: aliados para el éxito.</p><div class="w">Viernes 23 · 9:00 a.m. · Auditorio</div></div>
+        </article>
+        <article class="hf-spk" data-reveal>
+          <div class="hf-spk-img"><img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6ace1c1c3cdaab4465600d88.png" alt="Álvaro González"></div>
+          <div class="hf-spk-b"><h3>Álvaro González</h3><div class="r">CEO y fundador · Dawere</div><p class="t">El sistema educativo nacional que necesitamos para el futuro.</p><div class="w">Viernes 23 · 11:20 a.m. · Tarima</div></div>
+        </article>
+        <article class="hf-spk hf-spk-cta" data-reveal>
+          <div class="e">Agenda completa</div>
+          <h3>Todas las charlas en un solo lugar</h3>
+          <p>Horarios, salones y temas del viernes 23 y el sábado 24.</p>
+          <a class="hf-btn hf-btn-wh" href="https://homeschoolfest.lat/agenda" target="_blank" rel="noopener">Ver agenda ↗</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="ruta-tutor" class="hf-ruta hf-sec">
+    <div class="hf-blob" style="left:-140px;top:-120px;width:340px;height:340px;background:#ff761e;opacity:.16"></div>
+    <div class="hf-blob" style="right:-120px;bottom:-140px;width:320px;height:320px;background:#17a8a8;opacity:.16"></div>
+    <div class="hf-wrap">
+      <div class="hf-ruta-grid">
+        <div data-reveal="left">
+          <div class="hf-eyebrow" style="color:var(--hf-orange-400)">Programa para tutores · Viernes 23</div>
+          <h2>La Ruta del Tutor</h2>
+          <p class="lead">Obtén un <strong>certificado de participación avalado por Eduk Homes y Dawere con 15 horas académicas</strong> y dale inicio a tu camino como tutor homeschool.</p>
+          <div class="hf-when">
+            <span class="d">23</span>
+            <div class="m"><b>Octubre</b><span>9:00 a.m. a 6:00 p.m. · Zona Rental UNIMET</span></div>
+          </div>
+          <div class="cnt">12 charlas · Un día completo</div>
+          <div class="hf-btn-row">
+            <a class="hf-btn hf-btn-or" href="https://homeschoolfest.lat/agenda" target="_blank" rel="noopener">Ver agenda completa ↗</a>
+            <a class="hf-btn hf-btn-gh" href="#registro">Registrarme →</a>
+          </div>
+        </div>
+        <ol class="hf-rlist" data-stagger>
+          <li class="hf-rr au" data-reveal="right"><div class="hf-rt"><b>9:00</b><i>am</i></div><div><strong>Tutores EdukHomes: aliados para el éxito</strong><div class="hf-rm"><span class="hf-rs">Nathali Perlaza</span><span class="hf-tag">Auditorio</span></div></div></li>
+          <li class="hf-rr" data-reveal="right"><div class="hf-rt"><b>10:00</b><i>am</i></div><div><strong>Las altas capacidades en la educación</strong><div class="hf-rm"><span class="hf-rs">Jorge Díaz</span><span class="hf-tag">Salón MET Espace</span></div></div></li>
+          <li class="hf-rr" data-reveal="right"><div class="hf-rt"><b>11:00</b><i>am</i></div><div><strong>Rescatar la autoridad docente</strong><div class="hf-rm"><span class="hf-rs">Hilda Mar La Chica</span><span class="hf-tag">Salón MET Espace</span></div></div></li>
+          <li class="hf-rr" data-reveal="right"><div class="hf-rt"><b>12:00</b><i>pm</i></div><div><strong>La ruta bursátil para padres, docentes e hijos</strong><div class="hf-rm"><span class="hf-rs">Gibrán González · GoldGlobal</span><span class="hf-tag">Salón MET Espace</span></div></div></li>
+          <li class="hf-rr" data-reveal="right"><div class="hf-rt"><b>1:00</b><i>pm</i></div><div><strong>Enseñar sin perder la calma</strong><div class="hf-rm"><span class="hf-rs">Victoria Rodríguez</span><span class="hf-tag">Salón MET Espace</span></div></div></li>
+          <li class="hf-rr" data-reveal="right"><div class="hf-rt"><b>2:00</b><i>pm</i></div><div><strong>Conectados contra el bullying</strong><div class="hf-rm"><span class="hf-rs">Rodolfo Dordelly Matos</span><span class="hf-tag">Salón MET Espace</span></div></div></li>
+          <li class="hf-rr" data-reveal="right"><div class="hf-rt"><b>3:00</b><i>pm</i></div><div><strong>El nuevo estándar de oro en el idioma</strong><div class="hf-rm"><span class="hf-rs">Karolena Jensen · Scholar</span><span class="hf-tag">Salón MET Espace</span></div></div></li>
+          <li class="hf-rr" data-reveal="right"><div class="hf-rt"><b>3:30</b><i>pm</i></div><div><strong>Aprender matemáticas jugando</strong><div class="hf-rm"><span class="hf-rs">Jahnny Mora López · Aloha</span><span class="hf-tag">Salón MET Espace</span></div></div></li>
+          <li class="hf-rr au" data-reveal="right"><div class="hf-rt"><b>4:00</b><i>pm</i></div><div><strong>Legalidad y portafolio del homeschool</strong><div class="hf-rm"><span class="hf-rs">Flor Zambrano</span><span class="hf-tag">Auditorio</span></div></div></li>
+          <li class="hf-rr" data-reveal="right"><div class="hf-rt"><b>4:00</b><i>pm</i></div><div><strong>La aventura de escribir con PanHouse School</strong><div class="hf-rm"><span class="hf-rs">Zoraya Fermín · PanHouse</span><span class="hf-tag">Salón MET Espace</span></div></div></li>
+          <li class="hf-rr" data-reveal="right"><div class="hf-rt"><b>4:30</b><i>pm</i></div><div><strong>Claves del aprendizaje auténtico</strong><div class="hf-rm"><span class="hf-rs">María Francia Arteaga · ARCA Learning</span><span class="hf-tag">Salón MET Espace</span></div></div></li>
+          <li class="hf-rr au" data-reveal="right"><div class="hf-rt"><b>5:00</b><i>pm</i></div><div><strong>Crea experiencias educativas con IA</strong><div class="hf-rm"><span class="hf-rs">Sara Vanessa Rodríguez</span><span class="hf-tag">Auditorio</span></div></div></li>
+          <li class="hf-rr is-close" data-reveal="right"><div class="hf-rt"><b>6:00</b><i>pm</i></div><div><strong>Cierre Ruta del Tutor</strong></div></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section id="precio" class="hf-sec hf-price">
+    <div class="hf-wrap" style="max-width:1000px">
+      <div class="hf-two">
+        <div data-reveal="left">
+          <div class="hf-eyebrow">Entrada</div>
+          <h2 class="hf-h2" style="margin-bottom:16px">Una entrada. Dos días. Tres zonas.</h2>
+          <p class="hf-p">Cinco dólares por persona para que ninguna familia se quede afuera.</p>
+        </div>
+        <div class="hf-pcard" data-reveal="right">
+          <div style="height:6px;background:var(--grad)"></div>
+          <div class="hf-pcard-b">
+            <h3>Entrada general</h3>
+            <div class="hf-amt"><b>$5</b><span>USD por persona</span></div>
+            <ul>
+              <li>Acceso los dos días: 23 y 24 de octubre</li>
+              <li>Charlas tipo TEDx</li>
+              <li>Talleres para niños y jóvenes</li>
+              <li>Stands de escuelas y academias</li>
+            </ul>
+            <a class="hf-btn hf-btn-or hf-pulse-ring" href="#registro">Registrar a mi familia →</a>
+            <a class="hf-btn hf-btn-ol" href="https://homeschoolfest.lat/agenda" target="_blank" rel="noopener" style="width:100%;margin-top:12px">Ver agenda antes ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ventajas" class="hf-sec" style="background:var(--hf-neutral-050)">
+    <div class="hf-wrap">
+      <div data-reveal style="max-width:760px;margin-bottom:clamp(32px,4vw,48px)">
+        <div class="hf-eyebrow">Homeschool en Venezuela</div>
+        <h2 class="hf-h2" style="margin-bottom:18px">Educar en casa aquí ya tiene respaldo</h2>
+        <span class="hf-bar3" data-reveal></span>
+      </div>
+      <div class="hf-adv" data-stagger>
+        <div class="hf-advc" data-reveal><i style="background:var(--hf-purple-600)"></i><div><h3 style="color:var(--hf-purple-600)">01 · Legalidad y título</h3><p>Bachillerato certificado con programas reconocidos y portafolio en regla.</p></div></div>
+        <div class="hf-advc" data-reveal><i style="background:var(--hf-orange-500)"></i><div><h3 style="color:var(--hf-orange-700)">02 · Horario flexible</h3><p>El estudio se adapta a la vida real de tu familia.</p></div></div>
+        <div class="hf-advc" data-reveal><i style="background:var(--hf-teal-600)"></i><div><h3 style="color:var(--hf-teal-700)">03 · Seguridad y bienestar</h3><p>Menos traslados, más acompañamiento.</p></div></div>
+        <div class="hf-advc" data-reveal><i style="background:var(--hf-purple-600)"></i><div><h3 style="color:var(--hf-purple-600)">04 · Ritmo propio</h3><p>Avanza donde hay talento y refuerza donde hace falta.</p></div></div>
+        <div class="hf-advc" data-reveal><i style="background:var(--hf-orange-500)"></i><div><h3 style="color:var(--hf-orange-700)">05 · Inglés y tecnología</h3><p>Plataformas en línea e IA como herramientas de estudio.</p></div></div>
+        <div class="hf-advc" data-reveal><i style="background:var(--hf-teal-600)"></i><div><h3 style="color:var(--hf-teal-700)">06 · Continuidad si migras</h3><p>El estudio no se interrumpe si cambias de ciudad o de país.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="testimonios" class="hf-sec hf-testis">
+    <div class="hf-blob" style="right:-120px;top:-100px;width:320px;height:320px;background:#ff761e;opacity:.16;animation:hf-drift 16s ease-in-out infinite"></div>
+    <div class="hf-blob" style="left:-100px;bottom:-140px;width:280px;height:280px;background:#17a8a8;opacity:.16;animation:hf-drift 20s ease-in-out infinite"></div>
+    <div class="hf-wrap" style="position:relative">
+      <div class="hf-eyebrow" data-reveal style="color:var(--hf-orange-400);margin-bottom:clamp(24px,3vw,36px)">Familias que ya lo viven</div>
+      <div class="hf-tgrid" data-reveal>
+        <div>
+          <div class="hf-qm">“</div>
+          <blockquote id="hf-quote"></blockquote>
+          <div class="hf-by"><i></i><div><div id="hf-name"></div><div id="hf-meta"></div></div></div>
+        </div>
+        <div>
+          <div class="hf-testi-list" role="group" aria-label="Elegir testimonio">
+            <button type="button" class="hf-testi" data-i="0" aria-pressed="true" onclick="hfTesti(0)"><b>Familia Ramírez · Caracas</b><span>Dos años educando en casa a tres hijos.</span></button>
+            <button type="button" class="hf-testi" data-i="1" aria-pressed="false" onclick="hfTesti(1)"><b>Mariana G. · Valencia</b><span>Empezó por el bienestar de su hija.</span></button>
+            <button type="button" class="hf-testi" data-i="2" aria-pressed="false" onclick="hfTesti(2)"><b>Familia Bermúdez · Maracaibo</b><span>Se mudaron dos veces sin perder el año.</span></button>
+            <button type="button" class="hf-testi" data-i="3" aria-pressed="false" onclick="hfTesti(3)"><b>Prof. Daniela Ruiz</b><span>Docente que hoy acompaña familias.</span></button>
+          </div>
+          <a class="hf-btn hf-btn-or hf-tgo" href="#registro" style="margin-top:14px">Registrarme →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hf-sec hf-edic">
+    <div class="hf-wrap">
+      <div class="hf-two">
+        <div class="hf-photo" data-reveal="left"><img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa966d99f8b31b6ab26d2aa.jpg" alt="Familias en la primera edición del Homeschool Fest 2025"></div>
+        <div data-reveal="right">
+          <div class="hf-eyebrow" style="color:var(--hf-orange-400)">I Edición · 2025</div>
+          <h2 class="hf-h2">El año pasado nos encontramos. Este año compartimos contigo.</h2>
+          <p class="hf-p" style="margin-top:16px">La primera edición ocupó la terraza del Hotel Paseo Las Mercedes. Ahora llegamos a la Zona Rental de la UNIMET.</p>
+          <div class="hf-dates"><b>23</b><em>|</em><b>24</b><span>de octubre · Caracas</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hf-sec hf-cause">
+    <div class="hf-blob" style="right:-110px;top:-110px;width:300px;height:300px;background:#c9540c;opacity:.3"></div>
+    <div class="hf-wrap" style="position:relative">
+      <div class="hf-two">
+        <div data-reveal="left">
+          <div class="hf-eyebrow">Con propósito</div>
+          <h2 class="hf-h2">Tu familia también hace espacio para otra familia</h2>
+          <p class="hf-p" style="margin-top:18px">200 niños y jóvenes afectados por el terremoto del 24 de junio tendrán acceso al festival y recibirán obsequios de nuestra parte.</p>
+          <p class="hf-p"><strong>Cuando vienes al Homeschool Fest, ayudas a que ellos estén dentro.</strong></p>
+        </div>
+        <div class="hf-photo" data-reveal="right"><img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa966d99f8b31b6ab26d2a9.jpg" alt="Iniciativa social del Homeschool Fest" style="object-position:center 25%"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="hf-sec">
+    <div class="hf-wrap">
+      <div class="hf-center" data-reveal style="margin-bottom:40px">
+        <h2 class="hf-h2">Antes de registrarte, esto te interesa</h2>
+      </div>
+      <div class="hf-faq" data-stagger>
+        <div class="hf-fq is-open" data-reveal>
+          <button type="button" id="hf-q-0" aria-expanded="true" aria-controls="hf-faq-0" onclick="hfFaq(0)"><span>¿Los $5 incluyen los dos días?</span><span class="pm">⌄</span></button>
+          <div class="hf-fb" id="hf-faq-0"><div><p>Sí. La entrada cuesta $5 USD por persona e incluye el viernes 23 y el sábado 24 de octubre.</p></div></div>
+        </div>
+        <div class="hf-fq" data-reveal>
+          <button type="button" id="hf-q-1" aria-expanded="false" aria-controls="hf-faq-1" onclick="hfFaq(1)"><span>¿Tengo que educar en casa para asistir?</span><span class="pm">⌄</span></button>
+          <div class="hf-fb" id="hf-faq-1"><div><p>No. El evento es para familias que ya educan en casa y para quienes quieren conocer esta opción.</p></div></div>
+        </div>
+        <div class="hf-fq" data-reveal>
+          <button type="button" id="hf-q-2" aria-expanded="false" aria-controls="hf-faq-2" onclick="hfFaq(2)"><span>¿Puedo llevar a mis hijos?</span><span class="pm">⌄</span></button>
+          <div class="hf-fb" id="hf-faq-2"><div><p>Sí. Hay talleres para niños y jóvenes, y espacios de formación para padres, estudiantes y docentes.</p></div></div>
+        </div>
+        <div class="hf-fq" data-reveal>
+          <button type="button" id="hf-q-3" aria-expanded="false" aria-controls="hf-faq-3" onclick="hfFaq(3)"><span>¿Qué pasa después de registrarme?</span><span class="pm">⌄</span></button>
+          <div class="hf-fb" id="hf-faq-3"><div><p>Al completar el registro vas a la página de pago del evento para finalizar tu compra.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="registro" class="hf-sec hf-reg">
+    <div class="hf-blob" style="left:-90px;top:-90px;width:260px;height:260px;background:#17a8a8;opacity:.18"></div>
+    <div class="hf-blob" style="right:-90px;bottom:-90px;width:260px;height:260px;background:#ff761e;opacity:.2"></div>
+    <div class="hf-wrap" style="position:relative;max-width:960px">
+      <div class="hf-center" data-reveal>
+        <h2 class="hf-h2">Que este año no te lo cuenten: vívelo con tu familia</h2>
+        <p class="hf-p">Completa tus datos y reserva el lugar de tu familia.</p>
+      </div>
+      <div class="hf-form" data-reveal="zoom">
+        <div style="height:6px;background:var(--grad)"></div>
+        <div class="hf-form-in">
+          <iframe src="https://api.leadconnectorhq.com/widget/form/QufmW6mjX3SbkIm1N9ql" id="inline-QufmW6mjX3SbkIm1N9ql" title="1 Registro Homeschool fest" loading="lazy" data-layout="{'id':'INLINE'}" data-trigger-type="alwaysShow" data-activation-type="alwaysActivated" data-deactivation-type="neverDeactivate" data-form-name="1 Registro Homeschool fest" data-height="688" data-layout-iframe-id="inline-QufmW6mjX3SbkIm1N9ql" data-form-id="QufmW6mjX3SbkIm1N9ql" data-cookie-consent="true" data-cookie-consent-provider="auto"></iframe>
+        </div>
+      </div>
+      <p class="hf-reg-note">Primero registras a tu familia. Después completas el pago de $5 por persona.</p>
+    </div>
+  </section>
+
+  <footer class="hf-footer">
+    <div class="hf-foot-grid">
+      <div>
+        <img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa8a4668228b95da3946ddb.png" alt="Homeschool Fest" style="height:64px;width:auto;margin-bottom:14px">
+        <p style="margin-bottom:16px">23 y 24 de octubre de 2026<br>Zona Rental de la UNIMET · Caracas</p>
+        <a class="hf-btn hf-btn-pu" href="https://homeschoolfest.lat/agenda" target="_blank" rel="noopener" style="min-height:46px;padding:0 22px;font-size:13px">Ver agenda ↗</a>
+      </div>
+      <div>
+        <div class="k">Organizan</div>
+        <div class="hf-lgbox">
+          <img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa966dbc73b042e140cfe72.png" alt="Eduk Homes" style="height:48px;width:48px;object-fit:contain">
+          <img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa966db9f8b31b6ab26d2f9.png" alt="Dawere" style="height:38px;width:auto;object-fit:contain">
+        </div>
+      </div>
+      <div>
+        <div class="k">Colabora</div>
+        <div class="hf-lgbox"><img loading="lazy" decoding="async" src="https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa966dbbc55ee8d569405a6.png" alt="D-Future EdTech" style="height:30px;width:auto;object-fit:contain"></div>
+      </div>
+      <div>
+        <div class="k">Contáctanos</div>
+        <div class="c"><a href="mailto:homeschoolfest@dawere.com">homeschoolfest@dawere.com</a><br>@edukhomes<br>@dawereoficial</div>
+      </div>
+    </div>
+    <div class="hf-foot-end">Homeschool Fest 2026 · Una experiencia para toda la familia.</div>
+  </footer>
+
+  <div class="hf-sticky" id="hf-sticky" role="region" aria-label="Registro rápido">
+    <a class="a" href="#registro">Registrar · $5</a>
+    <a class="b" href="https://homeschoolfest.lat/agenda" target="_blank" rel="noopener">Agenda</a>
+  </div>
+
+</div>
+
+<script src="https://link.msgsndr.com/js/form_embed.js"></script>
+<script>
+(function(){
+  var root=document.getElementById('hf-landing');
+  if(!root||root.dataset.hfInit)return; root.dataset.hfInit='1';
+  var reduce=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var hasIO='IntersectionObserver' in window;
+  root.classList.add('hf-js');
+  document.documentElement.classList.add('hf-js');
+
+  /* Ancho completo: se sale de la caja de GHL */
+  function fullBleed(){
+    root.style.marginLeft='0'; root.style.width='auto';
+    var vw=document.documentElement.clientWidth||window.innerWidth;
+    var left=root.getBoundingClientRect().left;
+    root.style.width=vw+'px'; root.style.maxWidth='none'; root.style.marginLeft=(-left)+'px';
+  }
+  fullBleed();
+  window.addEventListener('load',fullBleed);
+  window.addEventListener('resize',fullBleed);
+  window.addEventListener('orientationchange',function(){setTimeout(fullBleed,200);});
+  setTimeout(fullBleed,400); setTimeout(fullBleed,1500);
+
+  /* Cuenta regresiva con animación al cambiar cada dígito */
+  var TARGET=new Date('2026-10-23T09:00:00-04:00').getTime();
+  var ids={d:'hf-cd-d',h:'hf-cd-h',m:'hf-cd-m',s:'hf-cd-s'}, cdTimer;
+  function pad(n){return String(n).padStart(2,'0');}
+  function setNum(id,val){
+    var el=document.getElementById(id); if(!el||el.textContent===String(val))return;
+    el.textContent=val;
+    if(!reduce){el.classList.remove('hf-bump'); void el.offsetWidth; el.classList.add('hf-bump');}
+  }
+  function tick(){
+    var t=Math.floor(Math.max(0,TARGET-Date.now())/1000);
+    setNum(ids.d,Math.floor(t/86400)); setNum(ids.h,pad(Math.floor(t/3600)%24));
+    setNum(ids.m,pad(Math.floor(t/60)%60)); setNum(ids.s,pad(t%60));
+    if(t===0){var l=document.getElementById('hf-cd-label'); if(l)l.textContent='El Homeschool Fest ya comenzó'; clearInterval(cdTimer);}
+  }
+  tick(); cdTimer=setInterval(tick,1000);
+
+  /* Contadores de estadísticas */
+  function fmt(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
+  function countUp(el){
+    var end=parseInt(el.getAttribute('data-count'),10), pre=el.getAttribute('data-prefix')||'';
+    if(reduce||!end){el.textContent=pre+fmt(end);return;}
+    var t0=null, dur=1600;
+    function step(ts){
+      if(t0===null)t0=ts; var p=Math.min(1,(ts-t0)/dur), e=1-Math.pow(1-p,3);
+      el.textContent=pre+fmt(Math.round(end*e)); if(p<1)requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  /* Escalonado y aparición al hacer scroll */
+  [].slice.call(root.querySelectorAll('[data-stagger]')).forEach(function(c){
+    [].slice.call(c.children).forEach(function(k,i){ if(k.hasAttribute('data-reveal'))k.style.setProperty('--d',Math.min(i,8)*80+'ms'); });
+  });
+  var els=[].slice.call(root.querySelectorAll('[data-reveal]'));
+  var counted=[].slice.call(root.querySelectorAll('[data-count]'));
+  function show(el){
+    el.classList.add('is-in');
+    [].slice.call(el.querySelectorAll('[data-count]')).forEach(function(c){ if(!c.__d){c.__d=1;countUp(c);} });
+  }
+  if(reduce||!hasIO){els.forEach(show);}
+  else{
+    var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){show(x.target);io.unobserve(x.target);}});},{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+    els.forEach(function(el){io.observe(el);});
+    setTimeout(function(){els.forEach(function(el){if(!el.classList.contains('is-in'))show(el);});},6000);
+  }
+
+  /* Progreso de lectura, sombra del header y parallax del hero */
+  var hdr=document.getElementById('hf-hdr'), prog=document.getElementById('hf-prog'), par=document.getElementById('hf-par');
+  var ticking=false;
+  function onScroll(){
+    if(ticking)return; ticking=true;
+    requestAnimationFrame(function(){
+      var y=window.pageYOffset||document.documentElement.scrollTop||0;
+      var h=(document.documentElement.scrollHeight-window.innerHeight)||1;
+      if(prog)prog.style.transform='scaleX('+Math.min(1,y/h)+')';
+      if(hdr)hdr.classList.toggle('is-stuck',y>10);
+      if(par&&!reduce&&y<1400)par.style.setProperty('--py',(y*0.18).toFixed(1)+'px');
+      ticking=false;
+    });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+  /* Testimonios */
+  var TESTIMONIOS=[
+    {quote:'Llegamos al homeschool con más miedos que certezas. Salimos con un plan, un currículum y tres familias del mismo urbanismo a las que hoy llamamos cuando algo no nos cuadra.',name:'Familia Ramírez · Caracas',meta:'Mamá de tres · 2 años en homeschool'},
+    {quote:'Mi hija dejó de llorar los domingos. Eso fue lo primero. Después vinieron las notas, el inglés y las ganas de estudiar sin que yo tenga que empujarla.',name:'Mariana G. · Valencia',meta:'Mamá de una adolescente · 3 años en homeschool'},
+    {quote:'Nos mudamos dos veces en un año y medio y mis hijos no perdieron un solo trimestre. El colegio se vino con nosotros en la maleta.',name:'Familia Bermúdez · Maracaibo',meta:'Papá de dos · 4 años en homeschool'},
+    {quote:'Vine como docente a ver de qué se trataba y me fui con seis familias pidiéndome tutorías. Aquí entendí que esto no compite con la escuela: la complementa.',name:'Prof. Daniela Ruiz',meta:'Tutora homeschooler · Caracas'}
+  ];
+  var rot=null, active=0, paused=false, inView=false, stopped=false;
+  var qEl=document.getElementById('hf-quote'), nmEl=document.getElementById('hf-name'), mtEl=document.getElementById('hf-meta');
+  var list=root.querySelector('.hf-testi-list'), btns=[].slice.call(root.querySelectorAll('.hf-testi'));
+  function fitQuote(){
+    if(!qEl)return; var cur=qEl.textContent,max=0; qEl.style.minHeight='0';
+    TESTIMONIOS.forEach(function(t){qEl.textContent=t.quote; max=Math.max(max,qEl.offsetHeight);});
+    qEl.textContent=cur; qEl.style.minHeight=max+'px';
+  }
+  function paint(i){
+    var t=TESTIMONIOS[i]; if(!t)return;
+    if(qEl){qEl.textContent=t.quote;qEl.style.opacity='1';} if(nmEl)nmEl.textContent=t.name; if(mtEl)mtEl.textContent=t.meta;
+  }
+  function centerChip(b){
+    if(!list||list.scrollWidth<=list.clientWidth+2)return;
+    list.scrollTo({left:b.offsetLeft-(list.clientWidth-b.offsetWidth)/2,behavior:reduce?'auto':'smooth'});
+  }
+  window.hfTesti=function(i,auto){
+    if(!TESTIMONIOS[i])return; active=i;
+    btns.forEach(function(b){
+      var on=b.getAttribute('data-i')==String(i);
+      b.setAttribute('data-active',on?'1':'0'); b.setAttribute('aria-pressed',on?'true':'false'); if(on)centerChip(b);
+    });
+    if(!auto){stopped=true; if(rot){clearInterval(rot);rot=null;}}
+    if(reduce||!qEl){paint(i);return;}
+    qEl.style.opacity='0'; setTimeout(function(){paint(i);},180);
+  };
+  paint(0); hfTesti(0,true); fitQuote();
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitQuote);
+  var rz; window.addEventListener('resize',function(){clearTimeout(rz);rz=setTimeout(fitQuote,150);});
+  if(!reduce){rot=setInterval(function(){ if(stopped||paused||!inView||document.hidden)return; hfTesti((active+1)%TESTIMONIOS.length,true); },8000);}
+  var sec=document.getElementById('testimonios');
+  if(sec){
+    sec.addEventListener('mouseenter',function(){paused=true;}); sec.addEventListener('mouseleave',function(){paused=false;});
+    sec.addEventListener('focusin',function(){paused=true;}); sec.addEventListener('focusout',function(){paused=false;});
+  }
+  if(hasIO&&sec){new IntersectionObserver(function(en){inView=en[0].isIntersecting;},{threshold:.2}).observe(sec);}else{inView=true;}
+
+  /* Preguntas frecuentes */
+  window.hfFaq=function(i){
+    var b=document.getElementById('hf-q-'+i); if(!b)return;
+    var box=b.parentNode, open=box.classList.toggle('is-open');
+    b.setAttribute('aria-expanded',open?'true':'false');
+  };
+
+  /* CTA fija en móvil: aparece al salir del hero y se oculta en el formulario */
+  var bar=document.getElementById('hf-sticky'), heroCta=root.querySelector('.hf-hero-ctas'), reg=document.getElementById('registro');
+  if(bar&&hasIO&&heroCta&&reg){
+    var heroVisible=true, regVisible=false;
+    var upd=function(){bar.classList.toggle('is-on',!heroVisible&&!regVisible);};
+    new IntersectionObserver(function(en){heroVisible=en[0].isIntersecting;upd();},{threshold:0}).observe(heroCta);
+    new IntersectionObserver(function(en){regVisible=en[0].isIntersecting;upd();},{threshold:0,rootMargin:'0px 0px -20% 0px'}).observe(reg);
+  }
+
+  /* Anclas con compensación del header */
+  root.addEventListener('click',function(ev){
+    var a=ev.target.closest&&ev.target.closest('a[href^="#"]'); if(!a)return;
+    var id=a.getAttribute('href').slice(1); if(!id)return;
+    var t=document.getElementById(id); if(!t)return; ev.preventDefault();
+    var h=root.querySelector('.hf-hdr'), off=(h?h.offsetHeight:0)+8;
+    window.scrollTo({top:t.getBoundingClientRect().top+(window.pageYOffset||0)-off,behavior:reduce?'auto':'smooth'});
+  });
+})();
+</script>
