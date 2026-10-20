@@ -224,6 +224,7 @@
 #hfest  .hf-badge2.b2{background:#ece4f6;color:#572893}
 #hfest  .hf-ruta-list{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
 #hfest  .hf-rrow{display:grid;grid-template-columns:76px minmax(0,1fr);gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.88);border:1px solid rgba(87,40,147,.08);box-shadow:0 6px 18px -12px rgba(45,20,80,.22)}
+#hfest  .hf-rrow.is-close{background:#ece4f6;border-color:rgba(87,40,147,.18)}
 #hfest  .hf-rrow .hr{display:flex;align-items:baseline;gap:3px;color:#572893}
 #hfest  .hf-rrow .hr b{font-size:21px;font-weight:700;letter-spacing:-.03em;line-height:1}
 #hfest  .hf-rrow .hr small{font-size:12px;font-weight:600;color:#6b7474}
@@ -708,7 +709,7 @@
           var parts = s.time.split(' ');
           return '<li class="hf-rrow"><span class="hr"><b>' + esc(parts[0]) + '</b><small>' + esc(parts[1]) + '</small></span>' +
             '<span><span class="tt">' + esc(s.short || s.title) + '</span><span class="ft"><span class="sp">' + esc(s.speaker) + '</span><span class="hf-tag ' + spaceCls(s.space) + '">' + esc(s.space) + '</span></span></span></li>';
-        }).join('') + '</ul></div>';
+        }).join('') + '<li class="hf-rrow is-close"><span class="hr"><b>6:00</b><small>pm</small></span><span><span class="tt">Cierre Ruta del Tutor</span></span></li></ul></div>';
     };
 
     var renderMain = function () { renderList(); };
