@@ -1,0 +1,822 @@
+<!-- ============================================================
+  HOMESCHOOL FEST · Itinerario y registro (II Edición)
+  Pegar completo en un elemento "Custom JS/HTML" de GoHighLevel.
+  Todo el CSS vive bajo #hfest y el JS dentro de una función
+  aislada, así que no toca el resto de la página.
+  Solo hay dos datos para completar: busca "CONFIGURACION".
+============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,700&display=swap">
+
+<style>
+#hfest ,#hfest  *,#hfest  *::before,#hfest  *::after{box-sizing:border-box}
+#hfest {display:block;position:relative;width:100%;overflow:hidden;overflow:clip;container-type:inline-size;container-name:hf;font-family:'Jost',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:16px;line-height:1.5;color:#343a3a;text-align:left;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;
+  background:
+    radial-gradient(closest-side,rgba(23,168,168,.26),transparent) 0% 0%/560px 560px no-repeat,
+    radial-gradient(closest-side,rgba(139,98,194,.24),transparent) 100% 9%/640px 640px no-repeat,
+    radial-gradient(closest-side,rgba(255,145,71,.20),transparent) 0% 30%/560px 560px no-repeat,
+    radial-gradient(closest-side,rgba(76,194,193,.20),transparent) 100% 52%/560px 560px no-repeat,
+    radial-gradient(closest-side,rgba(179,148,218,.24),transparent) 0% 74%/640px 640px no-repeat,
+    radial-gradient(closest-side,rgba(255,145,71,.20),transparent) 100% 92%/580px 580px no-repeat,
+    linear-gradient(180deg,#fff 0%,#f4f6f6 40%,#e7ebeb 100%)}
+#hfest  [hidden]{display:none!important}
+#hfest  img{max-width:100%;height:auto;border:0;display:block}
+#hfest  a{color:#572893;text-decoration:none;background:none;box-shadow:none}
+#hfest  button{font-family:inherit;font-size:inherit;margin:0;text-transform:none;letter-spacing:normal;-webkit-appearance:none;appearance:none}
+#hfest  h1,#hfest  h2,#hfest  h3,#hfest  p{margin:0;padding:0;font-family:inherit;text-transform:none;letter-spacing:normal;background:none}
+#hfest  svg{display:block;flex:none}
+#hfest  .hf-sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+#hfest  :focus{outline:none}
+#hfest  :focus-visible{outline:3px solid #17a8a8;outline-offset:2px;border-radius:12px}
+
+/* ---------- Glass (con respaldo si el navegador no soporta blur) ---------- */
+#hfest  .hf-glass{background:rgba(255,255,255,.86);border:1px solid rgba(255,255,255,.95)}
+@supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+  #hfest   .hf-glass{background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(10px) saturate(160%);backdrop-filter:blur(10px) saturate(160%)}
+}
+
+/* ---------- Layout base (mobile primero) ---------- */
+#hfest  .hf-wrap{max-width:1200px;margin:0 auto;padding-inline:18px}
+#hfest  .hf-eyebrow{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#c9540c;line-height:1.3}
+#hfest  .hf-bar3{display:block;width:72px;height:5px;border-radius:999px;background:linear-gradient(90deg,#028183,#572893 45%,#ff761e)}
+
+/* Header */
+#hfest  .hf-header{position:relative;z-index:2;background:rgba(255,255,255,.7);border-bottom:1px solid rgba(255,255,255,.85);box-shadow:0 1px 0 rgba(87,40,147,.06)}
+#hfest  .hf-header-in{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:12px}
+#hfest  .hf-logo{height:40px;width:auto}
+#hfest  .hf-logo-txt{font-size:22px;font-weight:700;color:#572893;letter-spacing:-.02em}
+#hfest  .hf-social{display:flex;gap:8px}
+#hfest  .hf-pill{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:44px;min-height:44px;padding:0 12px;border-radius:999px;background:rgba(255,255,255,.8);border:1px solid rgba(87,40,147,.14);font-weight:600;font-size:15px;color:#572893;line-height:1}
+#hfest  .hf-pill .hf-lbl{display:none}
+
+/* Hero */
+#hfest  .hf-hero{display:grid;gap:28px;padding-top:32px;padding-bottom:20px;position:relative;z-index:1}
+#hfest  .hf-hero-copy{display:flex;flex-direction:column;gap:20px;min-width:0}
+#hfest  .hf-eyebrow-row{display:flex;align-items:center;gap:12px}
+#hfest  .hf-eyebrow-row i{width:32px;height:5px;border-radius:999px;background:linear-gradient(90deg,#028183,#572893 45%,#ff761e);flex:none}
+#hfest  .hf-h1{font-size:42px;line-height:1.04;letter-spacing:-.025em;font-weight:700;color:#572893;text-wrap:balance}
+#hfest  .hf-lead{font-size:18px;font-weight:300;line-height:1.65;max-width:540px;color:#343a3a;text-wrap:pretty}
+#hfest  .hf-meta{display:flex;align-items:center;flex-wrap:wrap;gap:16px 20px}
+#hfest  .hf-date{display:flex;align-items:baseline;gap:12px;color:#572893}
+#hfest  .hf-date b{font-size:52px;font-weight:700;letter-spacing:-.03em;line-height:1}
+#hfest  .hf-date .hf-sep{font-size:40px;font-weight:300;line-height:1;color:#b394da}
+#hfest  .hf-date .hf-mes{font-size:19px;font-weight:500;line-height:1.15}
+#hfest  .hf-where{display:flex;flex-direction:column;gap:2px;padding-left:18px;border-left:2px solid #d3d9d9}
+#hfest  .hf-where small{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#6b7474}
+#hfest  .hf-where span{font-size:17px;font-weight:500;color:#343a3a;line-height:1.3}
+#hfest  .hf-ctas{display:grid;gap:10px}
+#hfest  .hf-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:14px 22px;border-radius:999px;font-weight:600;font-size:15px;letter-spacing:.05em;text-transform:uppercase;line-height:1.15;text-align:center;cursor:pointer;border:2px solid transparent;transition:background-color .15s,color .15s,transform .15s,box-shadow .15s}
+#hfest  .hf-btn:active{transform:scale(.98)}
+#hfest  .hf-btn-purple{background:#572893;color:#fff}
+#hfest  .hf-btn-orange{background:#ff761e;color:#2d1450}
+#hfest  .hf-btn-line{background:transparent;border-color:#572893;color:#572893;letter-spacing:.02em;text-transform:none;font-size:15px;min-height:48px;padding:10px 18px}
+#hfest  .hf-media{position:relative;padding:10px;border-radius:28px;box-shadow:0 30px 60px -24px rgba(45,20,80,.28)}
+#hfest  .hf-frame{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:4/3;background:linear-gradient(135deg,#ece4f6,#e6f6f6)}
+#hfest  .hf-frame img{width:100%;height:100%;object-fit:cover}
+#hfest  .hf-badge{position:absolute;left:20px;bottom:20px;display:flex;align-items:center;gap:12px;padding:10px 16px 10px 10px;border-radius:18px;box-shadow:0 16px 32px -12px rgba(45,20,80,.25)}
+#hfest  .hf-badge-ico{width:40px;height:40px;border-radius:50%;background:#ff761e;color:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+#hfest  .hf-badge small{display:block;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6b7474;line-height:1.3}
+#hfest  .hf-badge strong{display:block;font-size:16px;font-weight:700;color:#572893;line-height:1.25}
+
+/* Secciones */
+#hfest  .hf-sec{position:relative;z-index:1;padding-top:28px;padding-bottom:48px;display:flex;flex-direction:column;gap:22px;scroll-margin-top:var(--hf-offset,0px)}
+#hfest  .hf-sec-head{display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center}
+#hfest  .hf-h2{font-size:32px;line-height:1.1;letter-spacing:-.02em;font-weight:700;color:#572893;text-wrap:balance}
+
+/* Tabs de día */
+#hfest  .hf-tabs{display:flex;gap:6px;padding:6px;border-radius:999px;box-shadow:0 12px 30px -14px rgba(45,20,80,.22);width:100%;max-width:420px;align-self:center}
+#hfest  .hf-tab{flex:1 1 0;display:flex;align-items:baseline;justify-content:center;gap:8px;min-height:48px;padding:8px 14px;border:0;border-radius:999px;cursor:pointer;background:transparent;color:#572893;transition:background-color .22s,color .22s}
+#hfest  .hf-tab span{font-size:14px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+#hfest  .hf-tab b{font-size:24px;font-weight:700;letter-spacing:-.02em;line-height:1}
+#hfest  .hf-tab em{font-style:normal;font-size:14px;font-weight:500}
+#hfest  .hf-tab[aria-selected="true"]{background:#572893;color:#fff}
+#hfest  .hf-kids .hf-tab[aria-selected="true"]{background:#ff761e;color:#2d1450}
+
+/* Filtros */
+#hfest  .hf-tools{display:flex;flex-direction:column;gap:12px;align-items:stretch}
+#hfest  .hf-search{position:relative;display:block}
+#hfest  .hf-search svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#6f3fae;pointer-events:none}
+#hfest  .hf-search input{width:100%;height:50px;padding:0 16px 0 46px;border-radius:999px;border:1px solid rgba(87,40,147,.18);background:rgba(255,255,255,.9);font:inherit;font-size:16px;color:#343a3a;margin:0;-webkit-appearance:none;appearance:none}
+#hfest  .hf-search input::placeholder{color:#8b9595}
+#hfest  .hf-search input:focus-visible{outline:3px solid #17a8a8;outline-offset:2px}
+#hfest  .hf-chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#hfest  .hf-chip{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid rgba(87,40,147,.18);background:rgba(255,255,255,.85);color:#572893;font-size:14px;font-weight:600;cursor:pointer;transition:background-color .15s,color .15s}
+#hfest  .hf-chip[aria-pressed="true"]{background:#572893;border-color:#572893;color:#fff}
+#hfest  .hf-count{font-size:14px;font-weight:500;color:#4d5555;margin-left:auto}
+#hfest  .hf-empty{padding:28px 20px;border-radius:22px;text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center;font-size:17px;color:#343a3a}
+
+/* Tarjetas de charla */
+#hfest  .hf-list{display:flex;flex-direction:column;gap:12px;margin:0;padding:0;list-style:none}
+#hfest  .hf-card{position:relative;border-radius:22px;overflow:hidden;box-shadow:0 8px 24px -14px rgba(45,20,80,.16);transition:box-shadow .22s}
+#hfest  .hf-card.is-open{box-shadow:0 24px 48px -18px rgba(45,20,80,.28)}
+#hfest  .hf-card-bar{height:4px;background:transparent;transition:background .22s}
+#hfest  .hf-card.is-open .hf-card-bar{background:linear-gradient(90deg,#028183,#572893 45%,#ff761e)}
+#hfest  .hf-card-h{font-size:inherit;font-weight:inherit}
+#hfest  .hf-row{display:grid;grid-template-columns:auto minmax(0,1fr) 44px;grid-template-areas:"time av chev" "body body body";gap:12px 14px;align-items:center;width:100%;padding:16px;text-align:left;cursor:pointer;background:transparent;border:0;color:inherit;-webkit-tap-highlight-color:transparent}
+#hfest  .hf-time{grid-area:time;display:flex;flex-direction:column;gap:2px}
+#hfest  .hf-time b{font-size:28px;font-weight:700;letter-spacing:-.03em;line-height:1;color:#572893}
+#hfest  .hf-time small{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6b7474}
+#hfest  .hf-avs{grid-area:av;display:flex;align-items:center}
+#hfest  .hf-av{position:relative;width:52px;height:52px;border-radius:50%;overflow:hidden;flex:none;border:3px solid #fff;box-shadow:0 6px 16px -8px rgba(45,20,80,.35);background:linear-gradient(135deg,#ece4f6,#e6f6f6);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:19px;color:#572893}
+#hfest  .hf-av + .hf-av{margin-left:-16px}
+#hfest  .hf-av img,#hfest  .hf-ph img{position:absolute;inset:0;width:100%;height:100%;background:#fff}
+#hfest  .hf-body{grid-area:body;display:flex;flex-direction:column;gap:8px;min-width:0}
+#hfest  .hf-tags{display:flex;gap:6px 10px;flex-wrap:wrap;align-items:center}
+#hfest  .hf-tag{display:inline-flex;align-items:center;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;line-height:1.3}
+#hfest  .hf-tag.is-aud{background:#ece4f6;color:#572893}
+#hfest  .hf-tag.is-met{background:#e6f6f6;color:#01605f}
+#hfest  .hf-dur{font-size:13px;font-weight:500;color:#6b7474}
+#hfest  .hf-title{display:block;font-size:19px;line-height:1.25;font-weight:700;color:#2d1450;text-wrap:pretty}
+#hfest  .hf-who{display:flex;gap:4px 14px;flex-wrap:wrap;align-items:center;font-size:15px;font-weight:500;color:#343a3a;line-height:1.35}
+#hfest  .hf-who i{display:inline-flex;align-items:center;gap:5px;font-style:normal;font-weight:600;color:#01605f}
+#hfest  .hf-chev{grid-area:chev;justify-self:end;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(87,40,147,.08);color:#572893;transition:background-color .22s,color .22s,transform .3s}
+#hfest  .hf-card.is-open .hf-chev{background:#572893;color:#fff;transform:rotate(180deg)}
+
+/* Panel desplegable (anima altura con grid 0fr -> 1fr) */
+#hfest  .hf-panel{display:grid;grid-template-rows:0fr;visibility:hidden;transition:grid-template-rows .3s cubic-bezier(.2,.7,.3,1),visibility 0s linear .3s}
+#hfest  .hf-card.is-open .hf-panel{grid-template-rows:1fr;visibility:visible;transition-delay:0s}
+#hfest  .hf-panel-clip{min-height:0;overflow:hidden}
+#hfest  .hf-panel-in{margin-inline:16px;padding:20px 0 22px;display:grid;gap:22px;border-top:1px solid rgba(87,40,147,.08)}
+#hfest  .hf-spk{display:flex;flex-direction:column;gap:12px;max-width:240px}
+#hfest  .hf-photos{display:flex;gap:10px}
+#hfest  .hf-ph{position:relative;flex:1 1 0;min-width:0;aspect-ratio:3/4;border-radius:18px;overflow:hidden;background:#e7ebeb;box-shadow:0 14px 30px -16px rgba(45,20,80,.35);display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:700;color:#572893}
+#hfest  .hf-role{font-size:14px;line-height:1.45;color:#4d5555}
+#hfest  .hf-det{display:flex;flex-direction:column;gap:18px;min-width:0}
+#hfest  .hf-sum{display:flex;flex-direction:column;gap:8px}
+#hfest  .hf-sum p{font-size:17px;font-weight:300;line-height:1.7;color:#343a3a;text-wrap:pretty}
+#hfest  .hf-info{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:10px}
+#hfest  .hf-ic{display:flex;gap:10px;align-items:flex-start;padding:14px;border-radius:16px;background:rgba(255,255,255,.75);border:1px solid rgba(87,40,147,.1)}
+#hfest  .hf-ic svg{color:#572893;margin-top:2px}
+#hfest  .hf-ic small{display:block;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#6b7474;line-height:1.3}
+#hfest  .hf-ic strong{display:block;font-size:15px;font-weight:600;color:#2d1450;line-height:1.35}
+#hfest  .hf-ic span{display:block;font-size:13px;color:#4d5555;line-height:1.35}
+#hfest  .hf-acts{display:grid;gap:10px}
+#hfest  .hf-acts .hf-btn-reg{background:#ff761e;color:#2d1450;font-size:15px}
+#hfest  .hf-long{display:none}
+
+/* Talleres */
+#hfest  .hf-kids{padding-bottom:56px}
+#hfest  .hf-khead{position:relative;overflow:hidden;border-radius:28px;padding:26px 20px;background:linear-gradient(120deg,rgba(255,255,255,.88),rgba(255,241,232,.92));border:1px solid rgba(255,255,255,.95);box-shadow:0 30px 60px -28px rgba(201,84,12,.35);display:grid;gap:24px;align-items:center}
+#hfest  .hf-khead .hf-h2{color:#2d1450;font-size:34px}
+#hfest  .hf-kcopy{display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+#hfest  .hf-kcopy p{font-size:17px;font-weight:300;line-height:1.65;max-width:480px;text-wrap:pretty}
+#hfest  .hf-kpick{display:flex;flex-direction:column;gap:12px;align-items:stretch}
+#hfest  .hf-kpick .hf-lab{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#6b7474}
+#hfest  .hf-kpick .hf-tabs{align-self:stretch;max-width:none;background:rgba(255,255,255,.7)}
+#hfest  .hf-kpick .hf-note{font-size:15px;color:#4d5555}
+#hfest  .hf-kgrid{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;margin:0;padding:0;list-style:none}
+#hfest  .hf-kcard{display:flex;flex-direction:column;border-radius:22px;overflow:hidden;background:rgba(255,255,255,.88);border:1px solid rgba(255,255,255,.95);box-shadow:0 10px 28px -16px rgba(45,20,80,.22)}
+#hfest  .hf-kbar{height:6px;flex:none}
+#hfest  .hf-kin{padding:20px;display:flex;flex-direction:column;gap:14px;flex:1}
+#hfest  .hf-ktop{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+#hfest  .hf-ktime{display:flex;align-items:baseline;gap:6px}
+#hfest  .hf-ktime b{font-size:32px;font-weight:700;letter-spacing:-.03em;line-height:1;color:#c9540c}
+#hfest  .hf-ktime small{font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6b7474}
+#hfest  .hf-kico{width:46px;height:46px;border-radius:50%;flex:none;background:#fff1e8;color:#c9540c;display:flex;align-items:center;justify-content:center}
+#hfest  .hf-kt{display:flex;flex-direction:column;gap:6px}
+#hfest  .hf-kt h3{font-size:20px;line-height:1.25;font-weight:700;color:#2d1450;text-wrap:pretty}
+#hfest  .hf-kt .hf-ka{font-size:15px;font-weight:500;color:#343a3a;line-height:1.35}
+#hfest  .hf-kt .hf-kd{font-size:15px;font-weight:300;line-height:1.55;color:#343a3a}
+#hfest  .hf-kchips{display:flex;gap:8px;flex-wrap:wrap}
+#hfest  .hf-kchip{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;font-size:13px;font-weight:600;line-height:1.3}
+#hfest  .hf-kchip.c1{background:#fff1e8;color:#a3420a}
+#hfest  .hf-kchip.c2{background:#e6f6f6;color:#01605f}
+#hfest  .hf-kchip.c3{background:#ece4f6;color:#572893}
+#hfest  .hf-kfoot{margin-top:auto;padding-top:6px;display:flex;flex-direction:column;gap:6px}
+#hfest  .hf-kfoot .hf-btn{background:#ff761e;color:#2d1450;font-size:14px;min-height:50px}
+#hfest  .hf-kig{display:inline-flex;align-items:center;gap:6px;min-height:44px;font-weight:600;font-size:14px;color:#01605f}
+
+/* Aviso clave: entrada de adulto */
+#hfest  .hf-notice{display:block;position:relative;z-index:2;background:#2d1450;color:#fff}
+#hfest  .hf-notice-in{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px 14px;padding-block:12px;text-align:center}
+#hfest  .hf-notice .k{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#ffb27a}
+#hfest  .hf-notice .t{font-size:15px;font-weight:500;line-height:1.4;color:#fff;text-wrap:pretty}
+#hfest  .hf-notice .c{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:6px 14px;border-radius:999px;background:#ff761e;color:#2d1450;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+#hfest  .hf-req{display:block;font-size:15px;line-height:1.5;color:#4d5555}
+#hfest  .hf-req a{font-weight:600;text-decoration:underline;text-underline-offset:2px}
+#hfest  .hf-acts .hf-req{flex-basis:100%}
+#hfest  .hf-free{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:999px;background:#e6f6f6;color:#01605f;font-weight:600;font-size:15px;line-height:1.3}
+#hfest  .hf-soon{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:10px 20px;border-radius:999px;background:#ece4f6;color:#572893;font-weight:600;font-size:15px;text-align:center}
+#hfest  .hf-btn-teal{background:#028183;color:#fff}
+#hfest  .hf-tag.is-tar{background:#fff1e8;color:#a3420a}
+#hfest  .hf-pick{align-self:center;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#6b7474;margin-bottom:-12px}
+#hfest  .hf-tab.is-ruta{align-items:center;text-align:center}
+#hfest  .hf-tab.is-ruta span{line-height:1.15}
+
+/* La Ruta del Tutor */
+#hfest  .hf-ruta{border-radius:28px;overflow:hidden;box-shadow:0 30px 60px -28px rgba(45,20,80,.28)}
+#hfest  .hf-ruta-banner{display:block;width:100%;height:auto}
+#hfest  .hf-ruta-bar{height:6px;background:linear-gradient(90deg,#028183,#572893 45%,#ff761e)}
+#hfest  .hf-ruta-in{padding:26px 18px;display:grid;gap:26px;align-items:start}
+#hfest  .hf-ruta-copy{display:flex;flex-direction:column;gap:16px;min-width:0}
+#hfest  .hf-ruta .hf-k{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#01605f}
+#hfest  .hf-ruta h3{font-size:36px;line-height:1.02;letter-spacing:-.025em;font-weight:700;color:#c9540c;text-transform:uppercase}
+#hfest  .hf-ruta-when{display:flex;align-items:baseline;gap:4px 12px;flex-wrap:wrap;color:#572893}
+#hfest  .hf-ruta-when b{font-size:26px;font-weight:700;letter-spacing:-.02em}
+#hfest  .hf-ruta-when i{font-style:normal;font-size:22px;font-weight:300;color:#b394da}
+#hfest  .hf-ruta-when span{font-size:21px;font-weight:500}
+#hfest  .hf-ruta-copy p{font-size:17px;font-weight:400;line-height:1.65;color:#343a3a;text-wrap:pretty}
+#hfest  .hf-ruta-copy p strong{font-weight:600;color:#2d1450}
+#hfest  .hf-badges{display:flex;gap:10px;flex-wrap:wrap}
+#hfest  .hf-badge2{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;font-size:14px;font-weight:600;line-height:1.2}
+#hfest  .hf-badge2.b1{background:#e6f6f6;color:#01605f}
+#hfest  .hf-badge2.b2{background:#ece4f6;color:#572893}
+#hfest  .hf-ruta-list{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+#hfest  .hf-rrow{display:grid;grid-template-columns:76px minmax(0,1fr);gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.88);border:1px solid rgba(87,40,147,.08);box-shadow:0 6px 18px -12px rgba(45,20,80,.22)}
+#hfest  .hf-rrow.is-close{background:#ece4f6;border-color:rgba(87,40,147,.18)}
+#hfest  .hf-rrow .hr{display:flex;align-items:baseline;gap:3px;color:#572893}
+#hfest  .hf-rrow .hr b{font-size:21px;font-weight:700;letter-spacing:-.03em;line-height:1}
+#hfest  .hf-rrow .hr small{font-size:12px;font-weight:600;color:#6b7474}
+#hfest  .hf-rrow .tt{display:block;font-size:16px;font-weight:700;line-height:1.25;color:#2d1450;text-wrap:pretty}
+#hfest  .hf-rrow .ft{display:flex;align-items:center;justify-content:space-between;gap:4px 10px;flex-wrap:wrap;margin-top:5px}
+#hfest  .hf-rrow .sp{font-size:14px;color:#4d5555;line-height:1.3}
+
+/* Footer */
+#hfest  .hf-foot{position:relative;z-index:1;background:#572893;color:#fff}
+#hfest  .hf-foot-line{height:6px;background:linear-gradient(90deg,#028183,#572893 45%,#ff761e)}
+#hfest  .hf-foot-in{display:flex;flex-direction:column;gap:20px;padding-block:36px}
+#hfest  .hf-foot strong{display:block;font-size:26px;font-weight:700;letter-spacing:-.02em;line-height:1.15}
+#hfest  .hf-foot p{font-size:16px;color:#d7c6ec;margin-top:6px}
+#hfest  .hf-foot-links{display:flex;flex-direction:column}
+#hfest  .hf-foot a{display:flex;gap:8px;align-items:center;min-height:44px;color:#fff;font-weight:600;font-size:16px;overflow-wrap:anywhere}
+#hfest  .hf-foot a.hf-mail{color:#d7c6ec;font-weight:400}
+
+/* ---------- Solo móvil (contenedor < 640px): tabs de día fijos y texto más legible ---------- */
+@container hf (max-width:639px){
+  #hfest   #hf-tabs-main{position:sticky;top:calc(var(--hf-offset,0px) + 8px);z-index:15;background:rgba(255,255,255,.94);-webkit-backdrop-filter:none;backdrop-filter:none}
+  #hfest   #hf-tabs-main .hf-tab{padding:8px 10px;gap:6px;min-height:46px}
+  #hfest   #hf-tabs-main .hf-tab span{font-size:13px;letter-spacing:.06em}
+  #hfest   #hf-tabs-main .hf-tab b{font-size:21px}
+  #hfest   #hf-tabs-main .hf-tab em{display:none}
+  #hfest   #hf-tabs-main .hf-tab.is-ruta span{font-size:12px}
+  #hfest   .hf-lead,#hfest  .hf-sum p,#hfest  .hf-kcopy p,#hfest  .hf-kt .hf-kd{font-weight:400}
+  #hfest   .hf-foot-in{padding-bottom:calc(36px + env(safe-area-inset-bottom))}
+}
+
+/* ---------- Tablet (contenedor >= 640px) ---------- */
+@container hf (min-width:640px){
+  #hfest   .hf-wrap{padding-inline:24px}
+  #hfest   .hf-pill .hf-lbl{display:inline}
+  #hfest   .hf-pill{padding:0 16px}
+  #hfest   .hf-hero{gap:36px;padding-top:48px}
+  #hfest   .hf-h1{font-size:58px}
+  #hfest   .hf-lead{font-size:19px}
+  #hfest   .hf-date b{font-size:60px}
+  #hfest   .hf-ctas{display:flex;flex-wrap:wrap}
+  #hfest   .hf-media{padding:14px;border-radius:32px}
+  #hfest   .hf-frame{border-radius:22px}
+  #hfest   .hf-badge{left:28px;bottom:28px;padding:12px 20px 12px 12px}
+  #hfest   .hf-badge-ico{width:44px;height:44px}
+  #hfest   .hf-sec{gap:26px;padding-bottom:64px}
+  #hfest   .hf-h2{font-size:40px}
+  #hfest   .hf-tools{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between}
+  #hfest   .hf-search{flex:1 1 260px;max-width:380px}
+  #hfest   .hf-row{grid-template-columns:104px auto minmax(0,1fr) 44px;grid-template-areas:"time av body chev";gap:18px;padding:20px 24px}
+  #hfest   .hf-time b{font-size:30px}
+  #hfest   .hf-av{width:64px;height:64px;font-size:20px}
+  #hfest   .hf-av + .hf-av{margin-left:-18px}
+  #hfest   .hf-title{font-size:21px}
+  #hfest   .hf-panel-in{margin-inline:24px;grid-template-columns:240px minmax(0,1fr);gap:28px;padding:24px 0 26px}
+  #hfest   .hf-acts{display:flex;flex-wrap:wrap;align-items:center}
+  #hfest   .hf-long{display:inline}
+  #hfest   .hf-short{display:none}
+  #hfest   .hf-khead{padding:40px 32px;grid-template-columns:1.2fr 1fr;gap:32px}
+  #hfest   .hf-khead .hf-h2{font-size:44px}
+  #hfest   .hf-kgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+  #hfest   .hf-kin{padding:22px 24px 24px}
+  #hfest   .hf-kfoot{flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  #hfest   .hf-foot-in{flex-direction:row;justify-content:space-between;align-items:center;padding-block:48px;gap:32px}
+  #hfest   .hf-ruta-in{padding:40px 36px}
+  #hfest   .hf-ruta h3{font-size:48px}
+  #hfest   .hf-rrow{grid-template-columns:88px minmax(0,1fr);padding:14px 18px}
+}
+
+/* ---------- Desktop (contenedor >= 900px) ---------- */
+@container hf (min-width:900px){
+  #hfest   .hf-header-in{padding-block:14px}
+  #hfest   .hf-logo{height:48px}
+  #hfest   .hf-hero{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:56px;align-items:center;padding-top:72px;padding-bottom:32px}
+  #hfest   .hf-h1{font-size:72px}
+  #hfest   .hf-glass{-webkit-backdrop-filter:blur(18px) saturate(170%);backdrop-filter:blur(18px) saturate(170%)}
+  #hfest   .hf-panel-in{grid-template-columns:280px minmax(0,1fr);gap:36px}
+  #hfest   .hf-ruta-in{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:44px}
+  #hfest   .hf-spk{max-width:280px}
+  #hfest   .hf-kgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  #hfest   .hf-khead{padding:48px 44px}
+}
+@container hf (min-width:1100px){
+  #hfest   .hf-h1{font-size:80px}
+}
+
+/* ---------- Hover solo en dispositivos con puntero ---------- */
+@media (hover:hover){
+  #hfest   a:hover{color:#ff761e}
+  #hfest   .hf-btn-purple:hover{background:#4a2280;color:#fff}
+  #hfest   .hf-btn-teal:hover{background:#01605f;color:#fff}
+  #hfest   .hf-btn-orange:hover,#hfest  .hf-acts .hf-btn-reg:hover,#hfest  .hf-kfoot .hf-btn:hover{background:#e5620e;color:#2d1450}
+  #hfest   .hf-btn-line:hover{background:#572893;color:#fff}
+  #hfest   .hf-pill:hover{background:#fff;color:#572893}
+  #hfest   .hf-chip:hover{background:#ece4f6}
+  #hfest   .hf-chip[aria-pressed="true"]:hover{background:#4a2280;color:#fff}
+  #hfest   .hf-tab:hover{background:rgba(87,40,147,.08)}
+  #hfest   .hf-tab[aria-selected="true"]:hover{background:#572893}
+  #hfest   .hf-kids .hf-tab[aria-selected="true"]:hover{background:#ff761e}
+  #hfest   .hf-row:hover .hf-chev{background:#ece4f6}
+  #hfest   .hf-card.is-open .hf-row:hover .hf-chev{background:#4a2280}
+  #hfest   .hf-foot a:hover{color:#ffb37f}
+}
+
+@media (prefers-reduced-motion:reduce){
+  #hfest ,#hfest  *{transition-duration:.01ms!important;animation-duration:.01ms!important}
+}
+</style>
+
+<div id="hfest">
+
+  <header class="hf-header">
+    <div class="hf-wrap hf-header-in">
+      <div>
+        <img class="hf-logo" data-hf="logo" alt="Homeschool Fest" width="117" height="40" hidden>
+        <span class="hf-logo-txt" data-hf="logo-txt" hidden>Homeschool Fest</span>
+      </div>
+      <nav class="hf-social" aria-label="Instagram">
+        <a class="hf-pill" href="https://instagram.com/edukhomes" target="_blank" rel="noopener" aria-label="Instagram @edukhomes"><span data-ico="instagram" data-s="20"></span><span class="hf-lbl">@edukhomes</span></a>
+        <a class="hf-pill" href="https://instagram.com/dawereoficial" target="_blank" rel="noopener" aria-label="Instagram @dawereoficial"><span data-ico="instagram" data-s="20"></span><span class="hf-lbl">@dawereoficial</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <a class="hf-notice" href="https://www.goliiive.com/homeschool-fest" target="_blank" rel="noopener">
+    <div class="hf-wrap hf-notice-in">
+      <span class="k"><span data-ico="ticket" data-s="16"></span>Importante</span>
+      <span class="t">Puedes registrarte en charlas, talleres y la Ruta del Tutor, pero necesitas tener comprada tu entrada de adulto.</span>
+      <span class="c">Confírmala aquí<span data-ico="arrow-right" data-s="14"></span></span>
+    </div>
+  </a>
+
+  <main>
+    <section class="hf-wrap hf-hero">
+      <div class="hf-hero-copy">
+        <div class="hf-eyebrow-row"><i></i><span class="hf-eyebrow">II Edición · Itinerario y registro</span></div>
+        <h1 class="hf-h1">Elige tus charlas y talleres.</h1>
+        <p class="hf-lead">Dos días para vivir, aprender y celebrar la educación en familia. Revisa el itinerario de cada fecha, abre cada sesión para leer su resumen y reserva tu cupo, para ti y para los más pequeños.</p>
+        <div class="hf-meta">
+          <div class="hf-date"><b>23</b><span class="hf-sep">|</span><b>24</b><span class="hf-mes">de<br>octubre</span></div>
+          <div class="hf-where"><small>Ubicación</small><span>Zona rental de la UNIMET · Caracas</span></div>
+        </div>
+        <div class="hf-ctas">
+          <a class="hf-btn hf-btn-purple" href="#hf-charlas" data-act="goto" data-target="hf-charlas"><span data-ico="mic" data-s="18"></span>Charlas para padres y docentes</a>
+          <a class="hf-btn hf-btn-teal" href="#hf-ruta-sec" data-act="ruta"><span data-ico="award" data-s="18"></span>La Ruta del Tutor</a>
+          <a class="hf-btn hf-btn-orange" href="#hf-talleres" data-act="goto" data-target="hf-talleres"><span data-ico="palette" data-s="18"></span>Talleres para niños</a>
+        </div>
+      </div>
+      <div class="hf-media hf-glass">
+        <div class="hf-frame"><img data-hf="hero" alt="Familias disfrutando del Homeschool Fest" width="1200" height="864" hidden></div>
+        <div class="hf-badge hf-glass">
+          <span class="hf-badge-ico" data-ico="ticket" data-s="22"></span>
+          <div><small>Cupos limitados</small><strong>Regístrate por taller</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hf-wrap hf-sec" id="hf-charlas">
+      <div class="hf-sec-head">
+        <span class="hf-eyebrow">Zona Charlas</span>
+        <h2 class="hf-h2">Charlas para padres y docentes</h2>
+        <span class="hf-bar3"></span>
+      </div>
+      <span class="hf-pick">Elige el día</span>
+      <div class="hf-tabs hf-glass" role="tablist" aria-label="Día de las charlas" id="hf-tabs-main"></div>
+      <div class="hf-tools" id="hf-tools">
+        <label class="hf-search"><span class="hf-sr">Buscar charla o speaker</span><span data-ico="search" data-s="18"></span><input type="search" id="hf-q" placeholder="Buscar charla o speaker" autocomplete="off"></label>
+        <div class="hf-chips" id="hf-chips" role="group" aria-label="Filtrar por espacio"></div>
+      </div>
+      <p class="hf-count" id="hf-count" aria-live="polite"></p>
+      <ul class="hf-list" id="hf-list"></ul>
+    </section>
+
+    <section class="hf-wrap hf-sec" id="hf-ruta-sec">
+      <div class="hf-ruta hf-glass" id="hf-ruta"></div>
+    </section>
+
+    <section class="hf-sec hf-kids" id="hf-talleres">
+      <div class="hf-wrap" style="display:flex;flex-direction:column;gap:22px">
+        <div class="hf-khead">
+          <div class="hf-kcopy">
+            <span class="hf-eyebrow">Zona Talleres</span>
+            <h2 class="hf-h2">Talleres para niños</h2>
+            <span class="hf-bar3"></span>
+            <p>Pintar, cantar, bailar, contar y descubrir. Experiencias inmersivas para que los más pequeños aprendan jugando mientras la familia vive el festival.</p>
+          </div>
+          <div class="hf-kpick">
+            <span class="hf-lab">Elige el día</span>
+            <div class="hf-tabs hf-glass" role="tablist" aria-label="Día de los talleres" id="hf-tabs-kids"></div>
+            <span class="hf-note">Cupos por taller · Los niños asisten acompañados de un adulto.</span>
+            <span class="hf-req">Para inscribir a tu hijo necesitas tener comprada tu entrada de adulto. <a href="https://www.goliiive.com/homeschool-fest" target="_blank" rel="noopener">Confírmala aquí</a></span>
+          </div>
+        </div>
+        <ul class="hf-kgrid" id="hf-kgrid"></ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="hf-foot">
+    <div class="hf-foot-line"></div>
+    <div class="hf-wrap hf-foot-in">
+      <div>
+        <strong>Aprender, convivir y celebrar.</strong>
+        <p>23 y 24 de octubre · Zona rental de la UNIMET, Caracas</p>
+      </div>
+      <div class="hf-foot-links">
+        <a href="https://instagram.com/edukhomes" target="_blank" rel="noopener"><span data-ico="instagram" data-s="18"></span>@edukhomes</a>
+        <a href="https://instagram.com/dawereoficial" target="_blank" rel="noopener"><span data-ico="instagram" data-s="18"></span>@dawereoficial</a>
+        <a class="hf-mail" href="mailto:homeschoolfest@dawere.com">homeschoolfest@dawere.com</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ===================== CONFIGURACION ===================== */
+  var CFG = {
+    logo: 'https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa876639f5a41333a6151f3.png',        // URL del logo (PNG con fondo transparente)
+    hero: 'https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/6aa87bb8381d46f46abadb8f.png',        // URL de la foto principal (JPG/WebP)
+    rutaBanner: '',              // opcional: URL del banner horizontal de la Ruta del Tutor (súbelo a Medios de GHL y pega el enlace). Vacío = no se muestra
+    defaultDay: 'vie',           // día inicial de las charlas: 'vie' (23 oct) o 'sab' (24 oct)
+    scrollOffset: 0              // px a reservar arriba al hacer scroll (pon 80 si tu página GHL tiene header fijo)
+  };
+  /* ========================================================= */
+
+  var start = function () {
+    var root = document.getElementById('hfest');
+    if (!root || root.getAttribute('data-ready')) return;
+    root.setAttribute('data-ready', '1');
+    root.style.setProperty('--hf-offset', CFG.scrollOffset + 'px');
+
+    /* ---------- Datos (sin cambios respecto a la versión original) ---------- */
+    var RUTA_FORM = 'https://forms.gle/6YvVjBngPjZ8gCvk6';
+    var TICKET = 'https://www.goliiive.com/homeschool-fest';
+    var IMG = 'https://assets.cdn.filesafe.space/PVXK62Q2DFRjYbDD9AYH/media/';
+    var P = {
+      nathali: IMG + '6acbfe87c478ac5535ad81f8.png',
+      rodolfo: IMG + '6ace1c1ca7201e602b512b9b.jpg',
+      andreaD: IMG + '6ace1c1c412f76b526a45797.jpg',
+      alvanis: IMG + '6ace1c1ebeb75e26e5a9cd88.jpg',
+      cimino: IMG + '6ace1c1f412f76b526a457f6.jpg',
+      sara: IMG + '6ace1c1e883b04e6192832ba.png',
+      gibran: IMG + '6ace1c2004c496731f4e93c6.jpg',
+      jorge: IMG + '6ace1c20beb75e26e5a9cdc4.jpeg',
+      karolena: IMG + '6ace1c20ed5644a05ff18476.jpg',
+      veruzhka: IMG + '6ad2b681cd7225ed379bf39a.jpeg',
+      zoraya: IMG + '6ad51db0436f78fefb7fd0eb.jpeg',
+      daniel: IMG + '6ad51db0f9a985d42cfc6bde.jpeg',
+      venemergencia: IMG + '6ad51db0cd7225ed37d2107b.jpeg',
+      paiva: IMG + '6ace1c20011eef2fd165da6c.jpg',
+      hilda: IMG + '6ad2b680cd7225ed379bf37e.jpg',
+      victoria: IMG + '6ad2b687b3c1e3eb1931bcf2.jpg',
+      alvaro: IMG + '6ad2b68986f4a10b2fae24cd.png',
+      aloha: IMG + '6ad2b686989628c77a2e163a.jpg',
+      flor: IMG + '6ace1c1c883b04e619283280.jpg',
+      francia: IMG + '6ad2b67d86f4a10b2fae23cf.jpg',
+      judith: IMG + '6ad2b68af9a985d42cc67a8b.png',
+      mariana: IMG + '6ace1c2158064d55a7db5eae.png',
+      felix: IMG + '6ad2b684cd7225ed379bf3da.jpg',
+      jesus: IMG + '6ad2b683989628c77a2e1626.jpg'
+    };
+    var MET = 'Salón MET.Espace';
+    var DATA = {
+      vie: [
+        { id:'v1', ruta:true, formUrl:'https://forms.gle/3mE8GxikNYTsN3vv9', time:'9:00 am', dur:'60 min', space:'Auditorio', speaker:'Nathali Perlaza', ig:['@bynathyofficial'], photos:[{key:'nathali', src:P.nathali}], role:'Lic. en Pedagogía Alternativa con maestría en Neurociencias aplicada a la Educación · CEO de Eduk Homes · Directora de Homeschool Fest', title:'Tutores EdukHomes: aliados para el éxito', audience:'Tutores y padres', summary:'Un encuentro de reconocimiento a los tutores EdukHomes, aliados de las familias que educan en casa: cómo acompañan, guían y mentorean el camino de cada estudiante.' },
+        { id:'v2', ruta:true, formUrl:'https://forms.gle/ARNC5Ss3XSKYy5ia7', time:'10:00 am', dur:'30 min', space:MET, speaker:'Jorge Díaz', ig:['@psicodiazj'], photos:[{key:'jorge', src:P.jorge}], role:'Licenciado en Psicología (UCAB) · Máster en Altas Capacidades y Desarrollo de Talentos', title:'Las altas capacidades en la educación', audience:'Padres y docentes', summary:'La familia y la escuela suelen ser los primeros entornos en identificar las altas capacidades; sin embargo, muchos de estos estudiantes pasan desapercibidos debido al desconocimiento y a los mitos arraigados sobre el tema. Esta charla brinda las bases formativas necesarias para reconocer y detectar a este alumnado de manera oportuna.' },
+        { id:'v3', ruta:true, short:'Rescatar la autoridad docente', formUrl:'https://forms.gle/zS9seGCaNS1tn4XKA', time:'11:00 am', dur:'30 min', space:MET, speaker:'Hilda Mar La Chica', ig:['@dra_lachica'], photos:[{key:'hilda', src:P.hilda}], role:'Psicóloga familiar (UCV) · Especialista en el acompañamiento de niños, adolescentes y familias', title:'Rescatar la autoridad docente: límites, respeto y comunicación asertiva en la educación', audience:'Docentes y tutores', summary:'A través de una experiencia narrada y situaciones propias del contexto escolar, esta ponencia invita a reflexionar sobre el docente como referente y ofrece estrategias prácticas para fortalecer su autoridad desde la coherencia, el respeto y la comunicación asertiva: roles, límites y normas claras, consecuencias lógicas y refuerzo positivo.' },
+        { id:'v8', noReg:true, time:'11:20 am', dur:'', space:'Tarima', speaker:'Álvaro González · Dawere', ig:['@dawereoficial'], photos:[{key:'alvaro', src:P.alvaro}], role:'Ingeniero en Telecomunicación · CEO y fundador de Dawere', title:'El sistema educativo nacional que necesitamos para el futuro' },
+        { id:'v4', ruta:true, short:'La ruta bursátil para padres, docentes e hijos', formUrl:'https://forms.gle/xiJnfSfqYTLv2QXf8', time:'12:00 pm', dur:'30 min', space:MET, speaker:'Gibrán González · GoldGlobal', ig:['@goldglobalcorp'], photos:[{key:'gibran', src:P.gibran}], role:'Asesor de Inversiones y Corredor Público de Valores con licencia de la SUNAVAL', title:'La ruta bursátil para padres, docentes e hijos: padres que generan dinero mientras hacen homeschool', audience:'Padres y docentes', summary:'Esta ponencia resume la educación financiera básica que todo padre debe enseñar a su hijo en casa para que comience a crear hábitos financieros, con argumentos sencillos de aplicar al alcance de cualquier presupuesto.' },
+        { id:'v5', ruta:true, short:'Enseñar sin perder la calma', formUrl:'https://forms.gle/w9ubTSGCifTbTjcdA', time:'1:00 pm', dur:'30 min', space:MET, speaker:'Victoria Rodríguez', ig:['@vicoria.teacompana'], photos:[{key:'victoria', src:P.victoria}], role:'Psicóloga social (UCV) · Mamá homeschooler', title:'Enseñar sin perder la calma: regulación emocional, rutinas flexibles y autocuidado en el homeschool', audience:'Padres y docentes', summary:'Acompañar el aprendizaje en casa va más allá de planificar actividades. Exploraremos cómo influye el estado emocional en el aprendizaje, la corregulación del adulto, las rutinas flexibles y el autocuidado parental, con ejemplos cotidianos y herramientas prácticas para que niños y adultos aprendan, se equivoquen, se ajusten y crezcan juntos.' },
+        { id:'v6', ruta:true, short:'Conectados contra el bullying', formUrl:'https://forms.gle/eSxwWA1AFbksVgrU8', time:'2:00 pm', dur:'30 min', space:MET, speaker:'Rodolfo Dordelly Matos', ig:['@elprofedice'], photos:[{key:'rodolfo', src:P.rodolfo}], role:'Licenciado en Educación y Comunicador Social · Profesor universitario · Conferencista', title:'Conectados contra el bullying: ¿qué nos toca hacer a padres, docentes y estudiantes?', audience:'Padres, docentes y tutores', summary:'Prevención, empatía y comunicación activa. Rodolfo Dordelly aborda el bullying desde una perspectiva multidimensional, delimitando la responsabilidad compartida entre el hogar, las aulas y los propios estudiantes, con claves prácticas de oratoria, neurociencia y comunicación asertiva para vencer el miedo y construir redes de apoyo.' },
+        { id:'v7', ruta:true, short:'El nuevo estándar de oro en el idioma', formUrl:'https://forms.gle/yFpcWeTsRpDtzVfH8', time:'3:00 pm', dur:'15 min', space:MET, speaker:'Karolena Jensen · Scholar', ig:['@scholar.esl'], photos:[{key:'karolena', src:P.karolena, zoom:1.35}], role:'Directora Ejecutiva de Scholar Company', title:'El nuevo estándar de oro: elevando al profesional venezolano en el idioma ante la nueva era del país', audience:'Adultos y empresas', summary:'La nueva Venezuela atrae una ola de inversiones que busca certeza y profesionalismo. Muchos líderes poseen el talento técnico, pero su autoridad se diluye por la barrera del idioma. Una charla sobre el inglés general, profesional y técnico como herramienta ganadora: preparar hoy el liderazgo que los retos de mañana exigen.' },
+        { id:'v9', ruta:true, formUrl:'https://forms.gle/daHFSQgdqD2pDY1f8', time:'3:30 pm', dur:'', space:MET, speaker:'Jahnny Mora López · Aloha Mental Arithmetic', ig:['@alohamental_ve'], photos:[{key:'aloha', src:P.aloha, fit:'contain', zoom:0.82}], role:'Licenciada en Psicología · Coach en ALOHA Mental Arithmetic', title:'Aprender matemáticas jugando', audience:'Padres y docentes', summary:'ALOHA Mental Arithmetic es el gimnasio neuronal más grande del mundo, presente en más de 40 países. Los niños aprenden matemáticas en un entorno lúdico, desarrollando ambos hemisferios a la vez gracias a la lógica matemática y la visualización del ábaco.' },
+        { id:'v10', ruta:true, formUrl:'https://forms.gle/PJv1zrdQe9ouKRSm7', time:'4:00 pm', dur:'60 min', space:'Auditorio', speaker:'Flor Zambrano', ig:['@lavidhomeschool'], photos:[{key:'flor', src:P.flor}], role:'Abogada especializada en litigios de familias homeschoolers · Cofundadora de La Vid Homeschool', title:'Legalidad y portafolio del homeschool', audience:'Padres y docentes', summary:'Revisión del marco legal internacional y nacional para que las familias eduquen a sus hijos desde el hogar, y de los elementos del portafolio de evidencias en Venezuela para 2027.' },
+        { id:'v13', ruta:true, formUrl:'https://forms.gle/Y86EyYhkr74j8Dor7', time:'4:00 pm', dur:'', space:MET, speaker:'Zoraya Fermín · PanHouse', ig:['@PanHouseSchool'], photos:[{key:'zoraya', src:P.zoraya}], role:'Casa Editorial PanHouse', title:'La aventura de escribir con PanHouse School' },
+        { id:'v11', ruta:true, short:'Claves del aprendizaje auténtico', formUrl:'https://forms.gle/gLtGbiUVsXCLMJw66', time:'4:30 pm', dur:'', space:MET, speaker:'María Francia Arteaga · ARCA Learning', ig:['@arcalearning'], photos:[{key:'francia', src:P.francia}], role:'Doctoranda en Ciencias de la Educación · Magíster en Lingüística Aplicada · Coautora del Modelo Didáctico A.R.C.A.', title:'Claves del aprendizaje auténtico: comunicación, diversidad de escenarios y resolución de retos', audience:'Docentes y tutores', summary:'Un conversatorio distendido con padres y educadores para reflexionar sobre rutas alternativas de formación: cómo la diversidad de escenarios, el lenguaje y los contextos de la vida real transforman la manera en que los estudiantes se comunican, resuelven problemas genuinos y demuestran lo que saben hacer.' },
+        { id:'v12', ruta:true, formUrl:'https://forms.gle/yrjRuCipwDdNT3Bu6', time:'5:00 pm', dur:'60 min', space:'Auditorio', speaker:'Sara Vanessa Rodríguez', ig:['@saravanz'], photos:[{key:'sara', src:P.sara}], role:'Diseñadora y estratega de marca · Conferencista · Mamá homeschooler · Fundadora y Directora Creativa de Elevanz', title:'Crea experiencias educativas con Inteligencia Artificial', audience:'Padres y docentes', summary:'Cada niño aprende y cada familia enseña distinto, y el homeschooling ofrece la oportunidad de honrar eso. En esta ponencia teórico-práctica, @saravanz comparte cómo la inteligencia artificial puede convertirse en una aliada creativa para diseñar experiencias educativas con sentido: materiales visuales, historias personalizadas y actividades que despiertan la curiosidad, sin perder la esencia humana del aprendizaje.' },
+        { id:'v14', formUrl:'https://forms.gle/ppvH89sdvyJihkvd7', time:'5:00 pm', dur:'30 min', space:MET, speaker:'Fundación Venemergencia', ig:[], photos:[{key:'venemergencia', src:P.venemergencia}], role:'Salud y prevención', title:'Soporte Básico de Vida', audience:'Público general, madres, padres, representantes y cuidadores', summary:'En una emergencia médica, actuar en los primeros minutos es lo que más influye en la supervivencia. La Fundación Venemergencia enseña la cadena de supervivencia, cómo reconocer una emergencia real, cómo activar el sistema de salud y los principios de las compresiones torácicas, para que cada asistente pueda responder como primer respondedor.' },
+        { id:'v15', formUrl:'https://forms.gle/BQhiVhyaQqsULxeR9', time:'5:30 pm', dur:'30 min', space:MET, speaker:'Daniel Álvarez Aserraf · CuidaSalud', ig:[], photos:[{key:'daniel', src:P.daniel}], role:'Ingeniero · Director de CuidaSalud · CEO y fundador de EvaluexCMD', title:'Cuidar a los que enseñan: mitos, realidades y protección ante urgencias médicas', audience:'Docentes, madres y padres', summary:'Cuando el hogar es también la escuela, la seguridad y el bienestar de la familia son la prioridad. Una ponencia práctica de CuidaSalud con las herramientas clave para reaccionar a tiempo ante imprevistos de salud.' }
+      ],
+      sab: [
+        { id:'s1', formUrl:'https://forms.gle/fo9bbCfx9yRGbfG56', time:'10:00 am', dur:'30 min', space:MET, speaker:'Andrea Cimino · Criando entre pantallas', ig:['@criandoentrepantallas'], photos:[{key:'cimino', src:P.cimino}], role:'Abogada y neurocoach, dedicada a la protección de NNA y la seguridad digital', title:'¿Cómo protejo a mi hijo en Internet? 5 decisiones que toda familia debería tomar', audience:'Familias', summary:'¿Basta con instalar controles parentales para mantener a nuestros hijos seguros en Internet? Descubre 5 decisiones prácticas que pueden transformar la manera en que proteges a tus hijos en el mundo digital, desde las primeras pantallas hasta la adolescencia: herramientas, límites, supervisión y, especialmente, las conversaciones que marcan la diferencia.' },
+        { id:'s2', formUrl:'https://forms.gle/6H8rHbBDVyAEXgsn9', time:'11:00 am', dur:'60 min', space:MET, speaker:'Veruzhka Ramírez, Lisbeth Alarcón y Dilsi Santander', ig:['@veruzhkaramirez','@fundacion.nuevaesperanza','@dilsipsico'], photos:[{key:'veruzhka', src:P.veruzhka}], role:'Conversatorio · Miss Venezuela 1997 y conferencista · CEO de Fundación Nueva Esperanza · Psicopedagoga y coach', title:'No viven en su mundo, viven en el nuestro', audience:'Familias', summary:'Un conversatorio dedicado a derribar mitos y tender puentes sobre la realidad de los niños neurodivergentes. Juntas compartirán vivencias, herramientas y perspectivas para comprender que la inclusión empieza cuando miramos desde el corazón y la aceptación.' },
+        { id:'s3', formUrl:'https://forms.gle/UBRP11aNtPqGrX6E9', time:'12:00 pm', dur:'30 min', space:MET, speaker:'María Verónica Paiva · El Cocuyo Lector', ig:['@elcocuyolector'], photos:[{key:'paiva', src:P.paiva}], role:'Licenciada en Educación (UCV) · Especialista en enseñanza de lectura y escritura (UBA)', title:'Palabras que enlazan: taller de lectura y escritura', audience:'Padres, tutores y docentes', summary:'Herramientas útiles y prácticas para acompañar a las infancias en la lectura y la escritura, un vínculo amoroso con los libros y las palabras y más autoestima en cada niño. Para que las familias, más informadas, apoyen activamente a sus hijos y crezca la cultura lectora.' },
+        { id:'s4', formUrl:'https://forms.gle/7ck2ydSRjEYiFJea8', time:'1:00 pm', dur:'30 min', space:MET, speaker:'Judith Suniaga Vicin · SUMA Deportes', ig:['@sumadeporte'], photos:[{key:'judith', src:P.judith}], role:'Socióloga (UCAB) · Magíster en Sustentabilidad y Desarrollo (USB) · Diplomada en Psicología Deportiva', title:'Socializar en libertad: comparativa entre el aula tradicional y el equipo deportivo en la formación integral', audience:'Familias y especialistas', summary:'¿Cómo asegurar una socialización rica, diversa y saludable al educar en casa? Un análisis comparativo entre el aula regular y el entrenamiento deportivo, donde la piscina se vuelve un laboratorio natural de trabajo en equipo, resiliencia, empatía y resolución de conflictos.' },
+        { id:'s5', formUrl:'https://forms.gle/xuxWuhVT4d2GBuVe7', time:'2:00 pm', dur:'60 min', space:MET, speaker:'Mariana Piñero · Mami Especialista', ig:['@mamiespecialista'], photos:[{key:'mariana', src:P.mariana}], role:'Psicopedagoga · Magíster en Orientación Conductual · Especialista en Inteligencia Emocional y Neuropsicología Aplicada', title:'Emociones en familia: experimentar, descubrir y aprender sobre nuestras emociones', audience:'Padres y docentes', summary:'Una experiencia psicoeducativa, participativa y vivencial que invita a niños, adultos y familias a explorar su mundo emocional. A través de dinámicas prácticas y herramientas de autorregulación, los participantes fortalecerán la comunicación familiar y construirán vínculos basados en la empatía, el respeto y la comunicación consciente.' },
+        { id:'s6', formUrl:'https://forms.gle/uffDD4Zm7gLcwmKs9', time:'3:00 pm', dur:'30 min', space:MET, speaker:'Andrea Duarte y Alvanis Redondo', ig:['@mademavzla','@alvanisredondo'], photos:[{key:'andreaD', src:P.andreaD, alt:'Andrea Duarte'},{key:'alvanis', src:P.alvanis, alt:'Alvanis Redondo'}], role:'Conversatorio · Docente de Educación Inicial y tutora homeschool (UCV y EdukHomes) · Administradora', title:'Padres Conecta2', audience:'Padres y docentes', summary:'Un punto de encuentro reflexivo y práctico donde las familias podrán reconocer, validar y potenciar el rol de los padres y madres como los primeros y más importantes maestros de sus hijos. Educar en el hogar no es solo transmitir contenidos, sino construir un vínculo sólido y con propósito para el futuro.' },
+        { id:'s7', formUrl:'https://forms.gle/7jRqnAt3Y7PcEXcM9', time:'3:30 pm', dur:'15 min', space:MET, speaker:'Karolena Jensen · Scholar', ig:['@scholar.esl'], photos:[{key:'karolena', src:P.karolena, zoom:1.35}], role:'Directora Ejecutiva de Scholar Company', title:'Rompiendo barreras en la educación de nuestros niños ante un idioma', audience:'Familias e instituciones educativas', summary:'La importancia de incorporar un segundo idioma a la vida de nuestros niños, tanto en lo cotidiano como en lo académico, aplicando el Scholar Method y rompiendo las barreras que suelen tener ante el idioma por la manera en que se imparte.' },
+        { id:'s8', formUrl:'https://forms.gle/GrEQhePwCF7sFmib9', time:'4:00 pm', dur:'60 min', space:MET, speaker:'Félix Zabala', ig:['@vidahomeschoolingvzla'], photos:[{key:'felix', src:P.felix, pos:'center top'}], role:'Abogado, especialista en DD. HH. y Derecho Penal · Padre homeschooler · Autor de «Fuera de la escuela, dentro de la ley»', title:'Fuera de la escuela, dentro de la ley', audience:'Docentes y tutores', summary:'Una guía jurídica para familias que consideran la educación en el hogar como una opción alternativa, personalizada y legal. El mito de la ilegalidad del homeschooling en Venezuela se fundamenta en la desinformación: esta charla empodera a las familias que deciden tomar esta ruta.' },
+        { id:'s10', noReg:true, time:'4:00 pm', dur:'', space:'Auditorio', speaker:'Álvaro González · Dawere', ig:['@dawereoficial'], photos:[{key:'alvaro', src:P.alvaro}], role:'Ingeniero en Telecomunicación · CEO y fundador de Dawere', title:'Cómo lanzar tu propio colegio virtual o híbrido con Edugogo.ai' },
+        { id:'s9', formUrl:'https://forms.gle/5XPevzgFdMePQKK7A', time:'5:00 pm', dur:'', space:MET, speaker:'Jesús Villarroel', ig:['@jesuseduardoeltiempo'], photos:[{key:'jesus', src:P.jesus}], role:'Ingeniero en Electrónica · Investigador del tiempo de vida · Autor de «La Teoría del Anticrono»', title:'El homeschooling y el anticrono: la segunda ola', audience:'Padres, docentes, tutores y empresarios', summary:'Un niño vive su etapa de mayor capacidad para aprender justo cuando el entorno digital se lleva casi todas sus horas libres. En esta ponencia haremos en vivo el análisis de las 24 horas de un niño para descubrir cuánto tiempo real le queda, cuánta atención personalizada recibe y quién está formando su Fase de Absorción.' }
+      ]
+    };
+    var KIDS = {
+      vie: [
+        { formUrl:'https://forms.gle/koi5fv5UECGu6tWW8', time:'12:00 pm', title:'Taller de música', academy:'Academia de música David Fori Rock Camp', ig:'@davidfori.schoolofmusic', space:'Salón infantil', cap:50, icon:'music' },
+        { formUrl:'https://forms.gle/EJxG44h1rTnAdHAv9', time:'1:00 pm', title:'Descubre tus habilidades y cualidades', academy:'Keter Do X', ig:'@keterdx', space:'Salón infantil', cap:50, icon:'sparkles' },
+        { formUrl:'https://forms.gle/Hm7CMYDGPPq2R6Wv5', time:'2:00 pm', title:'Habilidad matemática y aritmética', academy:'Aloha Mental Arithmetic · Jahnny Mora', ig:'@alohamental_ve', space:'Salón infantil', cap:50, icon:'calculator' },
+        { formUrl:'https://forms.gle/iXC7P5z65pAGDQ5W9', time:'3:00 pm', title:'Iniciación al inglés', academy:'Scholar', ig:'@scholar.esl', space:'Salón infantil', cap:50, icon:'languages' },
+        { formUrl:'https://forms.gle/Y86EyYhkr74j8Dor7', time:'4:00 pm', title:'La aventura de escribir con PanHouse School', academy:'Zoraya Fermín · Casa Editorial PanHouse', ig:'@PanHouseSchool', space:MET, cap:15, ages:'7 a 11 años, con sus padres', icon:'pencil' }
+      ],
+      sab: [
+        { formUrl:'https://forms.gle/LY3vUgYbYFx3pJFB6', time:'11:00 am', title:'Pintura colectiva', academy:'J. Yépez', ig:'@jotayepez_art', space:'Zona de Artes · al aire libre', cap:150, ages:'Todas las edades', icon:'palette', detail:'Todos los niños pintan la misma obra al mismo tiempo.' },
+        { formUrl:'https://forms.gle/6AmFYgwtLtbXm8mK8', time:'12:00 pm', title:'Iniciación al inglés', academy:'OnEnglish Oficial · Jackson Amesty', ig:'@onenglishoficial', space:'Salón infantil', cap:50, ages:'8 a 17 años', icon:'languages' },
+        { formUrl:'https://forms.gle/jcH1YRMANgTPHYur8', time:'1:00 pm', title:'Taller de ballet', academy:'Danzarte', ig:'@danzartecaracas', space:'Salón infantil', cap:50, icon:'footprints' },
+        { formUrl:'https://forms.gle/mLtz4QYfZfLoQooEA', time:'2:00 pm', title:'Taller de música', academy:'Mística y Talentos', ig:'@misticaytalentos', space:'Salón infantil', cap:40, ages:'8 a 11 años', icon:'music' },
+        { formUrl:'https://forms.gle/xYo8xpb9CUJgwx7dA', time:'3:00 pm', title:'Teatro musical para niños', academy:'La Escuela CFC', ig:'@laescuelacfc', space:'Salón infantil', cap:50, icon:'drama', detail:'Cierra con una presentación artística en la carpa principal.' }
+      ]
+    };
+    var DAYS = { vie: { label: 'Viernes', num: '23', full: 'Viernes 23 de octubre' }, sab: { label: 'Sábado', num: '24', full: 'Sábado 24 de octubre' } };
+    var ZONE = 'Zona Charlas · Homeschool Fest';
+
+    /* ---------- Iconos (Lucide) ---------- */
+    var ICONS = {
+      instagram: '<rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>',
+      mic: '<path d="M12 19v3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><rect x="9" y="2" width="6" height="13" rx="3"/>',
+      palette: '<path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>',
+      ticket: '<path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/>',
+      'map-pin': '<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/>',
+      clock: '<path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/>',
+      users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/>',
+      check: '<path d="M20 6 9 17l-5-5"/>',
+      award: '<path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/>',
+      'chevron-down': '<path d="m6 9 6 6 6-6"/>',
+      'arrow-right': '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+      search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+      music: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+      sparkles: '<path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/>',
+      calculator: '<rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/>',
+      languages: '<path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/>',
+      pencil: '<path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/>',
+      footprints: '<path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"/><path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"/><path d="M16 17h4"/><path d="M4 13h4"/>',
+      drama: '<path d="M10 11h.01"/><path d="M14 6h.01"/><path d="M18 6h.01"/><path d="M6.5 13.1h.01"/><path d="M22 5c0 9-4 12-6 12s-6-3-6-12c0-2 2-3 6-3s6 1 6 3"/><path d="M17.4 9.9c-.8.8-2 .8-2.8 0"/><path d="M10.1 7.1C9 7.2 7.7 7.7 6 8.6c-3.5 2-4.7 3.9-3.7 5.6 4.5 7.8 9.5 8.4 11.2 7.4.9-.5 1.9-2.1 1.9-4.7"/><path d="M9.1 16.5c.3-1.1 1.4-1.7 2.4-1.4"/>'
+    };
+    var ico = function (n, s) {
+      return '<svg width="' + s + '" height="' + s + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' + (ICONS[n] || '') + '</svg>';
+    };
+
+    /* ---------- Utilidades ---------- */
+    var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+    var norm = function (s) { return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); };
+    var igUrl = function (h) { return 'https://instagram.com/' + h.replace('@', ''); };
+    var initials = function (n) { return n.split('·')[0].replace(/,| y /g, ' ').trim().split(/\s+/).filter(function (w) { return /^[A-ZÁÉÍÓÚÑ]/.test(w); }).slice(0, 2).map(function (w) { return w[0]; }).join(''); };
+    var $ = function (id) { return document.getElementById(id); };
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ---------- Imágenes principales ---------- */
+    var setImg = function (key, url) {
+      var el = root.querySelector('[data-hf="' + key + '"]');
+      if (!el) return;
+      if (url && url.indexOf('http') === 0) {
+        el.addEventListener('error', function () { el.hidden = true; if (key === 'logo') root.querySelector('[data-hf="logo-txt"]').hidden = false; });
+        el.src = url; el.hidden = false;
+        if (key === 'hero') { el.setAttribute('fetchpriority', 'high'); }
+      } else if (key === 'logo') {
+        root.querySelector('[data-hf="logo-txt"]').hidden = false;
+      }
+    };
+    setImg('logo', CFG.logo);
+    setImg('hero', CFG.hero);
+
+    var hydrateIcons = function (scope) {
+      var nodes = scope.querySelectorAll('[data-ico]');
+      for (var i = 0; i < nodes.length; i++) { nodes[i].innerHTML = ico(nodes[i].getAttribute('data-ico'), nodes[i].getAttribute('data-s') || 18); nodes[i].removeAttribute('data-ico'); }
+    };
+    hydrateIcons(root);
+
+    /* ---------- Estado ---------- */
+    var today = new Date();
+    var autoDay = (today.getMonth() === 9 && today.getDate() === 24) ? 'sab' : null;
+    var state = { day: autoDay || CFG.defaultDay, kidDay: autoDay || (CFG.defaultDay === 'sab' ? 'sab' : 'vie'), open: null, q: '', space: '' };
+    var listEl = $('hf-list');
+
+    /* ---------- Tabs ---------- */
+    var tabsHTML = function (kind, cur) {
+      var keys = Object.keys(DAYS);
+      return keys.map(function (k) {
+        var sel = k === cur, r = k === 'ruta';
+        return '<button type="button" class="hf-tab' + (r ? ' is-ruta' : '') + '" role="tab" id="hf-tab-' + kind + '-' + k + '" aria-selected="' + sel + '" tabindex="' + (sel ? 0 : -1) + '" data-act="' + kind + '" data-day="' + k + '">' +
+          (r ? '<span>Ruta del Tutor</span>' : '<span>' + DAYS[k].label + '</span><b>' + DAYS[k].num + '</b>' + (kind === 'day' ? '<em>oct</em>' : '')) + '</button>';
+      }).join('');
+    };
+
+    /* ---------- Fotos ---------- */
+    var photoImg = function (p, alt) {
+      var st = 'object-fit:' + (p.fit || 'cover') + ';object-position:' + (p.pos || 'center 20%') + ';' + (p.zoom ? 'transform:scale(' + p.zoom + ');' : '');
+      return '<img src="' + esc(p.src) + '" alt="' + esc(alt) + '" loading="lazy" decoding="async" style="' + st + '">';
+    };
+
+    var spaceCls = function (sp) { return sp === 'Auditorio' ? 'is-aud' : sp === 'Tarima' ? 'is-tar' : 'is-met'; };
+
+    /* ---------- Charlas ---------- */
+    var sessionHTML = function (s) {
+      var parts = s.time.split(' '), h = parts[0], ap = parts[1];
+      var ini = esc(initials(s.speaker));
+      var avs = (s.photos || []).map(function (p) { return '<span class="hf-av" data-ini="' + ini + '">' + photoImg(p, p.alt || s.speaker) + '</span>'; }).join('') ||
+        '<span class="hf-av">' + ini + '</span>';
+      var ig = (s.ig && s.ig.length) ? '<i>' + ico('instagram', 15) + esc(s.ig[0]) + '</i>' : '';
+      return '<li class="hf-card hf-glass" data-id="' + s.id + '">' +
+        '<div class="hf-card-bar"></div>' +
+        '<h3 class="hf-card-h"><button type="button" class="hf-row" aria-expanded="false" aria-controls="hf-p-' + s.id + '" data-act="toggle" data-id="' + s.id + '">' +
+        '<span class="hf-time"><b>' + esc(h) + '</b><small>' + esc(ap) + '</small></span>' +
+        '<span class="hf-avs">' + avs + '</span>' +
+        '<span class="hf-body">' +
+          '<span class="hf-tags"><span class="hf-tag ' + spaceCls(s.space) + '">' + esc(s.space) + '</span>' + (s.dur ? '<span class="hf-dur">Duración ' + esc(s.dur) + '</span>' : '') + '</span>' +
+          '<span class="hf-title">' + esc(s.title) + '</span>' +
+          '<span class="hf-who"><span>' + esc(s.speaker) + '</span>' + ig + '</span>' +
+        '</span>' +
+        '<span class="hf-chev" aria-hidden="true">' + ico('chevron-down', 20) + '</span>' +
+        '</button></h3>' +
+        '<div class="hf-panel" id="hf-p-' + s.id + '" role="region" aria-label="Detalle: ' + esc(s.title) + '"><div class="hf-panel-clip"><div class="hf-panel-in"></div></div></div>' +
+        '</li>';
+    };
+
+    var panelHTML = function (s) {
+      var ini = esc(initials(s.speaker));
+      var photos = (s.photos || []).map(function (p) { return '<span class="hf-ph" data-ini="' + ini + '">' + photoImg(p, p.alt || s.speaker) + '</span>'; }).join('');
+      var igs = (s.ig || []).map(function (h) { return '<a class="hf-btn hf-btn-line" href="' + esc(igUrl(h)) + '" target="_blank" rel="noopener">' + ico('instagram', 18) + esc(h) + '</a>'; }).join('');
+      var req = '<span class="hf-req">Requisito: tener comprada tu entrada de adulto. <a href="' + TICKET + '" target="_blank" rel="noopener">Confírmala en goliiive.com</a></span>';
+      var action = s.noReg ? '<span class="hf-free">' + ico('check', 18) + 'No necesita registro · acceso libre con tu entrada</span>' :
+        s.formUrl ? req + '<a class="hf-btn hf-btn-reg" href="' + esc(s.formUrl) + '" target="_blank" rel="noopener"><span class="hf-long">Regístrate en esta charla</span><span class="hf-short">Regístrate</span>' + ico('arrow-right', 18) + '</a>' :
+        req + '<span class="hf-soon">Enlace de registro próximamente</span>';
+      var info = function (icon, label, main, sub) {
+        return '<div class="hf-ic">' + ico(icon, 18) + '<div><small>' + label + '</small><strong>' + esc(main) + '</strong>' + (sub ? '<span>' + esc(sub) + '</span>' : '') + '</div></div>';
+      };
+      return '<div class="hf-spk">' + (photos ? '<div class="hf-photos">' + photos + '</div>' : '') + '<span class="hf-role">' + esc(s.role || s.speaker) + '</span></div>' +
+        '<div class="hf-det">' +
+          '<div class="hf-sum"><span class="hf-eyebrow">Resumen</span><p>' + esc(s.summary || 'El resumen de esta sesión estará disponible muy pronto.') + '</p></div>' +
+          '<div class="hf-info">' +
+            info('map-pin', 'Ubicación', s.space, ZONE) +
+            info('clock', 'Horario', s.time + (s.dur ? ' · ' + s.dur : ''), DAYS[state.day].full) +
+            (s.audience ? info('users', 'Dirigido a', s.audience, '') : '') +
+          '</div>' +
+          '<div class="hf-acts">' + action + igs + '</div>' +
+        '</div>';
+    };
+
+    var visible = function () {
+      var q = norm(state.q).trim();
+      return (DATA[state.day] || []).filter(function (s) {
+        if (state.space && s.space !== state.space) return false;
+        if (!q) return true;
+        return norm([s.title, s.speaker, s.role, s.audience].join(' ')).indexOf(q) > -1;
+      });
+    };
+
+    var renderChips = function () {
+      var spaces = [];
+      (DATA[state.day] || []).forEach(function (s) { if (spaces.indexOf(s.space) < 0) spaces.push(s.space); });
+      var all = [''].concat(spaces);
+      $('hf-chips').innerHTML = all.map(function (sp) {
+        return '<button type="button" class="hf-chip" aria-pressed="' + (state.space === sp) + '" data-act="space" data-space="' + esc(sp) + '">' + (sp || 'Todas') + '</button>';
+      }).join('');
+    };
+
+    var renderList = function () {
+      var items = visible();
+      if (!items.some(function (s) { return s.id === state.open; })) state.open = null;
+      $('hf-count').textContent = items.length + (items.length === 1 ? ' charla' : ' charlas') + ' · ' + DAYS[state.day].full;
+      listEl.setAttribute('aria-labelledby', 'hf-tab-day-' + state.day);
+      listEl.innerHTML = items.length ? items.map(sessionHTML).join('') :
+        '<li class="hf-empty hf-glass"><span>No encontramos charlas con ese filtro.</span><button type="button" class="hf-btn hf-btn-line" data-act="clear">Limpiar filtros</button></li>';
+    };
+
+    /* ---------- La Ruta del Tutor ---------- */
+    var renderRuta = function () {
+      var rows = DATA.vie.filter(function (s) { return s.ruta; });
+      var banner = (CFG.rutaBanner && CFG.rutaBanner.indexOf('http') === 0) ? '<img class="hf-ruta-banner" src="' + esc(CFG.rutaBanner) + '" alt="La Ruta del Tutor · Viernes 23 de octubre · 9 AM a 6 PM · Zona rental UNIMET" width="2000" height="500" decoding="async" onerror="this.style.display=\'none\'">' : '';
+      $('hf-ruta').innerHTML = banner + '<div class="hf-ruta-bar"></div><div class="hf-ruta-in">' +
+        '<div class="hf-ruta-copy">' +
+          '<span class="hf-k">Formación para tutores</span>' +
+          '<h3>La Ruta del Tutor</h3>' +
+          '<div class="hf-ruta-when"><b>Viernes 23</b><i>|</i><span>9:00 am – 6:00 pm</span></div>' +
+          '<p>Al participar en la Ruta del Tutor <strong>obtendrás un certificado de participación avalado por EDUKHOMES y DAWERE con 15 horas académicas</strong>, aportando valor a tu currículum y dándole así inicio a tu camino como tutor homeschool.</p>' +
+          '<div class="hf-badges"><span class="hf-badge2 b1">' + ico('award', 18) + 'Certificado · 15 horas académicas</span><span class="hf-badge2 b2">' + ico('mic', 18) + rows.length + ' charlas</span><span class="hf-badge2 b2">' + ico('users', 18) + 'Para padres y docentes</span></div>' +
+          '<div class="hf-ctas"><a class="hf-btn hf-btn-orange" href="' + RUTA_FORM + '" target="_blank" rel="noopener">Regístrate en la Ruta del Tutor' + ico('arrow-right', 18) + '</a></div>' +
+          '<span class="hf-req">Requisito: tener comprada tu entrada de adulto. <a href="' + TICKET + '" target="_blank" rel="noopener">Confírmala en goliiive.com</a></span>' +
+        '</div>' +
+        '<ul class="hf-ruta-list">' + rows.map(function (s) {
+          var parts = s.time.split(' ');
+          return '<li class="hf-rrow"><span class="hr"><b>' + esc(parts[0]) + '</b><small>' + esc(parts[1]) + '</small></span>' +
+            '<span><span class="tt">' + esc(s.short || s.title) + '</span><span class="ft"><span class="sp">' + esc(s.speaker) + '</span><span class="hf-tag ' + spaceCls(s.space) + '">' + esc(s.space) + '</span></span></span></li>';
+        }).join('') + '<li class="hf-rrow is-close"><span class="hr"><b>6:00</b><small>pm</small></span><span><span class="tt">Cierre Ruta del Tutor</span></span></li></ul></div>';
+    };
+
+    var renderMain = function () { renderList(); };
+
+    var renderTabs = function () {
+      $('hf-tabs-main').innerHTML = tabsHTML('day', state.day);
+      $('hf-tabs-kids').innerHTML = tabsHTML('kid', state.kidDay);
+    };
+
+    /* ---------- Talleres ---------- */
+    var renderKids = function () {
+      $('hf-kgrid').setAttribute('aria-labelledby', 'hf-tab-kid-' + state.kidDay);
+      $('hf-kgrid').innerHTML = KIDS[state.kidDay].map(function (k, i) {
+        var parts = k.time.split(' ');
+        var bar = i % 2 ? 'linear-gradient(90deg,#ff761e,#ffb27a)' : 'linear-gradient(90deg,#ff761e,#572893)';
+        return '<li class="hf-kcard"><div class="hf-kbar" style="background:' + bar + '"></div><div class="hf-kin">' +
+          '<div class="hf-ktop"><div class="hf-ktime"><b>' + esc(parts[0]) + '</b><small>' + esc(parts[1]) + '</small></div><span class="hf-kico">' + ico(k.icon, 22) + '</span></div>' +
+          '<div class="hf-kt"><h3>' + esc(k.title) + '</h3><span class="hf-ka">' + esc(k.academy) + '</span>' + (k.detail ? '<span class="hf-kd">' + esc(k.detail) + '</span>' : '') + '</div>' +
+          '<div class="hf-kchips"><span class="hf-kchip c1">' + ico('map-pin', 14) + esc(k.space) + '</span><span class="hf-kchip c2">' + ico('users', 14) + k.cap + ' cupos</span>' + (k.ages ? '<span class="hf-kchip c3">' + esc(k.ages) + '</span>' : '') + '</div>' +
+          '<div class="hf-kfoot"><a class="hf-btn" href="' + esc(k.formUrl) + '" target="_blank" rel="noopener">Inscribir a mi hijo' + ico('arrow-right', 16) + '</a>' +
+          (k.ig ? '<a class="hf-kig" href="' + esc(igUrl(k.ig)) + '" target="_blank" rel="noopener">' + ico('instagram', 15) + esc(k.ig) + '</a>' : '') + '</div>' +
+          '</div></li>';
+      }).join('');
+    };
+
+    /* ---------- Abrir / cerrar charla ---------- */
+    var findSession = function (id) { return DATA[state.day].filter(function (s) { return s.id === id; })[0]; };
+    var setOpen = function (id, on) {
+      var card = listEl.querySelector('[data-id="' + id + '"]');
+      if (!card) return null;
+      if (on && !card.getAttribute('data-built')) {
+        card.querySelector('.hf-panel-in').innerHTML = panelHTML(findSession(id));
+        card.setAttribute('data-built', '1');
+      }
+      card.classList.toggle('is-open', on);
+      card.querySelector('.hf-row').setAttribute('aria-expanded', on ? 'true' : 'false');
+      return card;
+    };
+    var toggle = function (id) {
+      var prev = state.open, card;
+      if (prev) setOpen(prev, false);
+      if (prev === id) { state.open = null; return; }
+      state.open = id;
+      card = setOpen(id, true);
+      if (!card) return;
+      setTimeout(function () {
+        /* En móvil los tabs de día quedan fijos arriba: se reserva su alto para que no tapen la tarjeta */
+        var top = card.getBoundingClientRect().top, off = CFG.scrollOffset + (root.offsetWidth < 640 ? 68 : 0);
+        if (top < off + 8 || top > window.innerHeight * 0.55) {
+          window.scrollTo({ top: top + (window.pageYOffset || document.documentElement.scrollTop) - off - 12, behavior: reduce ? 'auto' : 'smooth' });
+        }
+      }, reduce ? 0 : 330);
+    };
+
+    var goto = function (id) {
+      var el = $(id);
+      if (!el) return;
+      var top = el.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop) - CFG.scrollOffset;
+      window.scrollTo({ top: top, behavior: reduce ? 'auto' : 'smooth' });
+    };
+
+    /* ---------- Eventos ---------- */
+    root.addEventListener('click', function (e) {
+      var t = e.target.closest ? e.target.closest('[data-act]') : null;
+      if (!t || !root.contains(t)) return;
+      var act = t.getAttribute('data-act');
+      if (act === 'toggle') { toggle(t.getAttribute('data-id')); }
+      else if (act === 'day') { state.day = t.getAttribute('data-day'); state.open = null; state.space = ''; renderTabs(); renderChips(); renderMain(); }
+      else if (act === 'kid') { state.kidDay = t.getAttribute('data-day'); renderTabs(); renderKids(); }
+      else if (act === 'space') { state.space = t.getAttribute('data-space'); renderChips(); renderList(); }
+      else if (act === 'clear') { state.q = ''; state.space = ''; $('hf-q').value = ''; renderChips(); renderList(); }
+      else if (act === 'ruta') { e.preventDefault(); goto('hf-ruta-sec'); }
+      else if (act === 'goto') { e.preventDefault(); goto(t.getAttribute('data-target')); }
+    });
+
+    root.addEventListener('keydown', function (e) {
+      var t = e.target;
+      if (!t.getAttribute || t.getAttribute('role') !== 'tab') return;
+      var k = e.key;
+      if (k !== 'ArrowLeft' && k !== 'ArrowRight' && k !== 'Home' && k !== 'End') return;
+      e.preventDefault();
+      var tabs = Array.prototype.slice.call(t.parentNode.querySelectorAll('[role="tab"]'));
+      var i = tabs.indexOf(t);
+      i = k === 'Home' ? 0 : k === 'End' ? tabs.length - 1 : (i + (k === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+      tabs[i].click();
+      var again = root.querySelector('#' + tabs[i].id);
+      if (again) again.focus();
+    });
+
+    var timer;
+    $('hf-q').addEventListener('input', function (e) {
+      var v = e.target.value;
+      clearTimeout(timer);
+      timer = setTimeout(function () { state.q = v; renderList(); }, 140);
+    });
+
+    /* Si una foto no carga, se muestran las iniciales del speaker */
+    root.addEventListener('error', function (e) {
+      var im = e.target;
+      if (!im || im.tagName !== 'IMG') return;
+      var p = im.parentNode;
+      if (p && p.getAttribute && p.getAttribute('data-ini') != null) { p.removeChild(im); p.textContent = p.getAttribute('data-ini'); }
+    }, true);
+
+    /* ---------- Inicio ---------- */
+    renderTabs(); renderChips(); renderMain(); renderRuta(); renderKids();
+  };
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
+</script>
