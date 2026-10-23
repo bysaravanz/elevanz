@@ -1,0 +1,2859 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+// GENERATED from dc-runtime/src/*.ts — do not edit. Rebuild with `cd dc-runtime && bun run build`.
+"use strict";
+(() => {
+  var __defProp = Object.defineProperty;
+  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+  var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+
+  // src/react.ts
+  function getReact() {
+    const R = window.React;
+    if (!R) throw new Error("dc-runtime: window.React is not available yet");
+    return R;
+  }
+  function getReactDOM() {
+    const RD = window.ReactDOM;
+    if (!RD) throw new Error("dc-runtime: window.ReactDOM is not available yet");
+    return RD;
+  }
+  var h = ((...args) => getReact().createElement(
+    ...args
+  ));
+
+  // src/parse.ts
+  function parseDcDocument(doc) {
+    const dc = doc.querySelector("x-dc");
+    if (!dc) return null;
+    const scriptEl = doc.querySelector("script[data-dc-script]");
+    const { props, preview } = parseDataProps(
+      scriptEl?.getAttribute("data-props") ?? null
+    );
+    return {
+      template: dc.innerHTML,
+      js: scriptEl ? scriptEl.textContent || "" : "",
+      props,
+      preview
+    };
+  }
+  function parseDcText(src) {
+    const openMatch = /<x-dc(?:\s[^>]*)?>/.exec(src);
+    if (!openMatch) return null;
+    const close = src.lastIndexOf("</x-dc>");
+    if (close === -1 || close < openMatch.index) return null;
+    const template = src.slice(openMatch.index + openMatch[0].length, close);
+    const doc = new DOMParser().parseFromString(src, "text/html");
+    const scriptEl = doc.querySelector("script[data-dc-script]");
+    const { props, preview } = parseDataProps(
+      scriptEl?.getAttribute("data-props") ?? null
+    );
+    return {
+      template,
+      js: scriptEl ? scriptEl.textContent || "" : "",
+      props,
+      preview
+    };
+  }
+  function parseDataProps(raw) {
+    if (!raw) return { props: null, preview: null };
+    let parsed;
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      return { props: null, preview: null };
+    }
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return { props: null, preview: null };
+    }
+    const obj = parsed;
+    const preview = obj.$preview && typeof obj.$preview === "object" ? obj.$preview : null;
+    const rest = {};
+    for (const k of Object.keys(obj)) {
+      if (k[0] !== "$") rest[k] = obj[k];
+    }
+    return { props: Object.keys(rest).length ? rest : null, preview };
+  }
+  function dcNameFromPath(pathname) {
+    let p = pathname || "";
+    try {
+      p = decodeURIComponent(p);
+    } catch {
+    }
+    const base = p.split("/").pop() || "Root";
+    return base.replace(/\.dc\.html$/, "").replace(/\.html?$/, "") || "Root";
+  }
+
+  // src/boot.ts
+  var BASE_CSS = `
+    .sc-placeholder{background:color-mix(in srgb,currentColor 8%,transparent);
+      border:1px solid color-mix(in srgb,currentColor 50%,transparent);
+      border-radius:2px;box-sizing:border-box;overflow:hidden}
+    @keyframes sc-shine{0%{background-position:100% 50%}100%{background-position:0% 50%}}
+    html.sc-dc-streaming .sc-placeholder,
+    html.sc-dc-streaming .sc-interp.sc-missing{position:relative;
+      background:color-mix(in srgb,currentColor 5%,transparent);
+      border-color:transparent}
+    html.sc-dc-streaming .sc-placeholder::before,
+    html.sc-dc-streaming .sc-interp.sc-missing::before{content:'';
+      position:absolute;inset:0;pointer-events:none;
+      background:linear-gradient(90deg,rgba(217,119,87,0) 25%,rgba(247,225,211,.95) 37%,rgba(217,119,87,0) 63%);
+      background-size:400% 100%;animation:sc-shine 1.4s ease infinite}
+    html.sc-dc-streaming .sc-placeholder:nth-child(n+9 of .sc-placeholder)::before,
+    html.sc-dc-streaming .sc-interp.sc-missing:nth-child(n+9 of .sc-interp.sc-missing)::before{animation:none;
+      background:color-mix(in srgb,currentColor 8%,transparent)}
+    .sc-placeholder-error{padding:4px 8px;font:11px/1.4 ui-monospace,monospace;
+      color:color-mix(in srgb,currentColor 70%,transparent);word-break:break-word}
+    .sc-interp.sc-missing{display:inline-block;width:2em;height:1em;overflow:hidden;
+      vertical-align:text-bottom;background:rgba(255,255,255,.3);border:1px solid rgba(0,0,0,.5);
+      border-radius:2px;box-sizing:border-box;color:transparent;
+      user-select:none}
+    .sc-interp.sc-unresolved{font-family:ui-monospace,monospace;font-size:.85em;
+      color:color-mix(in srgb,currentColor 50%,transparent);
+      background:color-mix(in srgb,currentColor 10%,transparent);border-radius:3px;
+      padding:0 3px}
+    .sc-host.sc-has-error{position:relative}
+    .sc-logic-error{position:absolute;top:8px;left:8px;z-index:2147483647;max-width:60ch;
+      padding:6px 10px;background:#b00020;color:#fff;font:12px/1.4 ui-monospace,monospace;
+      border-radius:4px;white-space:pre-wrap;pointer-events:none}
+    /* Mirrors PRINT_BASELINE_CSS in apps/web deck-stage-export.ts \u2014 keep both
+       in sync until dc-runtime regains a build step. */
+    @media print {
+      @page { margin: 0.5cm; }
+      figure, table { break-inside: avoid; }
+      #dc-root, #dc-root > .sc-host { height: auto; }
+      *, *::before, *::after {
+        print-color-adjust: exact; -webkit-print-color-adjust: exact;
+        backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+        animation-delay: -99s !important; animation-duration: .001s !important;
+        animation-iteration-count: 1 !important; animation-fill-mode: both !important;
+        animation-play-state: running !important; transition-duration: 0s !important;
+      }
+    }
+  `;
+  var FULL_PAGE_CSS = "html,body{height:100%;margin:0}#dc-root,#dc-root>.sc-host{height:100%}";
+  function rootNameForDocument(doc, loc) {
+    let bootPath = loc.pathname || "";
+    if (!/\.dc\.html?$/i.test(safeDecode(bootPath))) {
+      try {
+        bootPath = new URL(doc.baseURI || "/").pathname;
+      } catch {
+      }
+    }
+    return dcNameFromPath(bootPath);
+  }
+  function safeDecode(s) {
+    try {
+      return decodeURIComponent(s);
+    } catch {
+      return s;
+    }
+  }
+  function boot(runtime, doc = document) {
+    const parsed = parseDcDocument(doc);
+    if (!parsed) return null;
+    const React = getReact();
+    const rootName = rootNameForDocument(doc, location);
+    runtime.markFetched(rootName);
+    runtime.setRootName(rootName);
+    runtime.adoptParsed(rootName, parsed);
+    if (!window.__resources) {
+      fetch(location.href).then((res) => res.ok ? res.text() : "").then((t) => {
+        const raw = t ? parseDcText(t) : null;
+        if (raw?.template) runtime.updateHtml(rootName, raw.template);
+      }).catch(() => {
+      });
+    }
+    const dc = doc.querySelector("x-dc");
+    const hostEl = doc.createElement("div");
+    hostEl.id = "dc-root";
+    dc.replaceWith(hostEl);
+    if (!parsed.preview) {
+      const s = doc.createElement("style");
+      s.textContent = FULL_PAGE_CSS;
+      doc.head.appendChild(s);
+    }
+    const Root = runtime.getDC(rootName);
+    const entry = runtime.registry.get(rootName);
+    function StandaloneRoot() {
+      const [, setTick] = React.useState(0);
+      React.useEffect(() => {
+        const sub = () => setTick((n) => n + 1);
+        entry.subs.add(sub);
+        return () => {
+          entry.subs.delete(sub);
+        };
+      }, []);
+      const defaults = React.useMemo(() => {
+        const d = {};
+        for (const k in entry.propsMeta || {}) {
+          const v = entry.propsMeta?.[k]?.default;
+          if (v !== void 0) d[k] = v;
+        }
+        return d;
+      }, [entry.propsMeta]);
+      return h(Root, { ...defaults, ...entry.propOverrides || {} });
+    }
+    const ReactDOM = getReactDOM();
+    if (ReactDOM.createRoot)
+      ReactDOM.createRoot(hostEl).render(h(StandaloneRoot));
+    else ReactDOM.render(h(StandaloneRoot), hostEl);
+    return rootName;
+  }
+
+  // src/expr.ts
+  var IDENT_RE = /^[A-Za-z_$][A-Za-z0-9_$]*/;
+  var NUMBER_RE = /^-?\d+(\.\d+)?$/;
+  function resolve(vals, src) {
+    const expr = String(src).trim();
+    if (!expr) return void 0;
+    if (expr[0] === "(" && expr[expr.length - 1] === ")" && parensWrapWhole(expr)) {
+      return resolve(vals, expr.slice(1, -1));
+    }
+    const eq = findTopLevelEquality(expr);
+    if (eq) {
+      const lv = resolve(vals, expr.slice(0, eq.index));
+      const rv = resolve(vals, expr.slice(eq.index + eq.op.length));
+      switch (eq.op) {
+        case "===":
+          return lv === rv;
+        case "!==":
+          return lv !== rv;
+        case "==":
+          return lv == rv;
+        default:
+          return lv != rv;
+      }
+    }
+    if (expr[0] === "!") return !resolve(vals, expr.slice(1));
+    if (expr === "true") return true;
+    if (expr === "false") return false;
+    if (expr === "null") return null;
+    if (expr === "undefined") return void 0;
+    if (NUMBER_RE.test(expr)) return Number(expr);
+    if (expr.length >= 2 && (expr[0] === '"' || expr[0] === "'") && expr[expr.length - 1] === expr[0]) {
+      return expr.slice(1, -1);
+    }
+    return resolvePath(vals, expr);
+  }
+  function parensWrapWhole(expr) {
+    let depth = 0;
+    for (let i = 0; i < expr.length - 1; i++) {
+      if (expr[i] === "(") depth++;
+      else if (expr[i] === ")") {
+        depth--;
+        if (depth === 0) return false;
+      }
+    }
+    return true;
+  }
+  function findTopLevelEquality(expr) {
+    let depth = 0;
+    for (let i = 0; i < expr.length; i++) {
+      const c = expr[i];
+      if (c === "[" || c === "(") depth++;
+      else if (c === "]" || c === ")") depth--;
+      else if (depth === 0 && (c === "=" || c === "!") && expr[i + 1] === "=") {
+        if (i > 0 && (expr[i - 1] === "=" || expr[i - 1] === "!")) continue;
+        if (!expr.slice(0, i).trim()) continue;
+        const op = expr[i + 2] === "=" ? c + "==" : c + "=";
+        return { index: i, op };
+      }
+    }
+    return null;
+  }
+  function resolvePath(vals, expr) {
+    const head = expr.match(IDENT_RE);
+    if (!head) return void 0;
+    let cur = vals == null ? void 0 : vals[head[0]];
+    let i = head[0].length;
+    while (i < expr.length) {
+      if (expr[i] === ".") {
+        const m = expr.slice(i + 1).match(IDENT_RE) || expr.slice(i + 1).match(/^\d+/);
+        if (!m) return void 0;
+        cur = cur == null ? void 0 : cur[m[0]];
+        i += 1 + m[0].length;
+      } else if (expr[i] === "[") {
+        let depth = 1;
+        let j = i + 1;
+        while (j < expr.length && depth > 0) {
+          if (expr[j] === "[") depth++;
+          else if (expr[j] === "]") {
+            depth--;
+            if (depth === 0) break;
+          }
+          j++;
+        }
+        if (depth !== 0) return void 0;
+        const key = resolve(vals, expr.slice(i + 1, j));
+        cur = cur == null ? void 0 : cur[key];
+        i = j + 1;
+      } else {
+        return void 0;
+      }
+    }
+    return cur;
+  }
+
+  // src/encode.ts
+  var CAMEL_ATTR = "sc-camel-";
+  var INLINE_TEXT_TAGS = new Set(
+    "a abbr b bdi bdo br cite code del dfn em i ins kbd mark q s samp small span strike strong sub sup u var wbr".split(
+      " "
+    )
+  );
+  var RAW_WRAP = {
+    select: "sc-raw-select",
+    table: "sc-raw-table",
+    tbody: "sc-raw-tbody",
+    thead: "sc-raw-thead",
+    tfoot: "sc-raw-tfoot",
+    tr: "sc-raw-tr",
+    td: "sc-raw-td",
+    th: "sc-raw-th",
+    caption: "sc-raw-caption"
+  };
+  var RAW_UNWRAP = Object.fromEntries(
+    Object.entries(RAW_WRAP).map(([k, v]) => [v, k])
+  );
+  var EVENT_MAP = {
+    onclick: "onClick",
+    onchange: "onChange",
+    oninput: "onInput",
+    onsubmit: "onSubmit",
+    onkeydown: "onKeyDown",
+    onkeyup: "onKeyUp",
+    onkeypress: "onKeyPress",
+    onmousedown: "onMouseDown",
+    onmouseup: "onMouseUp",
+    onmouseenter: "onMouseEnter",
+    onmouseleave: "onMouseLeave",
+    onfocus: "onFocus",
+    onblur: "onBlur",
+    ondoubleclick: "onDoubleClick",
+    oncontextmenu: "onContextMenu",
+    onmousemove: "onMouseMove",
+    onmouseover: "onMouseOver",
+    onmouseout: "onMouseOut",
+    onpointerdown: "onPointerDown",
+    onpointerup: "onPointerUp",
+    onpointermove: "onPointerMove",
+    onpointerenter: "onPointerEnter",
+    onpointerleave: "onPointerLeave",
+    onpointercancel: "onPointerCancel",
+    onpointerover: "onPointerOver",
+    onpointerout: "onPointerOut",
+    ongotpointercapture: "onGotPointerCapture",
+    onlostpointercapture: "onLostPointerCapture",
+    ontouchstart: "onTouchStart",
+    ontouchend: "onTouchEnd",
+    ontouchmove: "onTouchMove",
+    ontouchcancel: "onTouchCancel",
+    ondragstart: "onDragStart",
+    ondragend: "onDragEnd",
+    ondragenter: "onDragEnter",
+    ondragleave: "onDragLeave",
+    ondragover: "onDragOver",
+    onanimationstart: "onAnimationStart",
+    onanimationend: "onAnimationEnd",
+    onanimationiteration: "onAnimationIteration",
+    ontransitionend: "onTransitionEnd"
+  };
+  var ATTRS = `(?:[^>"']|"[^"]*"|'[^']*')*`;
+  var IMPORT_SELF_CLOSE_RE = new RegExp(
+    "<(x-import|dc-import)(" + ATTRS + ")/>",
+    "gi"
+  );
+  var CAMEL_ATTR_RE = /(\s)([a-z]+[A-Z][A-Za-z0-9]*)(\s*=)/g;
+  function encodeCamelAttrs(html) {
+    return html.replace(
+      CAMEL_ATTR_RE,
+      (_, sp, name, eq) => sp + CAMEL_ATTR + name.replace(/[A-Z]/g, (c) => "-" + c.toLowerCase()) + eq
+    );
+  }
+  function encodeCase(html) {
+    html = html.replace(
+      IMPORT_SELF_CLOSE_RE,
+      (_, t, a) => "<" + t + a + "></" + t + ">"
+    );
+    html = html.replace(/<helmet(\s|>)/gi, "<sc-helmet$1");
+    html = html.replace(/<\/helmet\s*>/gi, "</sc-helmet>");
+    html = encodeCamelAttrs(html);
+    for (const [real, alias] of Object.entries(RAW_WRAP)) {
+      html = html.replace(
+        new RegExp("(</?)" + real + "(?=[\\s>])", "gi"),
+        "$1" + alias
+      );
+    }
+    return html;
+  }
+  function kebabToCamel(s) {
+    return s.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+  }
+  function cssToObj(css) {
+    const o = {};
+    for (const decl of css.split(";")) {
+      const i = decl.indexOf(":");
+      if (i < 0) continue;
+      const prop = decl.slice(0, i).trim();
+      o[prop.startsWith("--") ? prop : kebabToCamel(prop)] = decl.slice(i + 1).trim();
+    }
+    return o;
+  }
+  function compileAttr(raw) {
+    const whole = raw.match(/^\s*\{\{([\s\S]+?)\}\}\s*$/);
+    if (whole) {
+      const path = whole[1];
+      return (vals) => resolve(vals, path);
+    }
+    if (raw.includes("{{")) {
+      const parts = raw.split(/\{\{([\s\S]+?)\}\}/g);
+      return (vals) => parts.map((s, i) => i & 1 ? resolve(vals, s) ?? "" : s).join("");
+    }
+    return () => raw;
+  }
+
+  // src/compile.ts
+  function collectProps(node, kind, host) {
+    const propGetters = [];
+    const pseudoClasses = [];
+    let hintSize = null;
+    for (const { name, value } of [...node.attributes]) {
+      if (name === "sc-name" || name === "data-dc-tpl") continue;
+      let key = name;
+      if (key.startsWith(CAMEL_ATTR))
+        key = kebabToCamel(key.slice(CAMEL_ATTR.length));
+      if (key === "hint-size") {
+        hintSize = value;
+        continue;
+      }
+      if (key.startsWith("style-")) {
+        pseudoClasses.push(host.pseudoClass(key.slice(6), value));
+        continue;
+      }
+      if (kind !== "dom") {
+        if (key.includes("-") && !(kind === "x-import" && (key.startsWith("aria-") || key.startsWith("data-"))))
+          key = kebabToCamel(key);
+      } else {
+        if (key === "class") key = "className";
+        else if (key === "for") key = "htmlFor";
+        else if (key.startsWith("on"))
+          key = EVENT_MAP[key] || "on" + key[2].toUpperCase() + key.slice(3);
+      }
+      propGetters.push([key, compileAttr(value)]);
+    }
+    return { propGetters, pseudoClasses, hintSize };
+  }
+  var HOST_STYLE_PROPS = /* @__PURE__ */ new Set([
+    "position",
+    "left",
+    "right",
+    "top",
+    "bottom",
+    "inset",
+    "width",
+    "height",
+    "z-index",
+    "transform"
+  ]);
+  function hostPositionStyle(style) {
+    const all = typeof style === "string" ? cssToObj(style) : style != null && typeof style === "object" ? style : null;
+    if (!all) return void 0;
+    const out = {};
+    for (const [k, v] of Object.entries(all)) {
+      const kebab = k.replace(/[A-Z]/g, (c) => "-" + c.toLowerCase());
+      if (HOST_STYLE_PROPS.has(kebab)) out[k] = v;
+    }
+    return Object.keys(out).length ? out : void 0;
+  }
+  function compileTemplate(html, host) {
+    const tpl = document.createElement("template");
+    //! nosemgrep: direct-inner-html-assignment
+    tpl.innerHTML = encodeCase(html);
+    let tplN = 0;
+    (function stamp(node) {
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        node.setAttribute("data-dc-tpl", String(tplN++));
+      }
+      for (const c of node.childNodes) stamp(c);
+    })(tpl.content);
+    const builders = walkChildren(tpl.content, host);
+    const render = ((vals, ctx) => builders.map((b, i) => b(vals || {}, ctx, i)));
+    render.__annotated = tpl.innerHTML;
+    return render;
+  }
+  function walkChildren(node, host) {
+    return [...node.childNodes].map((c) => walk(c, host)).filter((b) => b != null);
+  }
+  var SLIDE_ID_VALUE_RE = /^[0-9a-f]{8}$/;
+  var DECK_CONTROL_FLOW_RE = /^(sc-if|sc-for|sc-else|dc-import|x-import)$/;
+  var DECK_AUX_RE = /^(template|script|style|sc-helmet|helmet)$/;
+  function isDeckMountTag(el) {
+    if (el.localName === "deck-stage") return true;
+    return el.localName === "x-import" && (el.getAttribute("component-from-global-scope") || "") === "deck-stage";
+  }
+  function walkDeckChildren(el, host) {
+    const pairs = [...el.childNodes].map((c) => ({ c, b: walk(c, host) })).filter((p) => p.b !== null);
+    const kids = pairs.map((p) => p.b);
+    const seen = /* @__PURE__ */ new Set();
+    const wsSeen = /* @__PURE__ */ new Map();
+    const keys = [];
+    const nextSlideId = new Array(pairs.length);
+    {
+      let upcoming = null;
+      for (let j = pairs.length - 1; j >= 0; j--) {
+        const n = pairs[j].c;
+        if (n.nodeType === Node.ELEMENT_NODE) {
+          const t = n.localName;
+          upcoming = !DECK_AUX_RE.test(t) && !DECK_CONTROL_FLOW_RE.test(t) ? n.getAttribute("data-om-slide-id") : null;
+        }
+        nextSlideId[j] = upcoming;
+      }
+    }
+    for (let j = 0; j < pairs.length; j++) {
+      const { c } = pairs[j];
+      if (c.nodeType === Node.TEXT_NODE) {
+        if ((c.nodeValue ?? "").trim() === "") {
+          const base = nextSlideId[j] ? "omid-ws:" + nextSlideId[j] : "omid-ws:aux";
+          const n = wsSeen.get(base) ?? 0;
+          wsSeen.set(base, n + 1);
+          keys.push(n === 0 ? base : base + ":" + n);
+          continue;
+        }
+        return { kids, keys: null };
+      }
+      if (c.nodeType !== Node.ELEMENT_NODE) {
+        keys.push(j);
+        continue;
+      }
+      const child = c;
+      const tag = child.localName;
+      if (DECK_AUX_RE.test(tag)) {
+        keys.push(j);
+        continue;
+      }
+      if (DECK_CONTROL_FLOW_RE.test(tag)) return { kids, keys: null };
+      const v = child.getAttribute("data-om-slide-id");
+      if (!v || !SLIDE_ID_VALUE_RE.test(v) || seen.has(v)) {
+        return { kids, keys: null };
+      }
+      seen.add(v);
+      keys.push("omid:" + v);
+    }
+    return { kids, keys };
+  }
+  function renderDeckKids(kids, kidKeys, vals, ctx) {
+    return kids.map((b, j) => {
+      const k = kidKeys ? kidKeys[j] : j;
+      const out = b(vals, ctx, k);
+      return kidKeys != null && typeof out === "string" ? h(getReact().Fragment, { key: k }, out) : out;
+    });
+  }
+  function walk(node, host) {
+    if (node.nodeType === Node.TEXT_NODE) return walkText(node);
+    if (node.nodeType !== Node.ELEMENT_NODE) return null;
+    const el = node;
+    const tag = el.tagName.toLowerCase();
+    if (tag === "sc-for") return walkFor(el, host);
+    if (tag === "sc-if") return walkIf(el, host);
+    if (tag === "x-import") return walkXImport(el, host);
+    if (tag === "sc-helmet") return host.helmet(el);
+    if (tag === "dc-import") return walkComponent(el, host);
+    return walkElement(el, host);
+  }
+  var warnedHoles = /* @__PURE__ */ new Set();
+  function warnUnresolved(ctx, what) {
+    const key = (ctx?.__name || "?") + "\0" + what;
+    if (warnedHoles.has(key)) return;
+    warnedHoles.add(key);
+    console.warn("[dc-runtime] " + (ctx?.__name || "template") + ": " + what);
+  }
+  function walkText(node) {
+    const txt = node.nodeValue ?? "";
+    if (!txt.includes("{{")) {
+      if (!txt.trim() && !txt.includes(" ")) return null;
+      return () => txt;
+    }
+    const parts = txt.split(/\{\{([\s\S]+?)\}\}/g);
+    return (vals, ctx, key) => h(
+      getReact().Fragment,
+      { key },
+      ...parts.map((p, i) => {
+        if (!(i & 1)) return p;
+        const v = resolve(vals, p);
+        if (v === void 0) {
+          if (!ctx?.__streamingNow) {
+            if (document.body?.hasAttribute("data-dc-editor-on")) {
+              return h(
+                "span",
+                { key: i, className: "sc-interp sc-unresolved" },
+                "{{ " + p.trim() + " }}"
+              );
+            }
+            warnUnresolved(
+              ctx,
+              "{{ " + p.trim() + " }} never resolved \u2014 rendered as empty"
+            );
+            return null;
+          }
+          return h(
+            "span",
+            { key: i, className: "sc-interp sc-missing" },
+            p.trim()
+          );
+        }
+        if (getReact().isValidElement(v) || Array.isArray(v)) {
+          return h(getReact().Fragment, { key: i }, v);
+        }
+        if (v === null || typeof v === "boolean") return null;
+        return h("span", { key: i, className: "sc-interp" }, String(v));
+      })
+    );
+  }
+  function walkFor(el, host) {
+    const listGet = compileAttr(el.getAttribute("list") || "");
+    const asName = el.getAttribute("as") || "item";
+    const hintN = parseInt(el.getAttribute("hint-placeholder-count") || "0", 10);
+    const kids = walkChildren(el, host);
+    const listSrc = el.getAttribute("list") || "";
+    return (vals, ctx, key) => {
+      let list = listGet(vals);
+      if (!Array.isArray(list)) {
+        if (!ctx?.__streamingNow) {
+          if (list !== void 0 && list !== null) {
+            warnUnresolved(
+              ctx,
+              'sc-for list="' + listSrc + '" is not an array (' + typeof list + ")"
+            );
+          }
+          list = [];
+        } else {
+          list = hintN > 0 ? Array(hintN).fill(void 0) : [];
+        }
+      }
+      return h(
+        getReact().Fragment,
+        { key },
+        list.map((item, i) => {
+          const sub = { ...vals, [asName]: item, $index: i };
+          return h(
+            getReact().Fragment,
+            { key: i },
+            kids.map((b, j) => b(sub, ctx, j))
+          );
+        })
+      );
+    };
+  }
+  function walkIf(el, host) {
+    const valGet = compileAttr(el.getAttribute("value") || "");
+    const hintRaw = el.getAttribute("hint-placeholder-val");
+    const hintGet = hintRaw != null ? compileAttr(hintRaw) : null;
+    const kids = walkChildren(el, host);
+    return (vals, ctx, key) => {
+      let v = valGet(vals);
+      if (v === void 0 && hintGet && ctx?.__streamingNow) v = hintGet(vals);
+      return v ? h(
+        getReact().Fragment,
+        { key },
+        kids.map((b, j) => b(vals, ctx, j))
+      ) : null;
+    };
+  }
+  function walkComponent(el, host) {
+    const name = el.getAttribute("name") || el.getAttribute("component") || "";
+    el.removeAttribute("name");
+    el.removeAttribute("component");
+    const tplId = el.getAttribute("data-dc-tpl");
+    const styleRaw = el.getAttribute("style");
+    el.removeAttribute("style");
+    const styleGet = styleRaw != null ? compileAttr(styleRaw) : null;
+    const { propGetters, hintSize } = collectProps(el, "dc-import", host);
+    const kids = walkChildren(el, host);
+    return (vals, ctx, key) => {
+      const props = {
+        key,
+        __hintSize: hintSize,
+        __tplId: tplId,
+        __hostStyle: styleGet ? hostPositionStyle(styleGet(vals)) : void 0
+      };
+      for (const [k, g] of propGetters) {
+        const v = g(vals);
+        if (k === "dcProps") {
+          if (v && typeof v === "object") Object.assign(props, v);
+          continue;
+        }
+        props[k] = v;
+      }
+      if (kids.length) props.children = kids.map((b, j) => b(vals, ctx, j));
+      return h(host.component(name), props);
+    };
+  }
+  function walkXImport(el, host) {
+    const globalNameGet = compileAttr(
+      el.getAttribute("component-from-global-scope") || ""
+    );
+    const exportNameGet = compileAttr(
+      el.getAttribute("component") || el.getAttribute("name") || ""
+    );
+    const fromRaw = el.getAttribute("from") || (el.getAttribute("component-from-global-scope") ? "" : el.getAttribute("src") || el.getAttribute("import") || "");
+    const urls = fromRaw.trim() ? fromRaw.trim().split(/\s+/) : [];
+    const url = urls.length ? urls[urls.length - 1] : "";
+    const kindOf = (u) => /\.(jsx|tsx)(\?|#|$)/i.test(u) ? "jsx" : "js";
+    const tplId = el.getAttribute("data-dc-tpl");
+    const styleRaw = el.getAttribute("style");
+    el.removeAttribute("style");
+    const styleGet = styleRaw != null ? compileAttr(styleRaw) : null;
+    const wrap = tplId != null || styleGet != null;
+    const { propGetters, hintSize } = collectProps(el, "x-import", host);
+    const hasContent = el.children.length > 0 || !!(el.textContent || "").trim();
+    const deckKeyed = hasContent && isDeckMountTag(el) ? walkDeckChildren(el, host) : null;
+    const kids = deckKeyed ? deckKeyed.kids : hasContent ? walkChildren(el, host) : [];
+    const kidKeys = deckKeyed?.keys ?? null;
+    const urlBindable = fromRaw.includes("{{");
+    if (urls.length && !urlBindable) {
+      let prev;
+      for (const u of urls) prev = host.loadExternal(kindOf(u), u, prev);
+    }
+    const evalName = (g, vals) => {
+      const v = g(vals);
+      const s = v == null ? "" : String(v);
+      return s.includes("{{") ? "" : s;
+    };
+    return (vals, ctx, key) => {
+      const globalName = evalName(globalNameGet, vals);
+      const name = globalName || evalName(exportNameGet, vals);
+      const C = !name || urlBindable ? null : globalName ? host.resolveExternalGlobal(url, globalName) : host.resolveExternal(url, name);
+      const hostStyle = styleGet ? hostPositionStyle(styleGet(vals)) : void 0;
+      const wrapper = wrap ? {
+        key,
+        className: "sc-host-x",
+        "data-dc-tpl": tplId,
+        style: hostStyle || { display: "contents" }
+      } : null;
+      if (!C) {
+        const error = urlBindable ? "x-import `from` cannot contain {{ \u2026 }} \u2014 module URLs are resolved at parse time; use a literal URL" : host.resolveExternalError(url, name);
+        const ph = host.placeholder({
+          key: wrapper ? void 0 : key,
+          name,
+          hintSize,
+          error
+        });
+        return wrapper ? h("div", wrapper, ph) : ph;
+      }
+      const props = wrapper ? {} : { key };
+      let unresolvedHole = false;
+      for (const [k, g] of propGetters) {
+        if (k === "component" || k === "componentFromGlobalScope" || k === "from") {
+          continue;
+        }
+        const v = g(vals);
+        if (v === void 0) unresolvedHole = true;
+        if (k === "dcProps") {
+          if (v && typeof v === "object") Object.assign(props, v);
+          continue;
+        }
+        props[k] = v;
+      }
+      if (unresolvedHole && ctx?.__htmlStreamingNow) {
+        const ph = host.placeholder({
+          key: wrapper ? void 0 : key,
+          name,
+          hintSize,
+          error: null
+        });
+        return wrapper ? h("div", wrapper, ph) : ph;
+      }
+      if (kids.length) {
+        props.children = renderDeckKids(kids, kidKeys, vals, ctx);
+      }
+      return wrapper ? h("div", wrapper, h(C, props)) : h(C, props);
+    };
+  }
+  function contentKey(el) {
+    const clone = el.cloneNode(true);
+    for (const d of clone.querySelectorAll("*")) {
+      while (d.attributes.length) d.removeAttribute(d.attributes[0].name);
+    }
+    const s = clone.innerHTML;
+    let h2 = 5381;
+    for (let i = 0; i < s.length; i++) h2 = (h2 << 5) + h2 + s.charCodeAt(i) | 0;
+    return s.length + "." + (h2 >>> 0).toString(36);
+  }
+  var NEVER_CONTENT_KEYED = new Set(
+    "script style textarea option title select canvas iframe video audio".split(
+      " "
+    )
+  );
+  var NOT_INLINE_SELECTOR = ":not(" + [...INLINE_TEXT_TAGS].join(",") + ")";
+  function walkElement(el, host) {
+    const realTag = RAW_UNWRAP[el.localName] || el.localName;
+    const tplId = el.getAttribute("data-dc-tpl");
+    const inlineOnly = el.childNodes.length > 0 && !NEVER_CONTENT_KEYED.has(realTag) && el.querySelector(NOT_INLINE_SELECTOR) === null;
+    const keySuffix = inlineOnly ? "|" + contentKey(el) : "";
+    const { propGetters, pseudoClasses } = collectProps(el, "dom", host);
+    const deckKeyed = isDeckMountTag(el) ? walkDeckChildren(el, host) : null;
+    const kids = deckKeyed ? deckKeyed.kids : walkChildren(el, host);
+    const kidKeys = deckKeyed?.keys ?? null;
+    return (vals, ctx, key) => {
+      const props = {
+        key: key + keySuffix,
+        "data-dc-tpl": tplId
+      };
+      for (const [k, g] of propGetters) {
+        let v = g(vals);
+        if (k === "style" && typeof v === "string") v = cssToObj(v);
+        if ((k === "value" || k === "checked") && v === void 0) {
+          v = k === "checked" ? false : "";
+        }
+        props[k] = v;
+      }
+      if (pseudoClasses.length) {
+        props.className = [props.className, ...pseudoClasses].filter(Boolean).join(" ");
+      }
+      return h(realTag, props, ...renderDeckKids(kids, kidKeys, vals, ctx));
+    };
+  }
+
+  // src/logic.ts
+  var StreamableLogic = class {
+    constructor(props) {
+      __publicField(this, "props");
+      __publicField(this, "state", {});
+      /** Back-pointer to the wrapper component, installed after construction. */
+      __publicField(this, "__host");
+      this.props = props || {};
+    }
+    setState(update, cb) {
+      this.__host && this.__host.__setLogicState(update, cb);
+    }
+    forceUpdate() {
+      this.__host && this.__host.forceUpdate();
+    }
+    componentDidMount() {
+    }
+    componentDidUpdate(_prevProps) {
+    }
+    componentWillUnmount() {
+    }
+    /** The flat object the template renders against (merged over props). */
+    renderVals() {
+      return {};
+    }
+  };
+  function evalDcLogic(src) {
+    //! nosemgrep: eval-and-function-constructor
+    const fn = new Function(
+      "DCLogic",
+      "StreamableLogic",
+      "React",
+      src + '\n;return (typeof Component!=="undefined"&&Component)||undefined;'
+    );
+    return fn(StreamableLogic, StreamableLogic, getReact());
+  }
+
+  // src/component.ts
+  function shallowEqual(a, b) {
+    if (!b) return false;
+    const ak = Object.keys(a).filter((k) => k !== "children");
+    const bk = Object.keys(b).filter((k) => k !== "children");
+    if (ak.length !== bk.length) return false;
+    for (const k of ak) if (a[k] !== b[k]) return false;
+    return true;
+  }
+  function Placeholder({
+    name,
+    hintSize,
+    streaming,
+    error
+  }) {
+    const [w, hgt] = (hintSize || "100%,60px").split(",");
+    return h(
+      "div",
+      {
+        className: "sc-placeholder" + (streaming ? " sc-streaming" : ""),
+        style: { width: w.trim(), height: hgt && hgt.trim() },
+        title: name
+      },
+      error ? h(
+        "div",
+        { className: "sc-placeholder-error" },
+        (name ? name + ": " : "") + error
+      ) : null
+    );
+  }
+  function hintToMin(hint) {
+    if (!hint) return void 0;
+    const [w, hgt] = hint.split(",");
+    return { minWidth: w.trim(), minHeight: hgt && hgt.trim() };
+  }
+  function createComponentFactory(registry, ensureFetched) {
+    const React = getReact();
+    const AncestorContext = React.createContext([]);
+    class StreamableComponent extends React.Component {
+      constructor(props) {
+        super(props);
+        __publicField(this, "__name");
+        __publicField(this, "__sub");
+        __publicField(this, "__needsDidMount", false);
+        /** Snapshot of the registry's streaming flags taken at render time —
+         *  builders read it off the RenderCtx (this) to pick placeholder vs
+         *  render-nothing for unresolved values. */
+        __publicField(this, "__streamingNow", false);
+        __publicField(this, "__htmlStreamingNow", false);
+        /** When a construct throws, remember the (class, registry.ver, props)
+         *  triple so render-time reconcile doesn't re-attempt it on every parent
+         *  re-render. A registry bump (new class, template, external module
+         *  resolving via bumpAll) changes `ver` and breaks the memo so an
+         *  env-dependent constructor can self-heal. */
+        __publicField(this, "__failedLogic", null);
+        __publicField(this, "__failedUserProps", null);
+        __publicField(this, "__failedVer", -1);
+        /** Per-instance constructor error — kept here (not on the registry entry)
+         *  so one instance's successful construct can't hide a sibling's failure,
+         *  and a construct can never wipe an eval error `updateJs` recorded on
+         *  `r.logicError`. */
+        __publicField(this, "__ctorError", null);
+        __publicField(this, "logic");
+        this.__name = props.__name;
+        this.state = { __v: 0, __err: null };
+        this.__sub = () => {
+          if (this.state.__err) this.setState({ __err: null });
+          this.forceUpdate();
+        };
+        this.__makeLogic(registry.get(this.__name).Logic, null);
+        ensureFetched(this.__name);
+      }
+      /** Error-boundary hook: a render crash anywhere in this DC's subtree
+       *  (its own template, an x-import'd component, a child DC without its
+       *  own deeper boundary) lands here instead of unmounting the page. */
+      static getDerivedStateFromError(e) {
+        return { __err: e instanceof Error && e.message ? e.message : String(e) };
+      }
+      componentDidCatch(e, info) {
+        console.error(
+          "[dc-runtime] render error in <" + this.__name + ">:",
+          e,
+          info?.componentStack || ""
+        );
+      }
+      /** Instantiate the logic class (or the no-op base) and adopt `prevState`
+       *  over its initial state — used both at mount and on hot-swap. */
+      __makeLogic(Logic, prevState) {
+        const L = Logic || StreamableLogic;
+        try {
+          this.logic = new L(this.__userProps());
+          this.__failedLogic = null;
+          this.__failedUserProps = null;
+          this.__ctorError = null;
+        } catch (e) {
+          console.error(e);
+          this.__failedLogic = Logic;
+          this.__failedUserProps = this.__userProps();
+          this.__failedVer = registry.get(this.__name).ver;
+          this.__ctorError = this.__name + ": " + (e instanceof Error && e.message ? e.message : String(e));
+          this.logic = new StreamableLogic(
+            this.__userProps()
+          );
+        }
+        this.logic.__host = this;
+        if (prevState)
+          this.logic.state = { ...this.logic.state || {}, ...prevState };
+      }
+      /** The props the author's logic + template see — internal __-prefixed
+       *  wiring stripped. */
+      __userProps() {
+        const { __name, __hintSize, __tplId, __hostStyle, ...rest } = this.props;
+        return rest;
+      }
+      __setLogicState(update, cb) {
+        const prev = this.logic.state;
+        const patch = typeof update === "function" ? update(prev) : update;
+        this.logic.state = { ...prev, ...patch };
+        this.setState((s) => ({ __v: s.__v + 1 }), cb);
+      }
+      /** Swap the logic instance when the registry's Logic class changed
+       *  (streaming completion, hot reload). State carries over; didMount
+       *  re-fires after the swap commits so refs exist. */
+      __reconcileLogic() {
+        const r = registry.get(this.__name);
+        const Next = r.Logic;
+        const Cur = this.logic.constructor;
+        if (Next === Cur || !Next && Cur === StreamableLogic || Next === this.__failedLogic && r.ver === this.__failedVer && shallowEqual(this.__userProps(), this.__failedUserProps)) {
+          return;
+        }
+        if (!this.__needsDidMount) {
+          try {
+            this.logic.componentWillUnmount();
+          } catch (e) {
+            console.error(e);
+          }
+        }
+        this.__makeLogic(Next, this.logic.state);
+        this.__needsDidMount = true;
+      }
+      componentDidMount() {
+        registry.get(this.__name).subs.add(this.__sub);
+        try {
+          this.logic.componentDidMount();
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      componentDidUpdate(prevProps) {
+        this.logic.props = this.__userProps();
+        if (this.__needsDidMount) {
+          if (this.state.__err || !registry.get(this.__name).tpl) return;
+          this.__needsDidMount = false;
+          try {
+            this.logic.componentDidMount();
+          } catch (e) {
+            console.error(e);
+          }
+        } else {
+          try {
+            this.logic.componentDidUpdate(prevProps);
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      }
+      componentWillUnmount() {
+        registry.get(this.__name).subs.delete(this.__sub);
+        if (!this.__needsDidMount) {
+          try {
+            this.logic.componentWillUnmount();
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      }
+      render() {
+        const r = registry.get(this.__name);
+        const cls = "sc-host" + (r.htmlStreaming ? " sc-streaming-html" : "") + (r.jsStreaming ? " sc-streaming-js" : "");
+        const hintStyle = r.htmlStreaming ? hintToMin(this.props.__hintSize) : void 0;
+        const hostStyle = this.props.__hostStyle || hintStyle ? { ...hintStyle || {}, ...this.props.__hostStyle || {} } : void 0;
+        const hostBase = {
+          className: cls,
+          style: hostStyle,
+          "data-sc-name": this.__name,
+          "data-dc-tpl": this.props.__tplId
+        };
+        const chain = Array.isArray(this.context) ? this.context : [];
+        if (chain.includes(this.__name)) {
+          const cycle = [
+            ...chain.slice(chain.indexOf(this.__name)),
+            this.__name
+          ].join(" \u2192 ");
+          return h(
+            "div",
+            { ...hostBase, className: cls + " sc-has-error" },
+            h(Placeholder, {
+              name: this.__name,
+              hintSize: this.props.__hintSize,
+              error: "circular import: " + cycle
+            })
+          );
+        }
+        if (this.state.__err) {
+          return h(
+            "div",
+            { ...hostBase, className: cls + " sc-has-error" },
+            h(
+              "div",
+              { className: "sc-logic-error", "data-omelette-chrome": "" },
+              this.__name + ": " + this.state.__err
+            ),
+            h(Placeholder, {
+              name: this.__name,
+              hintSize: this.props.__hintSize,
+              error: this.state.__err
+            })
+          );
+        }
+        this.__reconcileLogic();
+        if (!r.tpl) {
+          return h(
+            "div",
+            hostBase,
+            h(Placeholder, { name: this.__name, hintSize: this.props.__hintSize })
+          );
+        }
+        const userProps = this.__userProps();
+        this.logic.props = userProps;
+        let vals = userProps;
+        let renderErr = r.logicError || this.__ctorError;
+        try {
+          vals = { ...userProps, ...this.logic.renderVals() || {} };
+        } catch (e) {
+          console.error(e);
+          renderErr = this.__name + ".renderVals(): " + (e instanceof Error && e.message ? e.message : String(e));
+        }
+        this.__streamingNow = !!(r.htmlStreaming || r.jsStreaming);
+        this.__htmlStreamingNow = !!r.htmlStreaming;
+        return h(
+          "div",
+          { ...hostBase, className: cls + (renderErr ? " sc-has-error" : "") },
+          renderErr && h(
+            "div",
+            { className: "sc-logic-error", "data-omelette-chrome": "" },
+            renderErr
+          ),
+          h(
+            AncestorContext.Provider,
+            { value: [...chain, this.__name] },
+            r.tpl(vals, this)
+          )
+        );
+      }
+    }
+    __publicField(StreamableComponent, "contextType", AncestorContext);
+    const named = /* @__PURE__ */ new Map();
+    function getDC(name) {
+      const hit = named.get(name);
+      if (hit) return hit;
+      function Dispatcher(p) {
+        const [, setTick] = React.useState(0);
+        React.useEffect(() => {
+          const sub = () => setTick((n) => n + 1);
+          registry.get(name).subs.add(sub);
+          return () => {
+            registry.get(name).subs.delete(sub);
+          };
+        }, []);
+        ensureFetched(name);
+        return h(StreamableComponent, { ...p, __name: name });
+      }
+      Dispatcher.displayName = name;
+      named.set(name, Dispatcher);
+      return Dispatcher;
+    }
+    return {
+      getDC,
+      StreamableComponent
+    };
+  }
+
+  // src/bundled.ts
+  function bundledBlob(url) {
+    const blobs = window.__resourceBlobs;
+    const b = blobs ? blobs[url.split("#")[0]] : void 0;
+    return b instanceof Blob ? b : null;
+  }
+
+  // src/cdn.ts
+  var REACT_URL = "https://unpkg.com/react@18.3.1/umd/react.production.min.js";
+  var REACT_SRI = "sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z";
+  var REACT_DOM_URL = "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js";
+  var REACT_DOM_SRI = "sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1";
+  var BABEL_URL = "https://unpkg.com/@babel/standalone@7.29.0/babel.min.js";
+  var BABEL_SRI = "sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y";
+  function cdnScriptFor(url, sri) {
+    const res = window.__resources;
+    const v = res ? res[url] : void 0;
+    return typeof v === "string" && v ? { src: v } : { src: url, integrity: sri };
+  }
+
+  // src/external.ts
+  var isCustomElementName = (n) => !n.includes(".") && n.includes("-");
+  function isRenderableType(g) {
+    if (typeof g === "function") return !isElementClass(g);
+    return typeof g === "object" && g !== null && typeof g.$$typeof === "symbol";
+  }
+  function resolveDottedPath(root, name) {
+    let cur = root;
+    for (const seg of name.split(".")) {
+      if (cur == null) return void 0;
+      cur = cur[seg];
+    }
+    return cur;
+  }
+  var GLOBAL_POLL_INTERVAL_MS = 50;
+  var GLOBAL_POLL_TIMEOUT_MS = 3e4;
+  function createExternalModules(onResolved) {
+    const cache = /* @__PURE__ */ new Map();
+    let babelLoading = null;
+    const reportedMissing = /* @__PURE__ */ new Map();
+    const polling = /* @__PURE__ */ new Set();
+    function ensureBabel() {
+      if (window.Babel) return Promise.resolve();
+      if (babelLoading) return babelLoading;
+      const babel = cdnScriptFor(BABEL_URL, BABEL_SRI);
+      babelLoading = new Promise((res, rej) => {
+        const s = document.createElement("script");
+        s.src = babel.src;
+        if (babel.integrity) {
+          s.integrity = babel.integrity;
+          s.crossOrigin = "anonymous";
+        }
+        s.onload = () => res();
+        s.onerror = rej;
+        document.head.appendChild(s);
+      });
+      return babelLoading;
+    }
+    const pending = /* @__PURE__ */ new Map();
+    function load(kind, url, after) {
+      const existing = pending.get(url);
+      if (existing) return existing;
+      cache.set(url, null);
+      console.info("[dc-runtime] x-import: loading", url, "(" + kind + ")");
+      const ready = Promise.all([
+        kind === "jsx" ? ensureBabel() : Promise.resolve(),
+        after ?? Promise.resolve()
+      ]);
+      const p = ready.then(() => {
+        const pre = bundledBlob(url);
+        if (pre) return pre.text();
+        return fetch(url).then((r) => {
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          return r.text();
+        });
+      }).then((src) => {
+        const code = kind === "jsx" ? window.Babel.transform(src, {
+          filename: url,
+          presets: ["react", "typescript"]
+        }).code : src;
+        const module = { exports: {} };
+        const before = new Set(Object.keys(window));
+        //! nosemgrep: eval-and-function-constructor
+        new Function("React", "module", "exports", "require", code)(
+          getReact(),
+          module,
+          module.exports,
+          () => ({})
+        );
+        const globals = {};
+        for (const k of Object.keys(window)) {
+          if (!before.has(k) && typeof window[k] === "function") {
+            globals[k] = window[k];
+          }
+        }
+        cache.set(url, { mod: module.exports, globals });
+        console.info(
+          "[dc-runtime] x-import: loaded",
+          url,
+          "\u2014 exports:",
+          Object.keys(module.exports),
+          "window globals:",
+          Object.keys(globals)
+        );
+        onResolved();
+      }).catch((e) => {
+        cache.set(url, {
+          mod: {},
+          globals: {},
+          error: "failed to load: " + (e instanceof Error && e.message ? e.message : String(e))
+        });
+        console.error(
+          "[dc-runtime] x-import: FAILED to load",
+          url,
+          "(" + kind + ")",
+          e
+        );
+        onResolved();
+      });
+      pending.set(url, p);
+      return p;
+    }
+    function resolve2(url, name) {
+      const entry = cache.get(url);
+      if (!entry) return null;
+      const { mod, globals } = entry;
+      const C = mod && mod[name] || globals && globals[name] || typeof window !== "undefined" && window[name] || mod && mod.default;
+      if (typeof C === "function") return C;
+      const key = url + "\0" + name;
+      if (!reportedMissing.has(key)) {
+        reportedMissing.set(
+          key,
+          entry.error || 'no export named "' + name + '" (has: ' + Object.keys(mod).join(", ") + ")"
+        );
+        console.error(
+          "[dc-runtime] x-import: module",
+          url,
+          "loaded but has no component named",
+          JSON.stringify(name),
+          "\u2014 available exports:",
+          Object.keys(mod),
+          "window globals:",
+          Object.keys(globals),
+          ". The module must `module.exports = {" + name + "}` or set `window." + name + "`."
+        );
+      }
+      return null;
+    }
+    function waitForGlobal(name) {
+      if (polling.has(name)) return;
+      polling.add(name);
+      const started = Date.now();
+      const isCE = isCustomElementName(name);
+      const tick = () => {
+        const found = isCE ? customElements.get(name) : isRenderableType(resolveDottedPath(window, name));
+        if (found) {
+          polling.delete(name);
+          onResolved();
+          return;
+        }
+        if (Date.now() - started >= GLOBAL_POLL_TIMEOUT_MS) {
+          console.warn(
+            "[dc-runtime] x-import: global",
+            JSON.stringify(name),
+            "never appeared on window after " + GLOBAL_POLL_TIMEOUT_MS + "ms"
+          );
+          return;
+        }
+        setTimeout(tick, GLOBAL_POLL_INTERVAL_MS);
+      };
+      setTimeout(tick, GLOBAL_POLL_INTERVAL_MS);
+    }
+    function resolveGlobal(url, name) {
+      const isCE = isCustomElementName(name);
+      if (!url) {
+        if (isCE) {
+          if (customElements.get(name)) return name;
+          waitForGlobal(name);
+          return null;
+        }
+        const g2 = resolveDottedPath(window, name);
+        if (isRenderableType(g2)) return g2;
+        waitForGlobal(name);
+        return null;
+      }
+      const entry = cache.get(url);
+      if (!entry) return null;
+      if (isCE && customElements.get(name)) return name;
+      const g = entry.globals[name] ?? resolveDottedPath(window, name);
+      if (isRenderableType(g)) return g;
+      if (name.includes(".")) return null;
+      const key = url + "\0global\0" + name;
+      if (!reportedMissing.has(key)) {
+        reportedMissing.set(key, null);
+        if (isCE && !customElements.get(name)) {
+          console.warn(
+            "[dc-runtime] x-import:",
+            url,
+            "loaded but no custom element",
+            JSON.stringify(name),
+            "is registered and window." + name + " is not a function \u2014 rendering <" + name + "> as an unknown element."
+          );
+        }
+      }
+      return name;
+    }
+    function getError(url, name) {
+      const entry = cache.get(url);
+      if (entry?.error) return entry.error;
+      return reportedMissing.get(url + "\0" + name) || null;
+    }
+    return { load, resolve: resolve2, resolveGlobal, getError };
+  }
+  function isElementClass(g) {
+    try {
+      return typeof g === "function" && typeof HTMLElement !== "undefined" && g.prototype instanceof HTMLElement;
+    } catch {
+      return false;
+    }
+  }
+
+  // src/atomics.ts
+  var ATOMIC_CSS = (
+    // layout
+    ".fx{display:flex}.col{display:flex;flex-direction:column}.grid{display:grid}.ac{align-items:center}.jc{justify-content:center}.jb{justify-content:space-between}.f1{flex:1}.noshrink{flex-shrink:0}.wrap{flex-wrap:wrap}.fw5{font-weight:500}.fw6{font-weight:600}.fw7{font-weight:700}.fw8{font-weight:800}.fs11{font-size:11px}.fs12{font-size:12px}.fs13{font-size:13px}.fs14{font-size:14px}.fs15{font-size:15px}.fs16{font-size:16px}.fs20{font-size:20px}.fs22{font-size:22px}.upper{text-transform:uppercase}.tc{text-align:center}.nowrap{white-space:nowrap}.gap8{gap:8px}.gap10{gap:10px}.gap12{gap:12px}.gap16{gap:16px}.gap24{gap:24px}.m0{margin:0}.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}.mb16{margin-bottom:16px}.posrel{position:relative}.posabs{position:absolute}.round{border-radius:50%}.ohide{overflow:hidden}.bbox{box-sizing:border-box}.pointer{cursor:pointer}.w100{width:100%}.b0{border:none}"
+  );
+
+  // src/helmet.ts
+  var DESIGN_DOC_MODE_RE = /<meta\b[^>]*\bname\s*=\s*["']design_doc_mode["'][^>]*\b(?:content|value)\s*=\s*["'](\w+)["']/i;
+  var CANVAS_BG_LIGHT = "#f0eee6";
+  var CANVAS_BG_DARK = "#2e2c26";
+  function createHelmetManager(doc, isStreaming) {
+    const mounted = /* @__PURE__ */ new Set();
+    const live = /* @__PURE__ */ new Map();
+    let designDocMode = null;
+    let canvasStyleEl = null;
+    let appTheme = "light";
+    try {
+      const ds = doc.documentElement.dataset.theme;
+      appTheme = ds === "dark" || ds === "light" ? ds : new URLSearchParams(doc.defaultView?.location.search ?? "").get(
+        "theme"
+      ) === "dark" ? "dark" : "light";
+    } catch {
+    }
+    function applyCanvasBg() {
+      if (!canvasStyleEl) return;
+      const bg = appTheme === "dark" ? CANVAS_BG_DARK : CANVAS_BG_LIGHT;
+      canvasStyleEl.textContent = `html,body{background:${bg}}#dc-root>.sc-host{position:relative}`;
+    }
+    function postDesignMode(mode) {
+      if (window.parent === window) return;
+      try {
+        window.parent.postMessage({ type: "__dc_design_mode", mode }, "*");
+      } catch {
+      }
+    }
+    function setDesignDocMode(mode) {
+      if (mode === designDocMode) return;
+      designDocMode = mode;
+      postDesignMode(mode);
+      if (mode === "canvas") {
+        doc.documentElement.setAttribute("data-dc-canvas", "");
+        canvasStyleEl = doc.createElement("style");
+        canvasStyleEl.setAttribute("data-dc-canvas", "");
+        applyCanvasBg();
+        doc.head.appendChild(canvasStyleEl);
+      } else {
+        doc.documentElement.removeAttribute("data-dc-canvas");
+        canvasStyleEl?.remove();
+        canvasStyleEl = null;
+      }
+    }
+    window.addEventListener("message", (e) => {
+      const type = e.data && e.data.type;
+      if (type === "__dc_theme") {
+        const t = e.data.theme;
+        if (t === "light" || t === "dark") {
+          appTheme = t;
+          applyCanvasBg();
+        }
+        return;
+      }
+      if (!designDocMode || type !== "__dc_probe") return;
+      postDesignMode(designDocMode);
+    });
+    function compile(node) {
+      const raw = [...node.children];
+      const helmetClosed = node.nextSibling != null || node.parentNode?.nextSibling != null;
+      if (node.hasAttribute("data-dc-atomics") && !mounted.has("__dc-atomics")) {
+        mounted.add("__dc-atomics");
+        const el = doc.createElement("style");
+        el.id = "__dc-atomics";
+        el.textContent = ATOMIC_CSS;
+        doc.head.appendChild(el);
+      }
+      return (_vals, ctx) => {
+        const name = ctx && ctx.__name || "";
+        const streaming = !!(name && isStreaming(name));
+        for (let i = 0; i < raw.length; i++) {
+          const child = raw[i];
+          const tag = child.tagName;
+          const mayBePartial = streaming && !helmetClosed && i === raw.length - 1;
+          if (tag === "SCRIPT") {
+            if (mayBePartial) continue;
+            const key = "SCRIPT|" + (child.getAttribute("src") || child.textContent || "");
+            if (mounted.has(key)) continue;
+            mounted.add(key);
+            const el = doc.createElement("script");
+            for (const { name: an, value } of [...child.attributes])
+              el.setAttribute(an, value);
+            if (child.textContent) el.textContent = child.textContent;
+            doc.head.appendChild(el);
+          } else if (tag === "LINK" || tag === "META") {
+            if (mayBePartial) continue;
+            const key = tag + "|" + (child.getAttribute("href") || child.getAttribute("src") || child.outerHTML);
+            if (mounted.has(key)) continue;
+            mounted.add(key);
+            if (tag === "LINK") {
+              const rel = (child.getAttribute("rel") || "").toLowerCase().split(/\s+/);
+              const href = (child.getAttribute("href") || "").trim();
+              const res = window.__resources;
+              const pre = res && rel.includes("stylesheet") && !rel.includes("alternate") ? res[href] : void 0;
+              const blob = typeof pre === "string" && pre ? bundledBlob(pre) : null;
+              if (blob) {
+                const el = doc.createElement("style");
+                if (child.hasAttribute("disabled")) {
+                  el.setAttribute("media", "not all");
+                } else if (child.getAttribute("media")) {
+                  el.setAttribute("media", child.getAttribute("media"));
+                }
+                if (child.getAttribute("title"))
+                  el.setAttribute("title", child.getAttribute("title"));
+                void blob.text().then((css) => {
+                  el.textContent = css;
+                });
+                doc.head.appendChild(el);
+                continue;
+              }
+            }
+            doc.head.appendChild(child.cloneNode(true));
+          } else {
+            const key = name + "|" + i;
+            let el = live.get(key);
+            if (!el || el.tagName !== tag) {
+              if (el) el.remove();
+              el = doc.createElement(tag.toLowerCase());
+              live.set(key, el);
+              doc.head.appendChild(el);
+            }
+            for (const { name: an, value } of [...child.attributes]) {
+              if (el.getAttribute(an) !== value) el.setAttribute(an, value);
+            }
+            if (el.textContent !== child.textContent)
+              el.textContent = child.textContent;
+          }
+        }
+        return null;
+      };
+    }
+    return { compile, setDesignDocMode };
+  }
+
+  // src/pseudo.ts
+  function scanUnquotedUrl(css, i) {
+    if (css[i] !== "u" && css[i] !== "U" || css.slice(i, i + 4).toLowerCase() !== "url(" || /[a-z0-9_-]/i.test(css[i - 1] ?? "")) {
+      return -1;
+    }
+    let j = i + 4;
+    while (j < css.length && /\s/.test(css[j])) j++;
+    if (css[j] === '"' || css[j] === "'") return -1;
+    while (j < css.length && css[j] !== ")") {
+      if (css[j] === "\\") j++;
+      j++;
+    }
+    return j < css.length ? j + 1 : css.length;
+  }
+  function stripComments(css) {
+    let out = "";
+    let quote = "";
+    for (let i = 0; i < css.length; i++) {
+      const c = css[i];
+      if (quote) {
+        if (c === "\\") {
+          out += c + (css[i + 1] ?? "");
+          i++;
+          continue;
+        }
+        if (c === quote) quote = "";
+        out += c;
+      } else if (c === "'" || c === '"') {
+        quote = c;
+        out += c;
+      } else if (c === "/" && css[i + 1] === "*") {
+        const end = css.indexOf("*/", i + 2);
+        i = end === -1 ? css.length : end + 1;
+        out += " ";
+      } else {
+        const end = scanUnquotedUrl(css, i);
+        if (end === -1) out += c;
+        else {
+          out += css.slice(i, end);
+          i = end - 1;
+        }
+      }
+    }
+    return out;
+  }
+  function importantify(css) {
+    css = stripComments(css);
+    const decls = [];
+    let start = 0;
+    let depth = 0;
+    let quote = "";
+    for (let i = 0; i < css.length; i++) {
+      const c = css[i];
+      if (quote) {
+        if (c === "\\") i++;
+        else if (c === quote) quote = "";
+      } else if (c === "'" || c === '"') quote = c;
+      else if (c === "(") depth++;
+      else if (c === ")") depth = Math.max(0, depth - 1);
+      else if (c === ";" && depth === 0) {
+        decls.push(css.slice(start, i));
+        start = i + 1;
+      } else {
+        const end = scanUnquotedUrl(css, i);
+        if (end !== -1) i = end - 1;
+      }
+    }
+    decls.push(css.slice(start));
+    return decls.map((d) => d.trim()).filter(Boolean).map((d) => /!\s*important$/i.test(d) ? d : d + " !important").join(";");
+  }
+  function createPseudoSheet(doc) {
+    let el = null;
+    const cache = /* @__PURE__ */ new Map();
+    let n = 0;
+    return (pseudo, css) => {
+      const k = pseudo + "|" + css;
+      const hit = cache.get(k);
+      if (hit) return hit;
+      if (!el) {
+        el = doc.createElement("style");
+        doc.head.appendChild(el);
+      }
+      const cls = "scp" + (n++).toString(36);
+      const isPseudoElement = pseudo === "before" || pseudo === "after";
+      const sel = isPseudoElement ? "." + cls + "::" + pseudo : "." + cls + ":" + pseudo;
+      el.sheet.insertRule(
+        sel + "{" + (isPseudoElement ? css : importantify(css)) + "}",
+        el.sheet.cssRules.length
+      );
+      cache.set(k, cls);
+      return cls;
+    };
+  }
+
+  // src/registry.ts
+  function createRegistry() {
+    const entries = /* @__PURE__ */ Object.create(null);
+    function get(name) {
+      return entries[name] || (entries[name] = {
+        html: "",
+        tpl: null,
+        Logic: null,
+        jsStreaming: false,
+        htmlStreaming: false,
+        ver: 0,
+        subs: /* @__PURE__ */ new Set(),
+        fetched: false
+      });
+    }
+    function bump(name) {
+      const r = get(name);
+      r.ver++;
+      for (const fn of r.subs) fn();
+    }
+    return {
+      entries,
+      get,
+      bump,
+      bumpAll() {
+        for (const n in entries) bump(n);
+      }
+    };
+  }
+
+  // src/runtime.ts
+  var COMPONENT_DIR = ".";
+  function createRuntime(doc = document) {
+    const registry = createRegistry();
+    const pseudoClass = createPseudoSheet(doc);
+    const helmet = createHelmetManager(
+      doc,
+      (name) => registry.get(name).htmlStreaming
+    );
+    const external = createExternalModules(() => registry.bumpAll());
+    const factory = createComponentFactory(registry, ensureFetched);
+    const host = {
+      component: (name) => factory.getDC(name),
+      placeholder: (props) => h(Placeholder, props),
+      helmet: (node) => helmet.compile(node),
+      loadExternal: (kind, url, after) => external.load(kind, url, after),
+      resolveExternal: (url, name) => external.resolve(url, name),
+      resolveExternalGlobal: (url, name) => external.resolveGlobal(url, name),
+      resolveExternalError: (url, name) => external.getError(url, name),
+      pseudoClass
+    };
+    function ensureFetched(name) {
+      const r = registry.get(name);
+      if (r.fetched) return;
+      r.fetched = true;
+      const url = COMPONENT_DIR + "/" + encodeURIComponent(name) + ".dc.html";
+      const res = window.__resources;
+      const pre = res ? res[url] : void 0;
+      const target = typeof pre === "string" && pre ? pre : url;
+      const blob = bundledBlob(target);
+      (blob ? blob.text() : fetch(target).then((res2) => {
+        if (!res2.ok) {
+          console.error(
+            '[dc-runtime] sibling fetch for "' + name + '" failed:',
+            url,
+            "returned",
+            res2.status,
+            "\u2014 the reference renders as an empty placeholder."
+          );
+          return "";
+        }
+        return res2.text();
+      })).then((t) => {
+        if (!t) return;
+        const parsed = parseDcText(t);
+        if (!parsed) {
+          console.error(
+            '[dc-runtime] sibling fetch for "' + name + '":',
+            url,
+            "has no <x-dc> block \u2014 not a Design Component."
+          );
+          return;
+        }
+        if (parsed.props) r.propsMeta = parsed.props;
+        if (parsed.preview) r.preview = parsed.preview;
+        if (parsed.template && !r.html) updateHtml(name, parsed.template);
+        if (parsed.js && !r.Logic) updateJs(name, parsed.js);
+      }).catch(
+        (e) => console.error(
+          '[dc-runtime] sibling fetch for "' + name + '" threw:',
+          url,
+          e
+        )
+      );
+    }
+    let rootName = null;
+    function updateHtml(name, html) {
+      const r = registry.get(name);
+      r.html = html;
+      if (name === rootName) {
+        const mode = DESIGN_DOC_MODE_RE.exec(html)?.[1] ?? null;
+        if (mode || !r.htmlStreaming) helmet.setDesignDocMode(mode);
+      }
+      try {
+        r.tpl = compileTemplate(html, host);
+      } catch (e) {
+        console.error("[dc-runtime] template compile FAILED for", name, e);
+      }
+      registry.bump(name);
+    }
+    function updateJs(name, src) {
+      const r = registry.get(name);
+      const seq = r.jsSeq = (r.jsSeq || 0) + 1;
+      try {
+        const Cls = evalDcLogic(src);
+        if (r.jsSeq !== seq) return;
+        if (typeof Cls !== "function") {
+          r.logicError = name + ".dc.html: <script data-dc-script> must define `class Component extends DCLogic`";
+        } else {
+          r.logicError = null;
+          r.Logic = Cls;
+        }
+      } catch (e) {
+        if (r.jsSeq !== seq) return;
+        console.error(
+          "[dc-runtime] logic class eval FAILED for",
+          name,
+          "\u2014 the template renders with props only.",
+          e
+        );
+        r.logicError = name + ": " + (e instanceof Error && e.message ? e.message : String(e));
+      }
+      registry.bump(name);
+    }
+    function setStreaming(name, kind, on) {
+      const r = registry.get(name);
+      if (kind === "html") r.htmlStreaming = !!on;
+      else r.jsStreaming = !!on;
+      let any = false;
+      for (const n in registry.entries) {
+        const e = registry.entries[n];
+        if (e && (e.htmlStreaming || e.jsStreaming)) {
+          any = true;
+          break;
+        }
+      }
+      doc.documentElement.classList.toggle("sc-dc-streaming", any);
+      registry.bump(name);
+    }
+    function dcUpdate(name, kind, content, streaming) {
+      if (streaming) registry.get(name).fetched = true;
+      if (kind === "html") {
+        setStreaming(name, "html", !!streaming);
+        updateHtml(name, content);
+      } else if (kind === "js") {
+        setStreaming(name, "js", !!streaming);
+        if (!streaming) updateJs(name, content);
+      } else if (kind === "props") {
+        const { props, preview } = parseDataProps(content);
+        const r = registry.get(name);
+        r.propsMeta = props ?? void 0;
+        r.preview = preview;
+        registry.bump(name);
+      }
+    }
+    function setProps(name, overrides) {
+      registry.get(name).propOverrides = overrides && typeof overrides === "object" ? { ...overrides } : null;
+      registry.bump(name);
+    }
+    function adoptParsed(name, parsed) {
+      if (!parsed) return;
+      const r = registry.get(name);
+      if (parsed.props) r.propsMeta = parsed.props;
+      if (parsed.preview) r.preview = parsed.preview;
+      if (parsed.template) updateHtml(name, parsed.template);
+      if (parsed.js) updateJs(name, parsed.js);
+    }
+    return {
+      registry,
+      getDC: factory.getDC,
+      updateHtml,
+      updateJs,
+      dcUpdate,
+      setProps,
+      adoptParsed,
+      setRootName: (name) => {
+        rootName = name;
+      },
+      markFetched: (name) => {
+        registry.get(name).fetched = true;
+      },
+      annotatedTemplate: (name) => {
+        const r = registry.get(name);
+        return r.tpl && r.tpl.__annotated || null;
+      },
+      templateSource: (name) => registry.get(name).html || null,
+      StreamableLogic
+    };
+  }
+
+  // src/stream-state.ts
+  function createStreamTracker(staleMs = 6e4, now = Date.now) {
+    const since = /* @__PURE__ */ new Map();
+    const liveOne = (n) => {
+      const t = since.get(n);
+      if (t === void 0) return false;
+      if (now() - t > staleMs) {
+        since.delete(n);
+        return false;
+      }
+      return true;
+    };
+    return {
+      push(name, streaming, viewportKey) {
+        if (viewportKey === "dc-model") return;
+        if (streaming) since.set(name, now());
+        else since.delete(name);
+      },
+      live(name) {
+        if (name !== void 0) return liveOne(name);
+        for (const n of [...since.keys()]) if (liveOne(n)) return true;
+        return false;
+      }
+    };
+  }
+
+  // src/index.ts
+  function hideRawTemplate() {
+    const s = document.createElement("style");
+    s.textContent = "x-dc{display:none!important}";
+    document.head.appendChild(s);
+  }
+  function loadScript(src, integrity) {
+    return new Promise((resolve2, reject) => {
+      //! nosemgrep: create-script-element
+      const s = document.createElement("script");
+      s.src = src;
+      if (integrity) {
+        s.integrity = integrity;
+        s.crossOrigin = "anonymous";
+      }
+      s.async = false;
+      s.onload = () => resolve2();
+      s.onerror = () => reject(new Error(`failed to load ${src}`));
+      document.head.appendChild(s);
+    });
+  }
+  function loadReactUmd() {
+    const w = window;
+    if (w.React && w.ReactDOM) return Promise.resolve();
+    const react = cdnScriptFor(REACT_URL, REACT_SRI);
+    const reactDom = cdnScriptFor(REACT_DOM_URL, REACT_DOM_SRI);
+    return Promise.all([
+      loadScript(react.src, react.integrity),
+      loadScript(reactDom.src, reactDom.integrity)
+    ]).then(() => void 0);
+  }
+  function init() {
+    const runtime = createRuntime(document);
+    let rootName = "Root";
+    const baseCss = document.createElement("style");
+    baseCss.textContent = BASE_CSS;
+    document.head.prepend(baseCss);
+    const notifyHost = () => {
+      if (window.parent === window) return;
+      const r = runtime.registry.entries[rootName];
+      try {
+        window.parent.postMessage(
+          {
+            type: "__dc_booted",
+            rootName,
+            propsMeta: r && r.propsMeta || null,
+            preview: r && r.preview || null
+          },
+          "*"
+        );
+      } catch {
+      }
+    };
+    const streams = createStreamTracker();
+    const api = {
+      __dcUpdate: (name, kind, content, streaming, viewportKey) => {
+        streams.push(name, streaming, viewportKey);
+        runtime.dcUpdate(name, kind, content, streaming);
+        if (name === rootName && !streaming && kind === "props") notifyHost();
+      },
+      __dcStreaming: (name) => streams.live(name),
+      __dcSetProps: (name, overrides) => runtime.setProps(name, overrides),
+      /** Name of the component currently mounted as the page root — DC tools
+       *  push their template-stream here when targeting "the open page". */
+      __dcRootName: () => rootName,
+      /** Editor bridge — the encoded, `data-dc-tpl`-annotated template source.
+       *  The host editor parses this into its own template DOM so it can map a
+       *  rendered node (carrying the same `data-dc-tpl`) back to the source
+       *  node that emitted it. Returns the encoded form (`sc-camel-*` attrs,
+       *  `<sc-raw-*>`/`<sc-helmet>` tags); the editor decodes on serialize. */
+      __dcAnnotatedTemplate: (name) => runtime.annotatedTemplate(name),
+      /** Editor bridge — the *original* (decoded) template source. */
+      __dcTemplateSource: (name) => runtime.templateSource(name),
+      __dcBoot: () => {
+        rootName = boot(runtime, document) ?? rootName;
+        notifyHost();
+      },
+      __dcRegistry: runtime.registry.entries,
+      getDC: (name) => runtime.getDC(name),
+      // `DCLogic` is the documented base class name; `StreamableLogic` is the
+      // implementation alias kept for any project that already references it.
+      DCLogic: runtime.StreamableLogic,
+      StreamableLogic: runtime.StreamableLogic
+    };
+    Object.assign(window, api);
+    window.__dcContentKeyed = true;
+    if (document.readyState !== "loading") api.__dcBoot();
+    else document.addEventListener("DOMContentLoaded", () => api.__dcBoot());
+  }
+  hideRawTemplate();
+  loadReactUmd().then(init).catch((err) => {
+    console.error("[dc] failed to load React or boot:", err);
+    throw err;
+  });
+})();
+
+</script>
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/vileidy.png" data-resource-id="logo_vileidy">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/respiracion.png" data-resource-id="logo_respiracion">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/supercloset.png" data-resource-id="logo_supercloset">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/inspiria.png" data-resource-id="logo_inspiria">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/fusionwraps.png" data-resource-id="logo_fusionwraps">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/quotes.png" data-resource-id="logo_quotes">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/colstone.png" data-resource-id="logo_colstone">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/luyana.png" data-resource-id="logo_luyana">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/citypadel.png" data-resource-id="logo_citypadel">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/reymang.png" data-resource-id="logo_reymang">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/espiritual.png" data-resource-id="logo_espiritual">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/freewings.png" data-resource-id="logo_freewings">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/universo.png" data-resource-id="logo_universo">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/gemology.png" data-resource-id="logo_gemology">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/yoma.png" data-resource-id="logo_yoma">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/saladfresh.png" data-resource-id="logo_saladfresh">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/covencava.png" data-resource-id="logo_covencava">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/magnetive.png" data-resource-id="logo_magnetive">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/ch.png" data-resource-id="logo_ch">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/vital.png" data-resource-id="logo_vital">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/faena.png" data-resource-id="logo_faena">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/gkids.png" data-resource-id="logo_gkids">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/allexandra.png" data-resource-id="logo_allexandra">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/germiven.png" data-resource-id="logo_germiven">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/rg.png" data-resource-id="logo_rg">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/leslie.png" data-resource-id="logo_leslie">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/wynwood.png" data-resource-id="logo_wynwood">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/img/img_7400.jpg" data-resource-id="svc1">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/img/img_7236.jpg" data-resource-id="svc2">
+<meta name="ext-resource-dependency" content="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/img/20220430_155330.jpg" data-resource-id="svc3">
+</head>
+<body>
+<x-dc>
+<helmet>
+  <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#0A0A0B"></rect><circle cx="50" cy="50" r="22" fill="#FFFEB4"></circle><text x="50" y="57" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="800" font-size="20" fill="#0A0A0B">SV</text></svg></template>
+  <title>Sara Vanessa · Academias Online que se posicionan y venden</title>
+  <link rel="stylesheet" href="_ds/saravanz-design-system-d65655ef-9fe9-4e58-896c-165fe38249ae/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/saravanz-design-system-d65655ef-9fe9-4e58-896c-165fe38249ae/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/saravanz-design-system-d65655ef-9fe9-4e58-896c-165fe38249ae/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/saravanz-design-system-d65655ef-9fe9-4e58-896c-165fe38249ae/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/saravanz-design-system-d65655ef-9fe9-4e58-896c-165fe38249ae/tokens/effects.css">
+  <link rel="stylesheet" href="_ds/saravanz-design-system-d65655ef-9fe9-4e58-896c-165fe38249ae/tokens/base.css">
+  <link rel="stylesheet" href="_ds/saravanz-design-system-d65655ef-9fe9-4e58-896c-165fe38249ae/styles.css">
+  <script src="_ds/saravanz-design-system-d65655ef-9fe9-4e58-896c-165fe38249ae/_ds_bundle.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+  <style>
+    html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+    body{margin:0;background:#070708;color:#fff;-webkit-tap-highlight-color:transparent}
+    h1,h2,h3,h4,h5,h6,p,blockquote,figcaption,label{color:inherit}
+    a{color:#FFFEB4;text-decoration:none}
+    a:hover{color:#fff}
+    ::selection{background:#FFFEB4;color:#070708}
+    @keyframes svMarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    @keyframes svMarqueeR{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+    @keyframes svFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+    @keyframes svFloat2{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(12px) rotate(2deg)}}
+    @keyframes svSpin{to{transform:rotate(360deg)}}
+    @keyframes svBreathe{0%,100%{transform:scale(1);box-shadow:0 0 120px 30px rgba(255,254,180,.28)}50%{transform:scale(1.03);box-shadow:0 0 180px 60px rgba(255,254,180,.4)}}
+    @keyframes svBlobA{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(12vw,8vh) scale(1.2)}}
+    @keyframes svBlobB{0%,100%{transform:translate(0,0) scale(1.1)}50%{transform:translate(-14vw,-6vh) scale(.9)}}
+    @keyframes svBlobC{0%,100%{transform:translate(0,0)}50%{transform:translate(6vw,-12vh)}}
+    @keyframes svDraw{from{stroke-dashoffset:900}to{stroke-dashoffset:0}}
+    @keyframes svPop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+    @keyframes svUp{from{opacity:0;transform:translateY(60px);filter:blur(12px)}to{opacity:1;transform:none;filter:blur(0)}}
+    @keyframes svPulse{0%{box-shadow:0 0 0 0 rgba(255,254,180,.8)}100%{box-shadow:0 0 0 14px rgba(255,254,180,0)}}
+    @keyframes svTwinkle{0%,100%{opacity:.3;transform:scale(.7) rotate(0)}50%{opacity:1;transform:scale(1.1) rotate(25deg)}}
+    @keyframes svSheen{0%{transform:translateX(-120%) skewX(-20deg)}100%{transform:translateX(320%) skewX(-20deg)}}
+    @keyframes svFlow{from{background-position:0 0}to{background-position:0 200px}}
+  </style>
+</helmet>
+
+<div ref="{{ rootRef }}" style="background:#070708;color:#fff;font-family:Montserrat,var(--font-sans);position:relative;overflow-x:clip">
+
+  <div style="position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden">
+    <div style="position:absolute;left:-12vw;top:-14vh;width:52vw;height:52vw;border-radius:50%;background:#FFFEB4;opacity:.16;filter:blur(110px);animation:svBlobA 22s ease-in-out infinite"></div>
+    <div style="position:absolute;right:-16vw;top:22vh;width:56vw;height:56vw;border-radius:50%;background:#3C0A8D;opacity:.55;filter:blur(120px);animation:svBlobB 26s ease-in-out infinite"></div>
+    <div style="position:absolute;left:18vw;bottom:-30vh;width:50vw;height:50vw;border-radius:50%;background:#528397;opacity:.32;filter:blur(120px);animation:svBlobC 30s ease-in-out infinite"></div>
+  </div>
+
+  <sc-if value="{{ showCursor }}" hint-placeholder-val="{{ true }}">
+    
+    <div ref="{{ dotRef }}" style="position:fixed;left:0;top:0;width:24px;height:24px;margin:-12px 0 0 -12px;pointer-events:none;z-index:90;opacity:0;transition:opacity .4s">
+      <img src="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/destello.png" alt="" style="width:100%;height:100%;object-fit:contain;animation:svSpin 6s linear infinite;filter:drop-shadow(0 0 8px #FFFEB4)">
+    </div>
+  </sc-if>
+
+  <div ref="{{ barRef }}" style="position:fixed;top:0;left:0;height:2px;width:0;background:#FFFEB4;box-shadow:0 0 12px #FFFEB4;z-index:95"></div>
+
+  <header style="position:fixed;top:12px;left:0;right:0;z-index:80;display:flex;justify-content:center;padding:0 12px;pointer-events:none">
+    <div style="pointer-events:auto;width:100%;max-width:1240px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 8px 8px 20px;border-radius:999px;background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03));backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 20px 50px rgba(0,0,0,.35)">
+      <a href="#inicio" style="display:flex;align-items:center"><img src="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/logo-wordmark-white.png" alt="Sara Vanessa" style="height:22px;width:auto;display:block"></a>
+      <sc-if value="{{ notMob }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.75)"><span style="width:8px;height:8px;border-radius:50%;background:#FFFEB4;animation:svPulse 1.8s ease-out infinite"></span>Agenda abierta</span>
+          <a href="#contacto"><x-import component-from-global-scope="SaravanzDesignSystem_d65655.Button" variant="accent" size="sm" hint-size="230px,40px">Quiero crear mi academia →</x-import></a>
+        </div>
+      </sc-if>
+      <sc-if value="{{ mob }}" hint-placeholder-val="{{ false }}">
+        <a href="#contacto" style="display:flex;align-items:center;gap:8px;height:44px;padding:0 18px;border-radius:999px;background:#FFFEB4;color:#070708;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase"><span style="width:7px;height:7px;border-radius:50%;background:#3C0A8D"></span>Hablemos</a>
+      </sc-if>
+    </div>
+  </header>
+
+  <nav style="position:fixed;bottom:max(14px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:80;display:flex;gap:4px;padding:6px;border-radius:999px;background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.04));backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 20px 50px rgba(0,0,0,.5)">
+    <a href="#servicios" onClick="{{ d0.go }}" title="Academias Online" style="display:flex;align-items:center;justify-content:center;gap:8px;min-width:48px;height:48px;padding:0 {{ d0.pad }};box-sizing:border-box;border-radius:999px;background:{{ d0.bg }};color:{{ d0.fg }};font-size:12px;font-weight:700;transition:all .4s cubic-bezier(.22,.61,.36,1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"></path><path d="M6 12v5c3 2 9 2 12 0v-5"></path></svg><span style="max-width:{{ d0.mw }};overflow:hidden;white-space:nowrap;transition:max-width .4s">Academias</span></a>
+    <a href="#servicios" onClick="{{ d1.go }}" title="Experiencias" style="display:flex;align-items:center;justify-content:center;gap:8px;min-width:48px;height:48px;padding:0 {{ d1.pad }};box-sizing:border-box;border-radius:999px;background:{{ d1.bg }};color:{{ d1.fg }};font-size:12px;font-weight:700;transition:all .4s cubic-bezier(.22,.61,.36,1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z"></path><path d="M19 17v4M17 19h4"></path></svg><span style="max-width:{{ d1.mw }};overflow:hidden;white-space:nowrap;transition:max-width .4s">Experiencias</span></a>
+    <a href="#servicios" onClick="{{ d2.go }}" title="Ecosistemas de Venta" style="display:flex;align-items:center;justify-content:center;gap:8px;min-width:48px;height:48px;padding:0 {{ d2.pad }};box-sizing:border-box;border-radius:999px;background:{{ d2.bg }};color:{{ d2.fg }};font-size:12px;font-weight:700;transition:all .4s cubic-bezier(.22,.61,.36,1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.5"></circle><circle cx="5" cy="18" r="2.5"></circle><circle cx="19" cy="18" r="2.5"></circle><path d="M10.8 7.2 6.3 15.8M13.2 7.2l4.5 8.6M7.5 18h9"></path></svg><span style="max-width:{{ d2.mw }};overflow:hidden;white-space:nowrap;transition:max-width .4s">Ecosistemas</span></a>
+    <a href="#casos" title="Casos" style="display:flex;align-items:center;justify-content:center;gap:8px;min-width:48px;height:48px;padding:0 {{ d3.pad }};box-sizing:border-box;border-radius:999px;background:{{ d3.bg }};color:{{ d3.fg }};font-size:12px;font-weight:700;transition:all .4s cubic-bezier(.22,.61,.36,1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 10 5-10 5L2 7z"></path><path d="m2 12 10 5 10-5"></path><path d="m2 17 10 5 10-5"></path></svg><span style="max-width:{{ d3.mw }};overflow:hidden;white-space:nowrap;transition:max-width .4s">Casos</span></a>
+    <a href="#sobre" title="Sobre Sara" style="display:flex;align-items:center;justify-content:center;gap:8px;min-width:48px;height:48px;padding:0 {{ d4.pad }};box-sizing:border-box;border-radius:999px;background:{{ d4.bg }};color:{{ d4.fg }};font-size:12px;font-weight:700;transition:all .4s cubic-bezier(.22,.61,.36,1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg><span style="max-width:{{ d4.mw }};overflow:hidden;white-space:nowrap;transition:max-width .4s">Sobre Sara</span></a>
+  </nav>
+
+  <!-- HERO -->
+  <section id="inicio" ref="{{ heroRef }}" data-screen-label="01 Hero" style="position:relative;z-index:1;min-height:100svh;padding:clamp(108px,14vw,140px) clamp(20px,4vw,32px) clamp(96px,10vw,120px);display:flex;align-items:center;box-sizing:border-box;overflow:hidden">
+    <img src="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/img/img_7084.jpg" alt="" style="position:absolute;inset:-40px;width:calc(100% + 80px);height:calc(100% + 80px);object-fit:cover;object-position:center 20%;filter:blur(40px) saturate(1.2);opacity:.22;pointer-events:none">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%, rgba(7,7,8,0) 0%, rgba(7,7,8,.75) 70%)"></div>
+    <div style="position:relative;width:100%;max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,480px),1fr));gap:clamp(32px,5vw,48px);align-items:center">
+      <div style="animation:svUp 1.2s cubic-bezier(.22,.61,.36,1) both">
+        <div style="display:inline-flex;align-items:center;gap:10px;padding:7px 14px 7px 7px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font-size:12px;font-weight:600;letter-spacing:.06em;margin-bottom:24px">
+          <span style="padding:5px 10px;border-radius:999px;background:#FFFEB4;color:#070708;font-size:10px;font-weight:800;letter-spacing:.14em">ACADEMIAS ONLINE</span>Creative Director · Sara Vanessa
+        </div>
+        <p style="margin:0 0 8px;font-size:clamp(20px,2.2vw,30px);font-weight:600;line-height:1.2;letter-spacing:-.01em;color:rgba(255,255,255,.85);max-width:560px">Lo que sabes merece más que un curso.</p>
+        <h1 style="font-family:Montserrat,var(--font-sans);margin:0 0 26px;font-weight:900;font-size:clamp(46px,11vw,124px);line-height:.9;letter-spacing:-.045em;text-transform:uppercase">Merece una <span style="font-family:var(--font-script);font-weight:400;text-transform:none;letter-spacing:0;font-size:1.12em;color:#FFFEB4;text-shadow:0 0 40px rgba(255,254,180,.5)">academia.</span></h1>
+        <p style="font-size:clamp(16px,1.3vw,19px);line-height:1.65;color:rgba(255,255,255,.82);max-width:540px;margin:0 0 24px;text-wrap:pretty">Convierto la experiencia de tu marca personal en una Academia Online con identidad propia, una estructura clara y un recorrido que enamora… y que vende mientras tú enseñas.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px">
+          <span style="padding:10px 15px;border-radius:999px;background:rgba(255,254,180,.12);border:1px solid rgba(255,254,180,.4);color:#FFFEB4;font-weight:700;font-size:14px;animation:svUp .9s cubic-bezier(.22,.61,.36,1) .6s both">Que te elijan.</span>
+          <span style="padding:10px 15px;border-radius:999px;background:rgba(255,254,180,.12);border:1px solid rgba(255,254,180,.4);color:#FFFEB4;font-weight:700;font-size:14px;animation:svUp .9s cubic-bezier(.22,.61,.36,1) .9s both">Que aprendan.</span>
+          <span style="padding:10px 15px;border-radius:999px;background:#FFFEB4;color:#070708;font-weight:800;font-size:14px;animation:svUp .9s cubic-bezier(.22,.61,.36,1) 1.2s both">Que te recomienden.</span>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+          <a href="#contacto"><x-import component-from-global-scope="SaravanzDesignSystem_d65655.Button" variant="accent" size="lg" hint-size="280px,54px">Quiero crear mi academia →</x-import></a>
+          <a href="#casos" style="display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 26px;box-sizing:border-box;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:#fff;font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;transition:background .3s" style-hover="background:rgba(255,255,255,.16);color:#fff">Ver proyectos ↓</a>
+        </div>
+      </div>
+
+      <div style="position:relative;width:100%;max-width:{{ heroVisW }};margin:0 auto;aspect-ratio:1">
+        <div data-depth="6" style="position:absolute;inset:4%;transition:transform .6s cubic-bezier(.22,.61,.36,1)">
+          <div style="width:100%;height:100%;border-radius:50%;background:#FFFEB4;animation:svBreathe 6s ease-in-out infinite, svPop 1.2s cubic-bezier(.22,.61,.36,1) both"></div>
+        </div>
+        <div data-depth="2" style="position:absolute;inset:17%;transition:transform .6s cubic-bezier(.22,.61,.36,1)">
+          <div style="position:absolute;inset:-10px;border-radius:50%;background:conic-gradient(from 0deg,#3C0A8D,#528397,#070708,#3C0A8D);animation:svSpin 8s linear infinite"></div>
+          <div style="position:absolute;inset:0;border-radius:50%;overflow:hidden;background:#070708;box-shadow:0 30px 60px rgba(0,0,0,.5);animation:svPop 1.4s cubic-bezier(.22,.61,.36,1) .25s both">
+            <img src="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/img/img_7084.jpg" alt="Sara Vanessa" style="width:100%;height:100%;object-fit:cover;object-position:center 14%;display:block">
+          </div>
+        </div>
+        <svg viewBox="0 0 560 560" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible"><polyline points="40,430 170,380 300,410 430,300 540,290" fill="none" stroke="#070708" stroke-width="2.5" stroke-dasharray="900" style="animation:svDraw 2.4s cubic-bezier(.65,0,.25,1) .8s both"></polyline><circle cx="170" cy="380" r="6" fill="#070708"></circle><circle cx="300" cy="410" r="6" fill="#070708"></circle><circle cx="430" cy="300" r="6" fill="#070708"></circle></svg>
+        <div data-depth="-26" style="position:absolute;left:0;top:68%;transition:transform .5s cubic-bezier(.22,.61,.36,1)">
+          <div style="animation:svFloat 5.5s ease-in-out infinite;padding:12px 18px;border-radius:16px;background:rgba(255,255,255,.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.9);box-shadow:0 18px 40px rgba(0,0,0,.35);font-weight:900;font-size:clamp(14px,3.6vw,22px);color:#3C0A8D;letter-spacing:-.02em">ACADEMIA</div>
+        </div>
+        <div data-depth="-18" style="position:absolute;left:34%;top:84%;transition:transform .5s cubic-bezier(.22,.61,.36,1)">
+          <div style="animation:svFloat2 6.5s ease-in-out infinite;padding:12px 18px;border-radius:16px;background:rgba(255,255,255,.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.9);box-shadow:0 18px 40px rgba(0,0,0,.35);font-weight:900;font-size:clamp(14px,3.6vw,22px);color:#3C0A8D;letter-spacing:-.02em">VENTAS</div>
+        </div>
+        <div data-depth="-30" style="position:absolute;right:0;top:46%;transition:transform .5s cubic-bezier(.22,.61,.36,1)">
+          <div style="animation:svFloat 6s ease-in-out .7s infinite;padding:12px 18px;border-radius:16px;background:rgba(255,255,255,.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.9);box-shadow:0 18px 40px rgba(0,0,0,.35);font-weight:900;font-size:clamp(14px,3.6vw,22px);color:#3C0A8D;letter-spacing:-.02em">EXPERIENCIA</div>
+        </div>
+        <div data-depth="-14" style="position:absolute;right:0;top:4%;transition:transform .5s cubic-bezier(.22,.61,.36,1)">
+          <div style="animation:svFloat2 7s ease-in-out infinite;display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:999px;background:rgba(7,7,8,.65);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.16);box-shadow:0 18px 40px rgba(0,0,0,.4)">
+            <span style="width:32px;height:32px;border-radius:50%;background:#FFFEB4;display:flex;align-items:center;justify-content:center"><img src="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/destello.png" alt="" style="width:18px;height:18px;object-fit:contain"></span>
+            <span><span style="display:block;font-size:13px;font-weight:700">+530 marcas</span><span style="display:block;font-size:11px;color:rgba(255,255,255,.7)">en más de 8 países</span></span>
+          </div>
+        </div>
+        <img src="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/destello.png" alt="" style="position:absolute;left:8%;top:12%;width:36px;object-fit:contain;animation:svTwinkle 3s ease-in-out infinite">
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGOS -->
+  <section data-screen-label="02 Clientes" style="position:relative;z-index:1;padding:48px 0">
+    <div style="text-align:center;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.65);font-weight:600;margin-bottom:28px;padding:0 24px;line-height:1.7">Más de 530 marcas en +8 países ya confiaron en mí</div>
+    <div style="display:flex;flex-direction:column;gap:14px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);overflow:hidden">
+      <div style="display:flex;gap:14px;width:max-content;animation:svMarquee {{ marqueeDur }} linear infinite">
+        <sc-for list="{{ logosA }}" as="lg" hint-placeholder-count="13">
+          <div style="width:{{ logoW }};height:{{ logoH }};flex-shrink:0;border-radius:20px;display:flex;align-items:center;justify-content:center;padding:14px 22px;box-sizing:border-box;background:linear-gradient(135deg,rgba(255,255,255,.09),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)">
+            <img src="{{ lg.src }}" alt="{{ lg.name }}" style="max-width:100%;max-height:64px;object-fit:contain;opacity:.85">
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:14px;width:max-content;animation:svMarqueeR {{ marqueeDur }} linear infinite">
+        <sc-for list="{{ logosB }}" as="lg" hint-placeholder-count="13">
+          <div style="width:{{ logoW }};height:{{ logoH }};flex-shrink:0;border-radius:20px;display:flex;align-items:center;justify-content:center;padding:14px 22px;box-sizing:border-box;background:linear-gradient(135deg,rgba(255,255,255,.09),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)">
+            <img src="{{ lg.src }}" alt="{{ lg.name }}" style="max-width:100%;max-height:64px;object-fit:contain;opacity:.85">
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECORRIDO -->
+  <section data-screen-label="03 El recorrido" style="position:relative;z-index:1;padding:clamp(72px,10vw,120px) clamp(20px,4vw,32px)">
+    <div style="max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(36px,6vw,64px);align-items:start">
+      <div data-reveal="" style="position:{{ stickyPos }};top:120px">
+        <div style="display:flex;align-items:center;gap:12px;font-size:12px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#FFFEB4;margin-bottom:18px"><span style="width:8px;height:8px;border-radius:50%;background:#FFFEB4"></span>La verdad incómoda</div>
+        <h2 style="font-family:Montserrat,var(--font-sans);font-weight:800;font-size:clamp(34px,5vw,68px);line-height:1.02;letter-spacing:-.04em;margin:0 0 22px;text-wrap:balance">Nadie se enamora de un curso. Se enamora de cómo lo hiciste <span style="font-family:var(--font-script);font-weight:400;letter-spacing:0;color:#FFFEB4;font-size:1.3em">sentir.</span></h2>
+        <p style="font-size:clamp(16px,1.4vw,18px);line-height:1.7;color:rgba(255,255,255,.78);margin:0;max-width:460px">Tu alumno empieza a vivir tu academia mucho antes de la primera clase. Y cada uno de estos momentos suma… o resta confianza.</p>
+      </div>
+      <div style="position:relative;padding-left:30px">
+        <div style="position:absolute;left:9px;top:10px;bottom:10px;width:2px;background:linear-gradient(180deg,rgba(255,254,180,.9),rgba(255,254,180,.1) 50%,rgba(255,254,180,.9));background-size:2px 200px;animation:svFlow 4s linear infinite"></div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <sc-for list="{{ touch }}" as="tp" hint-placeholder-count="9">
+            <div data-reveal="" data-delay="{{ tp.delay }}" style="position:relative;display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:20px;background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.02));backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.12);transition:background .3s,transform .3s" style-hover="background:rgba(255,254,180,.12);transform:translateX(6px)">
+              <span style="position:absolute;left:-28px;width:14px;height:14px;border-radius:50%;background:#070708;border:2px solid #FFFEB4;box-shadow:0 0 14px rgba(255,254,180,.6)"></span>
+              <span style="font-size:12px;font-weight:700;color:#FFFEB4;letter-spacing:.1em;min-width:22px">{{ tp.n }}</span>
+              <span style="font-size:clamp(16px,1.5vw,20px);font-weight:600;letter-spacing:-.01em;line-height:1.35">{{ tp.t }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+    <div data-reveal="" style="max-width:980px;margin:clamp(64px,9vw,96px) auto 0;text-align:center">
+      <p style="margin:0 0 10px;font-size:clamp(18px,2vw,26px);font-weight:600;color:rgba(255,255,255,.78)">La mayoría cuida uno o dos de esos momentos.</p>
+      <h2 style="font-family:Montserrat,var(--font-sans);font-weight:900;font-size:clamp(38px,6.4vw,96px);line-height:.98;letter-spacing:-.045em;margin:0 0 24px;text-wrap:balance">Yo me encargo de que todos <span style="font-family:var(--font-script);font-weight:400;letter-spacing:0;color:#FFFEB4;font-size:1.2em;text-shadow:0 0 40px rgba(255,254,180,.45)">sumen.</span></h2>
+      <p style="margin:0;font-size:clamp(16px,1.4vw,18px);line-height:1.7;color:rgba(255,255,255,.78)">Porque una experiencia que se recuerda nunca es casualidad. <strong style="color:#fff">Es una decisión.</strong></p>
+    </div>
+  </section>
+
+  <!-- DIFERENCIAL -->
+  <section data-screen-label="04 Diferencial" style="position:relative;z-index:1;padding:clamp(72px,10vw,110px) clamp(20px,4vw,32px)">
+    <div style="max-width:1240px;margin:0 auto">
+      <div data-reveal="" style="text-align:center;max-width:900px;margin:0 auto 36px">
+        <div style="display:inline-flex;align-items:center;gap:12px;font-size:12px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#FFFEB4;margin-bottom:18px"><span style="width:8px;height:8px;border-radius:50%;background:#FFFEB4"></span>Por qué es distinto</div>
+        <h2 style="font-family:Montserrat,var(--font-sans);font-weight:800;font-size:clamp(32px,4.6vw,64px);line-height:1.04;letter-spacing:-.04em;margin:0 0 20px;text-wrap:balance">No llego a hacer una pieza bonita. Llego a entender todo tu <span style="font-family:var(--font-script);font-weight:400;letter-spacing:0;color:#FFFEB4;font-size:1.3em">camino.</span></h2>
+        <p style="font-size:clamp(16px,1.4vw,17px);line-height:1.7;color:rgba(255,255,255,.78);margin:0 auto;max-width:640px">Una academia que se posiciona y vende no nace de una plataforma ni de un logo. Nace de unir cinco fuerzas que casi nunca trabajan juntas.</p>
+      </div>
+      <div data-reveal="" style="position:relative;max-width:min(520px,86vw);aspect-ratio:1;margin:0 auto 56px">
+        <div style="position:absolute;inset:0;border-radius:50%;background:#FFFEB4;box-shadow:0 0 160px 40px rgba(255,254,180,.25)"></div>
+        <div style="position:absolute;inset:22%;border-radius:50%;background:radial-gradient(circle at 35% 30%,#2a2a2c,#070708 70%);box-shadow:0 40px 80px rgba(0,0,0,.6),inset 0 2px 0 rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;text-align:center">
+          <div style="font-weight:900;font-size:clamp(22px,4.2vw,46px);line-height:.95;letter-spacing:-.04em;text-shadow:0 6px 20px rgba(0,0,0,.6)">CINCO<br>FUERZAS<br>UNA VISIÓN</div>
+        </div>
+        <div style="position:absolute;inset:-4%;border-radius:50%;border:1px dashed rgba(255,254,180,.4);animation:svSpin 40s linear infinite"></div>
+      </div>
+      <div style="position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px">
+        <sc-for list="{{ pillars }}" as="pl" hint-placeholder-count="5">
+          <div data-reveal="" data-delay="{{ pl.delay }}" style="padding:26px;border-radius:26px;background:linear-gradient(135deg,rgba(30,30,32,.92),rgba(12,12,14,.92));backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 24px 60px rgba(0,0,0,.45);transition:transform .4s,background .4s" style-hover="transform:translateY(-6px);background:rgba(255,254,180,.1)">
+            <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:12px"><span style="color:#FFFEB4;font-size:22px;font-weight:600">{{ pl.n }}</span><span style="font-size:18px;font-weight:800;letter-spacing:-.01em;text-transform:uppercase">{{ pl.t }}</span></div>
+            <div style="font-size:15px;color:rgba(255,255,255,.8);line-height:1.6">{{ pl.d }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div data-reveal="" style="margin:clamp(56px,8vw,88px) auto 0;max-width:860px">
+        <div style="text-align:center;font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:22px">Lo que suele pasar en nuestra primera conversación</div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+          <sc-for list="{{ realize }}" as="rz" hint-placeholder-count="4">
+            <div data-reveal="" data-delay="{{ rz.delay }}" style="display:flex;flex-direction:column;align-items:center;gap:6px;width:100%">
+              <div style="width:100%;max-width:720px;box-sizing:border-box;text-align:center;padding:20px 24px;border-radius:22px;background:{{ rz.bg }};color:{{ rz.fg }};border:1px solid rgba(255,255,255,.14);font-size:clamp(18px,2vw,24px);font-weight:{{ rz.w }};letter-spacing:-.01em;line-height:1.3;box-shadow:{{ rz.sh }}">“{{ rz.t }}”</div>
+              <span style="color:#FFFEB4;font-size:20px;opacity:{{ rz.arrow }};line-height:1">↓</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICIOS -->
+  <section id="servicios" data-screen-label="05 Servicios" style="position:relative;z-index:1;padding:clamp(72px,10vw,110px) clamp(20px,4vw,32px)">
+    <div style="max-width:1240px;margin:0 auto">
+      <div data-reveal="" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:40px">
+        <div style="max-width:760px">
+          <div style="display:flex;align-items:center;gap:12px;font-size:12px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#FFFEB4;margin-bottom:18px"><span style="width:8px;height:8px;border-radius:50%;background:#FFFEB4"></span>Cómo puedo ayudarte</div>
+          <h2 style="font-family:Montserrat,var(--font-sans);font-weight:800;font-size:clamp(32px,4.8vw,66px);line-height:1.02;letter-spacing:-.04em;margin:0;text-wrap:balance">Tres caminos. Un mismo propósito: que lo que sabes llegue <span style="font-family:var(--font-script);font-weight:400;letter-spacing:0;color:#FFFEB4;font-size:1.3em">lejos.</span></h2>
+        </div>
+        <p style="max-width:360px;font-size:16px;line-height:1.7;color:rgba(255,255,255,.75);margin:0">Puedes empezar por tu academia, por elevar tu marca o por el sistema que la vende. Cada proyecto se construye a tu medida.</p>
+      </div>
+      <div data-reveal="" style="display:flex;gap:12px;flex-wrap:wrap">
+        <sc-for list="{{ services }}" as="s" hint-placeholder-count="3">
+          <article onMouseEnter="{{ s.enter }}" onClick="{{ s.enter }}" style="position:relative;flex:{{ s.flex }};min-width:260px;height:{{ s.h }};border-radius:30px;overflow:hidden;cursor:pointer;transition:flex .8s cubic-bezier(.22,.61,.36,1),height .7s cubic-bezier(.22,.61,.36,1);background:#111;border:1px solid {{ s.bd }}">
+            <img src="{{ s.img }}" alt="{{ s.k }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:{{ s.pos }};transform:scale({{ s.scale }});filter:{{ s.filt }};transition:transform 1.2s cubic-bezier(.22,.61,.36,1),filter .8s">
+            <div style="position:absolute;top:16px;left:16px;right:16px;display:flex;justify-content:space-between;align-items:center;gap:10px">
+              <span style="padding:8px 13px;border-radius:999px;background:rgba(7,7,8,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.2);font-size:11px;font-weight:700;letter-spacing:.12em">{{ s.n }} · {{ s.k }}</span>
+              <span style="flex-shrink:0;width:44px;height:44px;border-radius:50%;background:{{ s.dotBg }};color:#070708;display:flex;align-items:center;justify-content:center;transition:background .4s,transform .6s;transform:rotate({{ s.rot }})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></span>
+            </div>
+            <sc-if value="{{ s.star }}" hint-placeholder-val="{{ false }}">
+              <span style="position:absolute;top:70px;left:16px;padding:6px 12px;border-radius:999px;background:#FFFEB4;color:#070708;font-size:10px;font-weight:800;letter-spacing:.14em">EL CORAZÓN DE MI TRABAJO</span>
+            </sc-if>
+            <div style="position:absolute;left:12px;right:12px;bottom:12px;padding:22px;border-radius:22px;background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.05));backdrop-filter:blur(24px) saturate(170%);-webkit-backdrop-filter:blur(24px) saturate(170%);border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.35);overflow:hidden">
+              <h3 style="font-family:Montserrat,var(--font-sans);font-weight:800;font-size:clamp(20px,2vw,28px);line-height:1.1;letter-spacing:-.02em;margin:0;max-width:460px;text-shadow:0 2px 12px rgba(0,0,0,.35)">{{ s.t }}</h3>
+              <div style="opacity:{{ s.op }};max-height:{{ s.mh }};overflow:hidden;transition:opacity .6s .15s,max-height .8s cubic-bezier(.22,.61,.36,1)">
+                <p style="font-size:15px;line-height:1.6;margin:12px 0 14px;max-width:460px">{{ s.d }}</p>
+                <div style="display:flex;gap:6px;flex-wrap:wrap">
+                  <sc-for list="{{ s.tags }}" as="tg" hint-placeholder-count="3">
+                    <span style="padding:7px 12px;border-radius:999px;background:#FFFEB4;color:#070708;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase">{{ tg }}</span>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </article>
+        </sc-for>
+      </div>
+
+      <div data-reveal="" style="margin-top:14px;border-radius:32px;padding:clamp(24px,4vw,52px);background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03));backdrop-filter:blur(24px) saturate(170%);-webkit-backdrop-filter:blur(24px) saturate(170%);border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 30px 70px rgba(0,0,0,.45);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(32px,5vw,48px)">
+        <div>
+          <div style="font-size:12px;font-weight:700;letter-spacing:.2em;color:#FFFEB4;margin-bottom:14px">{{ sd.n }} · {{ sd.k }}</div>
+          <h3 style="font-family:Montserrat,var(--font-sans);font-weight:800;font-size:clamp(26px,3vw,42px);line-height:1.06;letter-spacing:-.03em;margin:0 0 20px;text-wrap:balance">{{ sd.t }}</h3>
+          <sc-for list="{{ sd.intro }}" as="ip" hint-placeholder-count="2">
+            <p style="margin:0 0 14px;font-size:16px;line-height:1.7;color:rgba(255,255,255,.82);text-wrap:pretty">{{ ip }}</p>
+          </sc-for>
+          <sc-if value="{{ sd.hasQuote }}" hint-placeholder-val="{{ false }}">
+            <blockquote style="margin:10px 0 18px;padding:22px 24px;border-radius:20px;background:rgba(255,254,180,.1);border:1px solid rgba(255,254,180,.35);font-size:clamp(18px,1.8vw,23px);font-weight:700;line-height:1.35;color:#FFFEB4;letter-spacing:-.01em">{{ sd.quote }}</blockquote>
+          </sc-if>
+          <sc-if value="{{ sd.hasJourney }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0 18px">
+              <sc-for list="{{ sd.journey }}" as="jn" hint-placeholder-count="7">
+                <span style="display:flex;align-items:center;gap:6px"><span style="padding:9px 13px;border-radius:999px;background:{{ jn.bg }};color:{{ jn.fg }};font-size:13px;font-weight:700">{{ jn.t }}</span><span style="color:#FFFEB4;font-weight:700;opacity:{{ jn.arrow }}">→</span></span>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ sd.hasAfter }}" hint-placeholder-val="{{ false }}">
+            <p style="margin:0 0 14px;font-size:16px;line-height:1.7;font-weight:700">{{ sd.after }}</p>
+          </sc-if>
+          <sc-if value="{{ sd.hasSteps }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:22px">
+              <div style="font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:12px">Lo construimos contigo, paso a paso</div>
+              <div style="display:flex;flex-direction:column">
+                <sc-for list="{{ sd.steps }}" as="stp" hint-placeholder-count="7">
+                  <div style="display:grid;grid-template-columns:40px 1fr;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.1)">
+                    <span style="width:36px;height:36px;border-radius:50%;background:#FFFEB4;color:#070708;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800">{{ stp.n }}</span>
+                    <span><span style="display:block;font-size:13px;font-weight:800;letter-spacing:.14em">{{ stp.t }}</span><span style="display:block;font-size:15px;color:rgba(255,255,255,.78);line-height:1.55;margin-top:4px">{{ stp.d }}</span></span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:24px">
+          <div>
+            <div style="font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:12px">{{ sd.listTitle }}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <sc-for list="{{ sd.list }}" as="li" hint-placeholder-count="10">
+                <span style="padding:9px 13px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);font-size:13px;font-weight:600">{{ li }}</span>
+              </sc-for>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:12px">{{ sd.forTitle }}</div>
+            <sc-if value="{{ sd.hasForText }}" hint-placeholder-val="{{ true }}">
+              <p style="margin:0;font-size:17px;line-height:1.6;font-weight:600">{{ sd.forText }}</p>
+            </sc-if>
+            <sc-if value="{{ sd.hasForList }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ sd.forList }}" as="fl" hint-placeholder-count="5">
+                  <div style="display:flex;gap:12px;align-items:flex-start;font-size:15px;line-height:1.5"><span style="flex-shrink:0;width:8px;height:8px;margin-top:7px;border-radius:50%;background:#FFFEB4"></span>{{ fl }}</div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+          <div style="padding:24px;border-radius:22px;background:#FFFEB4;color:#070708;box-shadow:0 0 60px rgba(255,254,180,.18)">
+            <div style="font-size:12px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px">Lo que te llevas</div>
+            <sc-for list="{{ sd.result }}" as="rs" hint-placeholder-count="2">
+              <p style="margin:0 0 6px;font-size:17px;line-height:1.5;font-weight:700">{{ rs }}</p>
+            </sc-for>
+          </div>
+          <a href="#contacto" style="align-self:flex-start"><x-import component-from-global-scope="SaravanzDesignSystem_d65655.Button" variant="accent" size="lg" hint-size="280px,54px">{{ sd.cta }}</x-import></a>
+        </div>
+      </div>
+
+      <div data-reveal="" style="margin-top:14px;position:relative;overflow:hidden;border-radius:32px;padding:clamp(24px,4vw,48px);background:linear-gradient(135deg,rgba(60,10,141,.6),rgba(60,10,141,.2));backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);border:1px solid rgba(168,163,200,.35);box-shadow:inset 0 1px 0 rgba(255,255,255,.25);display:flex;justify-content:space-between;align-items:center;gap:28px;flex-wrap:wrap">
+        <div style="position:absolute;top:0;left:0;width:30%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);animation:svSheen 7s ease-in-out infinite;pointer-events:none"></div>
+        <div style="max-width:720px;position:relative">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.2em;color:#FFFEB4;margin-bottom:12px;line-height:1.6">PARA QUIEN YA CONSTRUYÓ CONMIGO · CREATIVE DIRECTION</div>
+          <h3 style="font-family:Montserrat,var(--font-sans);font-weight:800;font-size:clamp(24px,3vw,40px);line-height:1.08;letter-spacing:-.03em;margin:0 0 12px">Tu equipo ya sabe ejecutar. Lo que necesita es <span style="font-family:var(--font-script);font-weight:400;letter-spacing:0;color:#FFFEB4;font-size:1.3em">dirección.</span></h3>
+          <p style="margin:0;font-size:16px;line-height:1.65;color:rgba(255,255,255,.85)">Me convierto en tu directora creativa externa: cuido la visión en cada lanzamiento, cada pieza y cada nueva experiencia, para que tu marca crezca sin perder su alma.</p>
+        </div>
+        <a href="#contacto" style="position:relative"><x-import component-from-global-scope="SaravanzDesignSystem_d65655.Button" variant="light" size="lg" hint-size="240px,54px">Hablemos de dirección →</x-import></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- RAÍCES -->
+  <section data-screen-label="06 Raíces" style="position:relative;z-index:1;padding:clamp(72px,10vw,110px) clamp(20px,4vw,32px)">
+    <div style="max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(36px,6vw,56px);align-items:center">
+      <div data-reveal="">
+        <div style="display:flex;align-items:center;gap:12px;font-size:12px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#FFFEB4;margin-bottom:18px"><span style="width:8px;height:8px;border-radius:50%;background:#FFFEB4"></span>Mi forma de trabajar</div>
+        <h2 style="font-family:Montserrat,var(--font-sans);font-weight:800;font-size:clamp(36px,5.2vw,76px);line-height:1;letter-spacing:-.04em;margin:0 0 22px;text-wrap:balance">Todo lo que florece empieza bajo <span style="font-family:var(--font-script);font-weight:400;letter-spacing:0;color:#FFFEB4;font-size:1.3em">tierra.</span></h2>
+        <p style="font-size:clamp(16px,1.4vw,17px);line-height:1.7;color:rgba(255,255,255,.8);margin:0 0 14px;max-width:480px">Una marca puede verse espectacular y aun así no estar lista para crecer. Lo que brilla por fuera necesita algo firme que lo sostenga por dentro.</p>
+        <p style="font-size:clamp(16px,1.4vw,17px);line-height:1.7;color:rgba(255,255,255,.8);margin:0 0 32px;max-width:480px">Por eso miro cada proyecto como un árbol.</p>
+        <div style="display:flex;flex-direction:column;gap:4px;font-weight:800;font-size:clamp(22px,2.4vw,32px);letter-spacing:-.02em;line-height:1.15">
+          <span style="color:rgba(255,255,255,.55)">Muchos empiezan por las hojas.</span>
+          <span>Yo empiezo por las <span style="color:#FFFEB4">raíces.</span></span>
+        </div>
+      </div>
+      <div style="position:relative;display:flex;flex-direction:column;gap:10px">
+        <div style="position:absolute;left:50%;top:-10px;bottom:-10px;width:2px;margin-left:-1px;background:linear-gradient(0deg,rgba(82,131,151,.9),rgba(255,254,180,.9));opacity:.5"></div>
+        <sc-for list="{{ tree }}" as="tr" hint-placeholder-count="4">
+          <div data-reveal="" data-delay="{{ tr.delay }}" style="position:relative;padding:22px 22px;border-radius:24px;background:{{ tr.bg }};color:{{ tr.fg }};border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 20px 50px rgba(0,0,0,.35)">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:12px;flex-wrap:wrap"><span style="font-size:19px;font-weight:800;letter-spacing:-.01em">{{ tr.k }}</span><span style="font-size:11px;font-weight:700;letter-spacing:.16em;opacity:.75">{{ tr.lvl }}</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <sc-for list="{{ tr.items }}" as="ti" hint-placeholder-count="5">
+                <span style="padding:8px 12px;border-radius:999px;background:{{ tr.cb }};color:{{ tr.cf }};font-size:13px;font-weight:600">{{ ti }}</span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- MÉTODO -->
+  <section data-screen-label="07 Método" style="position:relative;z-index:1;padding:clamp(72px,10vw,110px) clamp(20px,4vw,32px)">
+    <div style="max-width:1240px;margin:0 auto">
+      <div data-reveal="" style="max-width:860px;margin-bottom:40px">
+        <div style="display:flex;align-items:center;gap:12px;font-size:12px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#FFFEB4;margin-bottom:18px"><span style="width:8px;height:8px;border-radius:50%;background:#FFFEB4"></span>Método · The Experience Journey</div>
+        <h2 style="font-family:Montserrat,var(--font-sans);font-weight:800;font-size:clamp(34px,4.8vw,66px);line-height:1.02;letter-spacing:-.04em;margin:0;text-wrap:balance">Lo memorable nunca se <span style="font-family:var(--font-script);font-weight:400;letter-spacing:0;color:#FFFEB4;font-size:1.3em">improvisa.</span></h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:12px">
+        <sc-for list="{{ method }}" as="m" hint-placeholder-count="6">
+          <div data-reveal="" data-delay="{{ m.delay }}" style="position:relative;overflow:hidden;padding:28px;border-radius:28px;background:{{ m.bg }};color:{{ m.fg }};border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);box-shadow:inset 0 1px 0 rgba(255,255,255,.25);display:flex;flex-direction:column;gap:14px;min-height:260px;transition:transform .4s" style-hover="transform:translateY(-6px)">
+            <div style="position:absolute;right:-10px;top:-30px;font-size:140px;font-weight:900;letter-spacing:-.06em;opacity:.08;line-height:1">{{ m.n }}</div>
+            <div style="font-size:13px;font-weight:700;letter-spacing:.18em;color:{{ m.ac }}">{{ m.n }} — {{ m.k }}</div>
+            <p style="margin:0;font-size:17px;line-height:1.5;font-weight:600;position:relative">{{ m.d }}</p>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;position:relative">
+              <sc-for list="{{ m.items }}" as="mi" hint-placeholder-count="4">
+                <span style="padding:7px 12px;border-radius:999px;background:{{ m.cb }};font-size:12px;font-weight:600">{{ mi }}</span>
+              </sc-for>
+            </div>
+            <sc-if value="{{ m.hasNote }}" hint-placeholder-val="{{ false }}">
+              <p style="margin:0;font-size:14px;line-height:1.55;opacity:.85;position:relative;font-style:italic">{{ m.note }}</p>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUK HOMES -->
+  <section data-screen-label="08 EDUK Homes" style="position:relative;z-index:1;padding:clamp(56px,8vw,110px) clamp(20px,4vw,32px)">
+    <div data-reveal="" style="max-width:1240px;margin:0 auto;position:relative;border-radius:36px;overflow:hidden;padding:clamp(24px,5vw,64px);background:linear-gradient(135deg,rgba(82,131,151,.35),rgba(60,10,141,.25));backdrop-filter:blur(26px) saturate(170%);-webkit-backdrop-filter:blur(26px) saturate(170%);border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 40px 80px rgba(0,0,0,.4)">
+      <div style="position:absolute;top:0;left:0;width:30%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent);animation:svSheen 8s ease-in-out infinite;pointer-events:none"></div>
+      <div style="position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(32px,5vw,48px)">
+        <div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:12px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#FFFEB4;margin-bottom:18px"><span style="width:8px;height:8px;border-radius:50%;background:#FFFEB4"></span>Caso destacado</div>
+          <h2 style="font-family:Montserrat,var(--font-sans);font-weight:800;font-size:clamp(30px,4vw,54px);line-height:1.04;letter-spacing:-.04em;margin:0 0 26px;text-wrap:balance">No solo le di forma. También ayudé a <span style="font-family:var(--font-script);font-weight:400;letter-spacing:0;color:#FFFEB4;font-size:1.3em">construirla.</span></h2>
+          <div style="font-weight:900;font-size:clamp(32px,4vw,52px);letter-spacing:-.04em;line-height:1">EDUK HOMES</div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.75);margin:10px 0 20px;line-height:1.6">Creative Direction · Experience Design · Product</div>
+          <p style="margin:0 0 14px;font-size:16px;line-height:1.7;color:rgba(255,255,255,.88)">EDUK Homes nace de un sueño: un ecosistema que une a familias, estudiantes y tutores alrededor del homeschooling.</p>
+          <p style="margin:0 0 24px;font-size:16px;line-height:1.7;color:rgba(255,255,255,.88)">Como socia y responsable de gran parte de la experiencia y del producto, he estado en cada decisión importante:</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <sc-for list="{{ eduk }}" as="ek" hint-placeholder-count="11">
+              <span style="padding:9px 13px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);font-size:13px;font-weight:600">{{ ek }}</span>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;justify-content:center;gap:18px">
+          <p style="margin:0;font-size:16px;line-height:1.7;color:rgba(255,255,255,.85)">Todo empezó con una sola pregunta:</p>
+          <blockquote style="margin:0;padding:clamp(24px,3vw,40px);border-radius:28px;background:#FFFEB4;color:#070708;font-weight:800;font-size:clamp(22px,2.6vw,34px);line-height:1.22;letter-spacing:-.02em;box-shadow:0 0 80px rgba(255,254,180,.25);animation:svFloat 8s ease-in-out infinite">¿Cómo debería sentirse una familia la primera vez que entra a este ecosistema?</blockquote>
+          <p style="margin:0;font-size:16px;line-height:1.7;color:rgba(255,255,255,.85)">Y después, construir todo lo necesario para que esa sensación se volviera real.</p>
+          <div><x-import component-from-global-scope="SaravanzDesignSystem_d65655.Button" variant="accent" size="lg" hint-size="280px,54px">Conocer el caso EDUK Homes →</x-import></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <section id="casos" data-screen-label="09 Casos" style="position:relative;z-index:1;padding:clamp(72px,10vw,110px) clamp(20px,4vw,32px)">
+    <div style="max-width:1240px;margin:0 auto">
+      <div data-reveal="" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:36px">
+        <div style="max-width:720px">
+          <div style="display:flex;align-items:center;gap:12px;font-size:12px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#FFFEB4;margin-bottom:18px"><span style="width:8px;height:8px;border-radius:50%;background:#FFFEB4"></span>Proyectos</div>
+          <h2 style="font-family:Montserrat,var(--font-sans);font-weight:800;font-size:clamp(34px,5vw,70px);line-height:1;letter-spacing:-.04em;margin:0">Experiencias que ya están <span style="font-family:var(--font-script);font-weight:400;letter-spacing:0;color:#FFFEB4;font-size:1.3em">vivas.</span></h2>
+        </div>
+        <p style="max-width:380px;font-size:16px;line-height:1.7;color:rgba(255,255,255,.75);margin:0">Detrás de cada proyecto había un problema real. Te cuento cuál era y qué construimos para resolverlo.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px">
+        <sc-for list="{{ cases }}" as="c" hint-placeholder-count="5">
+          <a href="#contacto" data-reveal="" data-delay="{{ c.delay }}" style="position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;gap:40px;min-height:{{ caseH }};padding:26px;border-radius:28px;background:{{ c.bg }};color:{{ c.fg }};border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);box-shadow:inset 0 1px 0 rgba(255,255,255,.25);transition:transform .4s" style-hover="transform:translateY(-6px);color:{{ c.fg }}">
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;font-weight:700;letter-spacing:.16em">{{ c.n }}</span><span style="width:44px;height:44px;border-radius:50%;background:{{ c.ab }};color:{{ c.af }};display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></span></div>
+            <div>
+              <div style="font-weight:900;font-size:clamp(24px,2.6vw,34px);letter-spacing:-.03em;line-height:1;margin-bottom:10px">{{ c.t }}</div>
+              <div style="font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;opacity:.8;line-height:1.6">{{ c.tags }}</div>
+            </div>
+          </a>
+        </sc-for>
+      </div>
+      <div data-reveal="" style="display:flex;justify-content:center;margin-top:32px">
+        <a href="#contacto" style="display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 28px;box-sizing:border-box;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:#fff;font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;transition:background .3s" style-hover="background:rgba(255,255,255,.16);color:#fff">Ver todos los proyectos →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMPACTO -->
+  <section ref="{{ statsRef }}" data-screen-label="10 Impacto" style="position:relative;z-index:1;padding:clamp(40px,6vw,70px) clamp(20px,4vw,32px)">
+    <div style="max-width:1240px;margin:0 auto;padding:clamp(24px,4vw,56px);border-radius:36px;background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.02));backdrop-filter:blur(26px) saturate(170%);-webkit-backdrop-filter:blur(26px) saturate(170%);border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 40px 80px rgba(0,0,0,.4);position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;width:30%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);animation:svSheen 6s ease-in-out infinite;pointer-events:none"></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:24px">
+        <sc-for list="{{ stats }}" as="st" hint-placeholder-count="3">
+          <div style="padding-top:20px;border-top:1px solid rgba(255,255,255,.2)">
+            <div style="font-weight:800;font-size:clamp(52px,6vw,92px);line-height:1;letter-spacing:-.05em;color:#FFFEB4;text-shadow:0 0 40px rgba(255,254,180,.35);font-variant-numeric:tabular-nums"><span style="font-size:.5em">{{ st.pre }}</span>{{ st.v }}</div>
+            <div style="margin-top:10px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.78);line-height:1.6">{{ st.l }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOBRE SARA -->
+  <section id="sobre" data-screen-label="11 Sobre Sara" style="position:relative;z-index:1;padding:clamp(72px,10vw,110px) clamp(20px,4vw,32px)">
+    <div style="max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(40px,6vw,64px);align-items:start">
+      <div data-reveal="" style="position:{{ stickyPos }};top:110px;width:100%;max-width:{{ aboutImgW }};margin:0 auto">
+        <div style="position:absolute;inset:8% -6% -6% 8%;border-radius:50%;background:#FFFEB4;filter:blur(60px);opacity:.25"></div>
+        <div style="position:relative;border-radius:999px 999px 32px 32px;overflow:hidden;aspect-ratio:.78;border:1px solid rgba(255,255,255,.14)"><img src="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/img/img_7501.jpg" alt="Sara trabajando" style="width:100%;height:100%;object-fit:cover;object-position:center 60%"></div>
+        <div style="position:absolute;right:-4%;bottom:8%;padding:16px 20px;border-radius:22px;background:linear-gradient(135deg,rgba(255,255,255,.2),rgba(255,255,255,.06));backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);border:1px solid rgba(255,255,255,.25);box-shadow:0 20px 50px rgba(0,0,0,.4);animation:svFloat 7s ease-in-out infinite">
+          <div style="font-size:11px;letter-spacing:.14em;color:#FFFEB4;font-weight:700">SARA VANESSA</div>
+          <div style="font-size:15px;font-weight:800;margin-top:4px">Creative Director · Elevanz</div>
+        </div>
+      </div>
+      <div>
+        <div data-reveal="">
+          <div style="display:flex;align-items:center;gap:12px;font-size:12px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#FFFEB4;margin-bottom:18px"><span style="width:8px;height:8px;border-radius:50%;background:#FFFEB4"></span>Sobre Sara</div>
+          <h2 style="font-family:Montserrat,var(--font-sans);font-weight:800;font-size:clamp(30px,4vw,54px);line-height:1.05;letter-spacing:-.04em;margin:0 0 22px;text-wrap:balance">Antes de crear experiencias digitales, aprendí a cuidar experiencias <span style="font-family:var(--font-script);font-weight:400;letter-spacing:0;color:#FFFEB4;font-size:1.25em">humanas.</span></h2>
+          <p style="font-size:clamp(16px,1.4vw,17px);line-height:1.75;color:rgba(255,255,255,.82);margin:0 0 16px">Mi historia empieza donde quizás no imaginas: <strong style="color:#FFFEB4">en el turismo.</strong> Estudié Turismo y trabajé con empresas como:</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:28px">
+            <sc-for list="{{ corps }}" as="co" hint-placeholder-count="5">
+              <span style="padding:10px 14px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);font-size:14px;font-weight:700">{{ co }}</span>
+            </sc-for>
+          </div>
+        </div>
+        <blockquote data-reveal="" style="margin:0 0 28px;padding:24px 26px;border-radius:24px;background:#FFFEB4;color:#070708;font-weight:800;font-size:clamp(19px,2vw,25px);line-height:1.3;letter-spacing:-.015em">“Una experiencia se construye mucho antes de que el cliente la viva.”</blockquote>
+        <div data-reveal="">
+          <p style="font-size:clamp(16px,1.4vw,17px);line-height:1.75;color:rgba(255,255,255,.82);margin:0 0 28px">Ahí entendí el poder de los detalles, de las expectativas y de los recorridos. Y aprendí que cada interacción, por pequeña que sea, cambia lo que una persona siente por una marca.</p>
+          <div style="font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:12px">Después llegó…</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:28px">
+            <sc-for list="{{ path }}" as="pa" hint-placeholder-count="8">
+              <span style="display:flex;align-items:center;gap:6px"><span style="padding:9px 13px;border-radius:999px;background:{{ pa.bg }};color:{{ pa.fg }};border:1px solid rgba(255,255,255,.16);font-size:13px;font-weight:700">{{ pa.t }}</span><span style="color:#FFFEB4;opacity:{{ pa.arrow }}">→</span></span>
+            </sc-for>
+          </div>
+          <p style="font-size:clamp(16px,1.4vw,17px);line-height:1.75;color:rgba(255,255,255,.82);margin:0 0 10px">Hoy todo eso converge en un solo propósito:</p>
+          <div style="font-weight:800;font-size:clamp(22px,2.4vw,32px);letter-spacing:-.025em;line-height:1.2;margin-bottom:18px;text-wrap:balance">Ayudar a quienes tienen algo valioso que enseñar a construir una academia capaz de <span style="color:#FFFEB4">sostenerlo.</span></div>
+          <p style="font-size:clamp(16px,1.4vw,17px);line-height:1.75;color:rgba(255,255,255,.82);margin:0">Soy Creative Director &amp; Experience Designer. A través de <strong style="color:#fff">Elevanz</strong>, convierto esa visión en estrategia, identidad y sistemas que funcionan.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILOSOFÍA -->
+  <section data-screen-label="12 Filosofía" style="position:relative;z-index:1;padding:clamp(72px,10vw,110px) clamp(20px,4vw,32px)">
+    <div style="max-width:1100px;margin:0 auto">
+      <div data-reveal="" style="text-align:center;margin-bottom:44px">
+        <div style="display:inline-flex;align-items:center;gap:12px;font-size:12px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#FFFEB4;margin-bottom:18px"><span style="width:8px;height:8px;border-radius:50%;background:#FFFEB4"></span>En lo que creo</div>
+        <h2 style="font-family:Montserrat,var(--font-sans);font-weight:800;font-size:clamp(30px,4.2vw,58px);line-height:1.06;letter-spacing:-.04em;margin:0 auto 20px;max-width:960px;text-wrap:balance">No necesitas convertirte en otra persona para construir una gran <span style="font-family:var(--font-script);font-weight:400;letter-spacing:0;color:#FFFEB4;font-size:1.3em">marca.</span></h2>
+        <p style="font-size:clamp(16px,1.4vw,18px);line-height:1.7;color:rgba(255,255,255,.78);margin:0 auto;max-width:620px">Necesitas que lo que ya eres tenga dónde apoyarse:</p>
+      </div>
+      <div style="display:flex;flex-direction:column">
+        <sc-for list="{{ philo }}" as="ph" hint-placeholder-count="5">
+          <div data-reveal="" data-delay="{{ ph.delay }}" style="display:flex;flex-wrap:wrap;column-gap:24px;row-gap:6px;align-items:baseline;padding:22px 8px;border-top:1px solid rgba(255,255,255,.14);transition:background .3s" style-hover="background:rgba(255,254,180,.06)">
+            <span style="flex:1 1 240px;font-weight:900;font-size:clamp(30px,4vw,54px);letter-spacing:-.04em;line-height:1;color:#FFFEB4">{{ ph.k }}</span>
+            <span style="flex:1.4 1 280px;font-size:clamp(17px,1.6vw,22px);font-weight:600;line-height:1.4;color:rgba(255,255,255,.88)">{{ ph.d }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div data-reveal="" style="margin-top:40px;padding:clamp(26px,4vw,48px);border-radius:32px;background:linear-gradient(135deg,rgba(60,10,141,.55),rgba(60,10,141,.18));border:1px solid rgba(168,163,200,.35);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);text-align:center">
+        <div style="font-weight:900;font-size:clamp(26px,3.4vw,46px);letter-spacing:-.03em;margin-bottom:12px;line-height:1.1">Tu conocimiento ya tiene valor.</div>
+        <p style="margin:0 auto;max-width:700px;font-size:clamp(16px,1.4vw,18px);line-height:1.7;color:rgba(255,255,255,.88)">Mi trabajo es que el mundo también pueda verlo, sentirlo y elegirlo.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOMENTOS -->
+  <section data-screen-label="13 Cada momento" style="position:relative;z-index:1;padding:clamp(72px,10vw,110px) clamp(20px,4vw,32px)">
+    <div style="max-width:1240px;margin:0 auto">
+      <div data-reveal="" style="text-align:center;margin-bottom:40px">
+        <h2 style="font-family:Montserrat,var(--font-sans);font-weight:900;font-size:clamp(36px,6vw,90px);line-height:.98;letter-spacing:-.045em;margin:0 0 16px;text-wrap:balance">¿Y si cada momento estuviera <span style="font-family:var(--font-script);font-weight:400;letter-spacing:0;color:#FFFEB4;font-size:1.2em;text-shadow:0 0 40px rgba(255,254,180,.45)">pensado?</span></h2>
+        <p style="margin:0;font-size:clamp(17px,1.5vw,19px);color:rgba(255,255,255,.78)">Imagina a alguien que acaba de descubrirte…</p>
+      </div>
+      <div data-reveal="" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:20px;align-items:stretch">
+        <div style="position:relative;overflow:hidden;border-radius:36px;padding:clamp(26px,4vw,56px);background:#FFFEB4;color:#070708;display:flex;flex-direction:column;justify-content:space-between;gap:24px;min-height:{{ momentH }};box-shadow:0 0 120px rgba(255,254,180,.25)">
+          <div style="position:absolute;right:-40px;bottom:-40px;width:260px;height:260px;border-radius:50%;border:1px dashed rgba(7,7,8,.25);animation:svSpin 30s linear infinite"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;position:relative">
+            <span style="font-size:12px;font-weight:800;letter-spacing:.2em">MOMENTO</span>
+            <span style="font-size:12px;font-weight:800;letter-spacing:.2em">{{ cur.n }} / 10</span>
+          </div>
+          <div style="position:relative">
+            <div style="font-weight:900;font-size:clamp(96px,14vw,200px);line-height:.85;letter-spacing:-.07em;color:#3C0A8D">{{ cur.n }}</div>
+            <div style="font-weight:800;font-size:clamp(22px,2.6vw,34px);line-height:1.18;letter-spacing:-.02em;margin-top:16px;max-width:460px;min-height:2.4em;text-wrap:balance">{{ cur.t }}</div>
+          </div>
+          <div style="position:relative;display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;gap:5px">
+              <sc-for list="{{ moments }}" as="mo" hint-placeholder-count="10">
+                <span style="flex:1;height:4px;border-radius:4px;background:{{ mo.bar }};transition:background .4s"></span>
+              </sc-for>
+            </div>
+            <div style="display:flex;gap:10px">
+              <button onClick="{{ prevM }}" aria-label="Momento anterior" style="width:48px;height:48px;border-radius:50%;border:1px solid rgba(7,7,8,.25);background:transparent;color:#070708;cursor:pointer;font-size:18px;font-weight:700">←</button>
+              <button onClick="{{ nextM }}" aria-label="Siguiente momento" style="width:48px;height:48px;border-radius:50%;border:0;background:#070708;color:#FFFEB4;cursor:pointer;font-size:18px;font-weight:700">→</button>
+            </div>
+          </div>
+        </div>
+        <sc-if value="{{ notMob }}" hint-placeholder-val="{{ true }}">
+          <div style="border-radius:36px;padding:12px;background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.02));backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);border:1px solid rgba(255,255,255,.14);display:flex;flex-direction:column;gap:2px">
+            <sc-for list="{{ moments }}" as="mo" hint-placeholder-count="10">
+              <button onClick="{{ mo.pick }}" style="display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center;text-align:left;padding:12px 16px;border:0;border-radius:18px;cursor:pointer;background:{{ mo.bg }};color:{{ mo.fg }};font-family:Montserrat,sans-serif;transition:background .4s,color .4s">
+                <span style="font-size:13px;font-weight:800;color:{{ mo.nc }}">{{ mo.n }}</span>
+                <span style="font-size:15px;font-weight:600;line-height:1.35">{{ mo.t }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+      <div data-reveal="" style="text-align:center;margin-top:56px">
+        <div style="font-weight:900;font-size:clamp(30px,4.6vw,62px);letter-spacing:-.04em;line-height:1.05">Eso es <span style="color:#FFFEB4">Experience Design.</span></div>
+        <p style="margin:16px auto 0;max-width:620px;font-size:clamp(16px,1.4vw,18px);line-height:1.7;color:rgba(255,255,255,.8)">No se trata de que alguien compre una vez. Se trata de que quiera volver… y traer a alguien más.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIOS -->
+  <section data-screen-label="14 Testimonios" style="position:relative;z-index:1;padding:clamp(72px,10vw,110px) clamp(20px,4vw,32px)">
+    <div style="max-width:1240px;margin:0 auto">
+      <div data-reveal="" style="margin-bottom:36px">
+        <div style="display:flex;align-items:center;gap:12px;font-size:12px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#FFFEB4;margin-bottom:18px"><span style="width:8px;height:8px;border-radius:50%;background:#FFFEB4"></span>Testimonios</div>
+        <h2 style="font-family:Montserrat,var(--font-sans);font-weight:800;font-size:clamp(34px,5vw,70px);line-height:1;letter-spacing:-.04em;margin:0">Lo que se siente <span style="font-family:var(--font-script);font-weight:400;letter-spacing:0;color:#FFFEB4;font-size:1.3em">del otro lado</span></h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:12px">
+        <sc-for list="{{ testimonials }}" as="t" hint-placeholder-count="3">
+          <figure data-reveal="" data-delay="{{ t.delay }}" style="margin:0;padding:clamp(24px,3vw,34px);border-radius:28px;background:{{ t.bg }};color:{{ t.fg }};border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);box-shadow:inset 0 1px 0 rgba(255,255,255,.25);display:flex;flex-direction:column;justify-content:space-between;gap:24px;min-height:260px">
+            <blockquote style="margin:0;font-size:clamp(17px,1.5vw,19px);font-weight:500;line-height:1.5;text-wrap:pretty">“{{ t.q }}”</blockquote>
+            <figcaption style="display:flex;align-items:center;gap:14px">
+              <span style="width:46px;height:46px;border-radius:50%;background:{{ t.av }};color:#070708;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800">{{ t.ini }}</span>
+              <span><span style="display:block;font-weight:700;font-size:15px">{{ t.name }}</span><span style="display:block;font-size:13px;opacity:.75;margin-top:2px">{{ t.role }}</span></span>
+            </figcaption>
+          </figure>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section data-screen-label="15 Experience Score" style="position:relative;z-index:1;padding:clamp(48px,8vw,90px) clamp(20px,4vw,32px)">
+    <div data-reveal="" style="max-width:1240px;margin:0 auto;position:relative;overflow:hidden;border-radius:36px;padding:clamp(24px,5vw,64px);background:linear-gradient(135deg,rgba(60,10,141,.75),rgba(60,10,141,.3));backdrop-filter:blur(26px) saturate(170%);-webkit-backdrop-filter:blur(26px) saturate(170%);border:1px solid rgba(168,163,200,.4);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 40px 80px rgba(0,0,0,.4);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(32px,5vw,48px);align-items:center">
+      <div>
+        <div style="display:flex;align-items:center;gap:12px;font-size:12px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#FFFEB4;margin-bottom:18px"><span style="width:8px;height:8px;border-radius:50%;background:#FFFEB4"></span>Evaluación gratuita</div>
+        <h2 style="font-family:Montserrat,var(--font-sans);font-weight:800;font-size:clamp(28px,3.8vw,50px);line-height:1.06;letter-spacing:-.04em;margin:0 0 18px;text-wrap:balance">¿Tu conocimiento está listo para convertirse en <span style="font-family:var(--font-script);font-weight:400;letter-spacing:0;color:#FFFEB4;font-size:1.3em">academia?</span></h2>
+        <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:rgba(255,255,255,.88)">En pocos minutos descubrirás qué tan preparada está tu marca para crecer. Evaluamos:</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px">
+          <span style="padding:9px 13px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);font-size:13px;font-weight:700">Marca</span>
+          <span style="padding:9px 13px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);font-size:13px;font-weight:700">Oferta</span>
+          <span style="padding:9px 13px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);font-size:13px;font-weight:700">Experiencia</span>
+          <span style="padding:9px 13px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);font-size:13px;font-weight:700">Conversión</span>
+          <span style="padding:9px 13px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);font-size:13px;font-weight:700">Tecnología</span>
+          <span style="padding:9px 13px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);font-size:13px;font-weight:700">Automatización</span>
+        </div>
+        <p style="margin:0 0 26px;font-size:16px;line-height:1.7;color:rgba(255,255,255,.88)">Recibirás <strong style="color:#FFFEB4">tu Experience Score</strong> y una primera hoja de ruta: dónde estás hoy y por dónde conviene empezar.</p>
+        <x-import component-from-global-scope="SaravanzDesignSystem_d65655.Button" variant="accent" size="lg" hint-size="300px,54px">Descubrir mi Experience Score →</x-import>
+      </div>
+      <div style="display:flex;justify-content:center">
+        <div style="position:relative;width:min(100%,320px);aspect-ratio:1">
+          <div style="position:absolute;inset:0;border-radius:50%;background:conic-gradient(#FFFEB4 0 72%,rgba(255,255,255,.12) 72% 100%);box-shadow:0 0 100px rgba(255,254,180,.25)"></div>
+          <div style="position:absolute;inset:-12px;border-radius:50%;border:1px dashed rgba(255,254,180,.45);animation:svSpin 30s linear infinite"></div>
+          <div style="position:absolute;inset:14px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#2a1a4a,#070708 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+            <div style="font-size:11px;font-weight:700;letter-spacing:.2em;color:rgba(255,255,255,.75)">TU EXPERIENCE</div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:.2em;color:rgba(255,255,255,.75);margin-bottom:6px">SCORE</div>
+            <div style="font-weight:900;font-size:clamp(60px,9vw,96px);letter-spacing:-.05em;line-height:1;color:#FFFEB4">?</div>
+            <div style="font-size:13px;color:rgba(255,255,255,.7);margin-top:6px">de 100</div>
+          </div>
+          <img src="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/destello.png" alt="" style="position:absolute;right:6%;top:4%;width:38px;object-fit:contain;animation:svTwinkle 3s ease-in-out infinite">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section data-screen-label="16 CTA final" style="position:relative;z-index:1;padding:clamp(72px,10vw,110px) clamp(20px,4vw,32px)">
+    <div style="max-width:1100px;margin:0 auto;text-align:center">
+      <h2 data-reveal="" style="font-family:Montserrat,var(--font-sans);font-weight:900;font-size:clamp(38px,6.6vw,98px);line-height:.98;letter-spacing:-.045em;margin:0 0 36px;text-wrap:balance">Hay algo que quieres <span style="font-family:var(--font-script);font-weight:400;letter-spacing:0;color:#FFFEB4;font-size:1.2em;text-shadow:0 0 40px rgba(255,254,180,.45)">construir.</span></h2>
+      <div data-reveal="" style="display:flex;flex-direction:column;gap:6px;margin-bottom:40px">
+        <sc-for list="{{ maybes }}" as="mb" hint-placeholder-count="5">
+          <div style="font-size:clamp(19px,2.4vw,32px);font-weight:700;letter-spacing:-.02em;line-height:1.25;opacity:{{ mb.op }};color:{{ mb.c }};transform:scale({{ mb.sc }});transition:opacity .6s,color .6s,transform .6s cubic-bezier(.22,.61,.36,1);text-wrap:balance">Quizás {{ mb.t }}</div>
+        </sc-for>
+      </div>
+      <div data-reveal="">
+        <div style="font-size:clamp(20px,2vw,28px);font-weight:800;margin-bottom:10px">No tienes que llegar con todo resuelto.</div>
+        <p style="margin:0 auto 28px;max-width:620px;font-size:clamp(16px,1.4vw,18px);line-height:1.7;color:rgba(255,255,255,.8)">Basta con las ganas de hacerlo bien. Cuéntamelo y empezamos por entender qué necesita tu idea para cobrar vida.</p>
+        <a href="#contacto"><x-import component-from-global-scope="SaravanzDesignSystem_d65655.Button" variant="accent" size="lg" hint-size="260px,54px">Cuéntame tu proyecto →</x-import></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMULARIO -->
+  <section id="contacto" data-screen-label="17 Formulario" style="position:relative;z-index:1;padding:clamp(80px,10vw,120px) clamp(16px,4vw,32px) clamp(110px,12vw,140px);background:#FDFCF8;color:#070708;overflow:hidden">
+    <div style="position:absolute;left:50%;top:0;width:900px;height:900px;margin-left:-450px;border-radius:50%;background:radial-gradient(circle,rgba(255,254,180,.9) 0%,rgba(255,254,180,.35) 35%,rgba(255,254,180,0) 65%);pointer-events:none"></div>
+    <div style="position:relative;max-width:900px;margin:0 auto">
+      <div data-reveal="" style="text-align:center;margin-bottom:36px">
+        <div style="width:120px;height:120px;margin:0 auto 24px;border-radius:50%;padding:5px;background:conic-gradient(#FFFEB4,#3C0A8D,#528397,#FFFEB4);box-shadow:0 0 80px rgba(255,254,180,.8)">
+          <div style="width:100%;height:100%;border-radius:50%;border:4px solid #FDFCF8;overflow:hidden;box-sizing:border-box"><img src="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/img/img_6720.jpg" alt="Sara" style="width:100%;height:100%;object-fit:cover;object-position:center 14%"></div>
+        </div>
+        <h2 style="font-family:Montserrat,var(--font-sans);font-weight:900;font-size:clamp(36px,5.6vw,78px);line-height:.98;letter-spacing:-.05em;margin:0 0 14px;text-wrap:balance">Cuéntame qué quieres <span style="color:#3C0A8D">construir.</span></h2>
+        <p style="margin:0;font-size:16px;color:#4A504F">Cinco preguntas. Menos de 3 minutos. Te respondo personalmente.</p>
+      </div>
+      <div data-reveal="" style="padding:clamp(20px,4vw,44px);border-radius:32px;background:rgba(255,255,255,.65);backdrop-filter:blur(24px) saturate(170%);-webkit-backdrop-filter:blur(24px) saturate(170%);border:1px solid rgba(255,255,255,.9);box-shadow:0 30px 80px rgba(60,10,141,.12),inset 0 1px 0 #fff">
+        <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:28px">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:14px">
+              <x-import component-from-global-scope="SaravanzDesignSystem_d65655.Input" label="Nombre" placeholder="Tu nombre" hint-size="100%,78px"></x-import>
+              <x-import component-from-global-scope="SaravanzDesignSystem_d65655.Input" label="Email" placeholder="tu@correo.com" type="email" hint-size="100%,78px"></x-import>
+            </div>
+            <sc-for list="{{ groups }}" as="g" hint-placeholder-count="4">
+              <div>
+                <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:12px;flex-wrap:wrap"><span style="font-size:14px;font-weight:800;color:#3C0A8D">{{ g.n }}.</span><span style="font-size:17px;font-weight:800;letter-spacing:-.01em">{{ g.q }}</span><span style="font-size:12px;color:#4A504F">{{ g.hint }}</span></div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <sc-for list="{{ g.opts }}" as="o" hint-placeholder-count="5">
+                    <button onClick="{{ o.pick }}" style="cursor:pointer;min-height:44px;padding:10px 16px;border-radius:999px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-family:Montserrat,sans-serif;font-size:14px;font-weight:600;transition:all .25s;text-align:left">{{ o.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+            <div>
+              <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:12px"><span style="font-size:14px;font-weight:800;color:#3C0A8D">05.</span><span style="font-size:17px;font-weight:800;letter-spacing:-.01em">Cuéntame tu proyecto.</span></div>
+              <x-import component-from-global-scope="SaravanzDesignSystem_d65655.Input" multiline="{{ true }}" placeholder="¿Qué te gustaría que vivieran tus alumnos o clientes?" hint-size="100%,140px"></x-import>
+            </div>
+            <x-import component-from-global-scope="SaravanzDesignSystem_d65655.Button" size="lg" full-width="{{ true }}" onClick="{{ submit }}" hint-size="100%,54px">Quiero empezar →</x-import>
+          </div>
+        </sc-if>
+        <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+          <div style="text-align:center;padding:36px 0">
+            <img src="https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/destello.png" alt="" style="width:64px;animation:svTwinkle 2.4s ease-in-out infinite">
+            <div style="font-weight:900;font-size:clamp(28px,4vw,36px);letter-spacing:-.03em;margin:16px 0 8px">¡Gracias por confiarme tu idea!</div>
+            <p style="color:#4A504F;font-size:16px;margin:0">La leo con calma y te escribo personalmente muy pronto.</p>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="position:relative;z-index:1;background:#070708;color:rgba(255,255,255,.75);padding:72px clamp(20px,4vw,32px) 120px">
+    <div style="max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:36px">
+      <div style="display:flex;justify-content:space-between;gap:28px;flex-wrap:wrap;align-items:flex-end">
+        <div>
+          <div style="font-weight:900;font-size:clamp(30px,4vw,52px);letter-spacing:-.04em;color:#fff;line-height:1">Sara Vanessa</div>
+          <div style="font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#FFFEB4;margin-top:10px;line-height:1.6">Creative Director &amp; Experience Designer</div>
+        </div>
+        <div style="font-family:var(--font-script);font-size:clamp(32px,4vw,52px);color:#FFFEB4;line-height:1.1">Diseño lo que tu cliente vive.</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-top:26px;border-top:1px solid rgba(255,255,255,.15);font-size:13px;align-items:center">
+        <span style="letter-spacing:.06em">Academias · Experiencias · Ecosistemas de Venta</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <a href="https://instagram.com/saravanz" style="display:inline-flex;align-items:center;min-height:44px;padding:0 14px;color:rgba(255,255,255,.9)" style-hover="color:#FFFEB4">Instagram</a>
+          <a href="https://linkedin.com" style="display:inline-flex;align-items:center;min-height:44px;padding:0 14px;color:rgba(255,255,255,.9)" style-hover="color:#FFFEB4">LinkedIn</a>
+          <a href="mailto:elevanzca@gmail.com" style="display:inline-flex;align-items:center;min-height:44px;padding:0 14px;color:rgba(255,255,255,.9)" style-hover="color:#FFFEB4">Email</a>
+        </div>
+        <span>© 2026 Sara Vanessa / Elevanz</span>
+      </div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showCursorGlow&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Efectos&quot;},&quot;marqueeSeconds&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;min&quot;:20,&quot;max&quot;:120,&quot;step&quot;:5,&quot;unit&quot;:&quot;s&quot;,&quot;default&quot;:60,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Efectos&quot;},&quot;autoplaySeconds&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;min&quot;:2,&quot;max&quot;:8,&quot;step&quot;:0.5,&quot;unit&quot;:&quot;s&quot;,&quot;default&quot;:3.5,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Cada momento&quot;}}">
+class Component extends DCLogic {
+  state = { svc: 0, p: 0, sent: false, sec: 'inicio', step: 0, maybe: 0, q1: null, q2: [], q3: [], q4: null, mob: typeof innerWidth !== 'undefined' ? innerWidth < 760 : false };
+  rootRef = React.createRef(); glowRef = React.createRef(); dotRef = React.createRef();
+  heroRef = React.createRef(); barRef = React.createRef(); statsRef = React.createRef();
+  componentDidMount() {
+    const root = this.rootRef.current; if (!root) return;
+    const ease = 'cubic-bezier(.22,.61,.36,1)';
+    const els = root.querySelectorAll('[data-reveal]');
+    els.forEach(el => { const d = el.getAttribute('data-delay') || 0; el.style.opacity = 0; el.style.transform = 'translateY(40px) scale(.98)'; el.style.filter = 'blur(10px)'; el.style.transition = 'opacity 1s ' + ease + ' ' + d + 'ms, transform 1.1s ' + ease + ' ' + d + 'ms, filter 1s ' + ease + ' ' + d + 'ms, background .4s'; });
+    this.io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { const t = e.target; t.style.opacity = 1; t.style.transform = ''; t.style.filter = 'none'; this.io.unobserve(t); } }), { threshold: .08, rootMargin: '0px 0px -30px 0px' });
+    els.forEach(el => this.io.observe(el));
+    this.sio = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting && !this.counted) { this.counted = true; const t0 = performance.now(); const step = t => { const k = Math.min(1, (t - t0) / 2000); this.setState({ p: 1 - Math.pow(1 - k, 3) }); if (k < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); }
+    }), { threshold: .3 });
+    if (this.statsRef.current) this.sio.observe(this.statsRef.current);
+    this.nio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && this.state.sec !== e.target.id) this.setState({ sec: e.target.id }); }), { rootMargin: '-45% 0px -50% 0px' });
+    ['inicio', 'servicios', 'casos', 'sobre', 'contacto'].forEach(id => { const el = root.querySelector('#' + id); el && this.nio.observe(el); });
+    this.mx = innerWidth / 2; this.my = innerHeight / 2; this.dx = this.mx; this.dy = this.my;
+    this.onMove = e => {
+      if (e.pointerType && e.pointerType !== 'mouse') return;
+      this.mx = e.clientX; this.my = e.clientY;
+      const g = this.glowRef.current; if (g) { g.style.opacity = 1; g.style.transform = 'translate3d(' + e.clientX + 'px,' + e.clientY + 'px,0)'; }
+      if (this.dotRef.current) this.dotRef.current.style.opacity = 1;
+      const h = this.heroRef.current; if (h) { const nx = e.clientX / innerWidth - .5, ny = e.clientY / innerHeight - .5; h.querySelectorAll('[data-depth]').forEach(el => { const d = +el.getAttribute('data-depth'); el.style.transform = 'translate3d(' + (nx * d * 2) + 'px,' + (ny * d * 2) + 'px,0)'; }); }
+    };
+    const loop = () => { this.dx += (this.mx - this.dx) * .14; this.dy += (this.my - this.dy) * .14; const d = this.dotRef.current; if (d) d.style.transform = 'translate3d(' + (this.dx + 16) + 'px,' + (this.dy + 16) + 'px,0)'; this.raf = requestAnimationFrame(loop); };
+    this.raf = requestAnimationFrame(loop);
+    this.onScroll = () => { const se = document.scrollingElement || document.documentElement; const max = se.scrollHeight - innerHeight; if (this.barRef.current) this.barRef.current.style.width = (max > 0 ? (se.scrollTop / max) * 100 : 0) + '%'; };
+    this.onResize = () => { const m = innerWidth < 760; if (m !== this.state.mob) this.setState({ mob: m }); };
+    addEventListener('pointermove', this.onMove); addEventListener('scroll', this.onScroll, { passive: true }); addEventListener('resize', this.onResize);
+    this.onResize();
+    this.hold = 0;
+    this.tick = setInterval(() => {
+      const adv = Date.now() > this.hold;
+      this.setState(s => ({ step: adv ? (s.step + 1) % 10 : s.step, maybe: (s.maybe + 1) % 5 }));
+    }, (this.props.autoplaySeconds ?? 3.5) * 1000);
+  }
+  componentWillUnmount() { [this.io, this.sio, this.nio].forEach(o => o && o.disconnect()); cancelAnimationFrame(this.raf); clearInterval(this.tick); removeEventListener('pointermove', this.onMove); removeEventListener('scroll', this.onScroll); removeEventListener('resize', this.onResize); }
+  renderVals() {
+    const S = this.state, mob = S.mob;
+    const R = (id, u) => (window.__resources && window.__resources[id]) || u;
+    const pad = i => String(i + 1).padStart(2, '0');
+    const names = ['vileidy','respiracion','supercloset','inspiria','fusionwraps','quotes','colstone','luyana','citypadel','reymang','espiritual','freewings','universo','gemology','yoma','saladfresh','covencava','magnetive','ch','vital','faena','gkids','allexandra','germiven','rg','leslie','wynwood'];
+    const all = names.map(n => ({ name: n, src: R('logo_' + n, 'https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/assets/clients/' + n + '.png') })).map(o => ({ ...o, p: { src: o.src } }));
+    const a = all.filter((_, i) => i % 2 === 0), b = all.filter((_, i) => i % 2 === 1);
+
+    const touch = ['Cuando te descubre en redes y se detiene.','Cuando entra a tu web y piensa: «esto es para mí».','Cuando recibe tu primer email.','Cuando te escribe por WhatsApp con una duda.','Cuando decide confiar y pagar.','Cuando abre tu plataforma por primera vez.','Cuando termina su primer módulo.','Cuando consigue su primer resultado.','Cuando le habla de ti a alguien más.'].map((t, i) => ({ t, n: pad(i), delay: String(i * 60) }));
+
+    const pillars = [
+      { t: 'Estrategia', d: 'Claridad sobre qué enseñas, a quién y por qué deberían elegirte a ti.' },
+      { t: 'Experiencia', d: 'El recorrido emocional de tu alumno, desde que te descubre hasta que te recomienda.' },
+      { t: 'Identidad', d: 'Un universo visual que comunica tu valor antes de que digas una sola palabra.' },
+      { t: 'Tecnología', d: 'Plataforma y automatizaciones conectadas para que todo funcione aunque no estés.' },
+      { t: 'Conversión', d: 'Los caminos que llevan de «me interesa» a «quiero entrar».' }
+    ].map((p, i) => ({ ...p, n: pad(i), delay: String(i * 70) }));
+
+    const rT = ['Pensaba que necesitaba una web.','En realidad, necesito ordenar toda mi experiencia.','Sara puede ver el recorrido completo.','Quiero que ella lo construya conmigo.'];
+    const realize = rT.map((t, i) => { const last = i === rT.length - 1; return { t, arrow: last ? 0 : 1, delay: String(i * 160), bg: last ? '#FFFEB4' : 'rgba(255,255,255,' + (.05 + i * .03) + ')', fg: last ? '#070708' : 'rgba(255,255,255,' + (.6 + i * .13) + ')', w: last ? 800 : 600, sh: last ? '0 0 60px rgba(255,254,180,.25)' : 'none' }; });
+
+    const svcData = [
+      { n: '01', k: 'ONLINE ACADEMY', star: true, t: 'De lo que sabes a una academia que la gente quiere vivir.', d: 'Para expertos que sienten que su conocimiento vale mucho más de lo que hoy están cobrando.', tags: ['Concepto', 'Plataforma', 'Ventas'], img: R('svc2','https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/img/img_7236.jpg'), pos: '55% center',
+        intro: ['Tienes años de experiencia, una forma única de explicar y resultados que lo demuestran.', 'Pero una academia que se posiciona y vende no nace de grabar clases y subirlas a una plataforma.', 'Necesita una gran idea, una estructura clara, una identidad propia y un sistema que la venda mientras tú enseñas.'],
+        steps: [['CONCEPTO','Encontramos la gran idea: qué transforma tu academia y por qué el mundo la necesita.'],['ARQUITECTURA','Ordenamos tu conocimiento en un camino que lleva al alumno hasta su resultado.'],['EXPERIENCIA','Pensamos cómo se sentirá tu alumno en cada etapa, para que avance y no abandone.'],['IDENTIDAD','Le damos nombre, voz y un universo visual que la hace inconfundible.'],['PLATAFORMA','Web, área privada y un entorno digital donde da gusto aprender.'],['CONVERSIÓN','El funnel y los mensajes que convierten interés en inscripciones.'],['AUTOMATIZACIÓN','Conectamos todo para que tu academia crezca sin depender de ti.']],
+        listTitle: 'Puede incluir', list: ['Naming','Branding','Experiencia educativa','UX/UI','Plataforma','Web','Área privada','Landing pages','Funnel','Automatizaciones','Email','Onboarding','Customer Journey','Membresías','Experiencias híbridas online + presenciales'],
+        forTitle: 'Pensado para', forText: 'Médicos · Psicólogos · Coaches · Consultores · Educadores · Tutores · Expertos que saben que tienen algo valioso que enseñar.',
+        result: ['No tendrás simplemente un curso.', 'Tendrás una academia con nombre propio, alumnos que la recomiendan y un negocio que trabaja contigo.'], cta: 'Quiero crear mi academia →' },
+      { n: '02', k: 'EXPERIENCE DESIGN', t: 'Que tu marca se sienta al nivel de lo que vales.', d: 'Para profesionales y marcas que ya existen, pero sienten que cada pieza habla un idioma distinto.', tags: ['Customer Journey', 'UX/UI', 'Identidad'], img: R('svc1','https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/img/img_7400.jpg'), pos: 'center 30%',
+        intro: ['Una web bonita no basta. La pregunta de fondo es otra:'], quote: '¿Qué quieres que sienta una persona en el instante en que te encuentra?', after: 'A partir de ahí, cuidamos cada interacción para provocarlo.',
+        listTitle: 'Podemos trabajar', list: ['Customer Journey','Arquitectura de experiencia','UX/UI','Dirección de arte','Identidad visual','Web','Landing pages','Touchpoints digitales','Onboarding','Experiencia de cliente','Experiencias presenciales conectadas con lo digital'],
+        forTitle: 'Ideal si', forText: 'Tu marca creció rápido y hoy sientes que su imagen ya no te representa.',
+        result: ['Una marca coherente, intencional y memorable.', 'Que se percibe al nivel del valor que realmente ofreces.'], cta: 'Quiero elevar mi marca →' },
+      { n: '03', k: 'CONVERSION ECOSYSTEM', t: 'No necesitas más seguidores. Necesitas un camino que convierta.', d: 'Para negocios que ya venden, pero sienten que se les escapan oportunidades por el camino.', tags: ['Funnels', 'CRM', 'Automatización'], img: R('svc3','https://cdn.jsdelivr.net/gh/bysaravanz/elevanz@3bd3b535fc1188f2386dedebab7da34931168f2c/saravanz-fotos/img/20220430_155330.jpg'), pos: 'center 30%',
+        intro: ['Tienes una oferta, una audiencia y una marca. Pero entre el primer «me interesa» y el «quiero comprar» se pierde gente… y no sabes exactamente dónde.', 'Revisamos el recorrido completo:'],
+        journey: ['Descubrimiento','Interés','Confianza','Decisión','Compra','Experiencia','Fidelización'], after: 'Y fortalecemos cada punto donde hoy se pierde confianza.',
+        listTitle: 'Creamos', list: ['Estrategia de funnel','Arquitectura de conversión','Landing pages','Lead magnets','Secuencias de email','Automatizaciones','CRM','Integraciones','WhatsApp','Customer Journey','Funnels evergreen','Funnels de lanzamiento','Experiencias post-compra','Onboarding'],
+        forTitle: 'Ideal si tu negocio', forList: ['Ya tiene oferta, audiencia y ventas.','Quiere dejar de depender de procesos manuales.','Quiere elevar su percepción de valor.','Quiere convertir mejor sin perseguir a nadie.','Quiere un sistema que crezca con él.'],
+        result: ['Un sistema de venta construido alrededor de la experiencia de tu cliente.', 'No un montón de herramientas sueltas. Un ecosistema.'], cta: 'Construir mi ecosistema →' }
+    ];
+    const services = svcData.map((s, i) => { const on = S.svc === i; return { ...s, p: { src: s.img }, star: !!s.star, flex: on ? '2.3 1 0%' : '1 1 0%', h: mob ? (on ? '460px' : '170px') : '540px', op: on ? 1 : 0, mh: on ? '260px' : '0px', scale: on ? 1.03 : 1.12, filt: on ? 'none' : 'blur(3px) brightness(.6)', dotBg: on ? '#FFFEB4' : 'rgba(255,255,255,.85)', rot: on ? '0deg' : '45deg', bd: on ? 'rgba(255,254,180,.6)' : 'rgba(255,255,255,.12)', enter: () => this.state.svc !== i && this.setState({ svc: i }) }; });
+    const cs = svcData[S.svc];
+    const sd = { ...cs,
+      hasQuote: !!cs.quote, hasAfter: !!cs.after, hasSteps: !!cs.steps, hasJourney: !!cs.journey, hasForText: !!cs.forText, hasForList: !!cs.forList,
+      steps: (cs.steps || []).map((x, i) => ({ n: pad(i), t: x[0], d: x[1] })),
+      journey: (cs.journey || []).map((t, i, arr) => ({ t, arrow: i < arr.length - 1 ? 1 : 0, bg: i === arr.length - 1 ? '#FFFEB4' : 'rgba(255,255,255,.1)', fg: i === arr.length - 1 ? '#070708' : '#fff' })),
+      forList: cs.forList || []
+    };
+
+    const tree = [
+      { k: 'Los frutos', lvl: 'LO QUE COSECHAS', items: ['Autoridad','Alumnos','Ventas','Fidelización','Crecimiento'], bg: '#FFFEB4', fg: '#070708', cb: 'rgba(7,7,8,.08)', cf: '#070708' },
+      { k: 'Lo que se ve', lvl: 'LAS HOJAS', items: ['Identidad','Comunicación','Web','Contenido','Plataforma'], bg: 'linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.04))', fg: '#fff', cb: 'rgba(255,255,255,.12)', cf: '#fff' },
+      { k: 'El tronco', lvl: 'LO QUE SOSTIENE', items: ['Experiencia','Arquitectura','Sistema'], bg: 'linear-gradient(135deg,rgba(60,10,141,.65),rgba(60,10,141,.3))', fg: '#fff', cb: 'rgba(255,255,255,.14)', cf: '#fff' },
+      { k: 'Las raíces', lvl: 'DONDE EMPIEZO', items: ['Estrategia','Propósito','Oferta','Procesos','Tecnología','Estructura'], bg: 'linear-gradient(135deg,rgba(82,131,151,.6),rgba(82,131,151,.25))', fg: '#fff', cb: 'rgba(255,254,180,.16)', cf: '#FFFEB4' }
+    ].map((t, i) => ({ ...t, delay: String(i * 100) }));
+
+    const mStyles = [
+      { bg: 'linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03))', fg: '#fff', ac: '#FFFEB4', cb: 'rgba(255,255,255,.1)' },
+      { bg: 'linear-gradient(135deg,rgba(60,10,141,.55),rgba(60,10,141,.2))', fg: '#fff', ac: '#FFFEB4', cb: 'rgba(255,255,255,.12)' },
+      { bg: '#FFFEB4', fg: '#070708', ac: '#3C0A8D', cb: 'rgba(7,7,8,.08)' }
+    ];
+    const method = [
+      { k: 'DISCOVER', d: 'Escuchamos tu historia, tu conocimiento y lo que quieres provocar en las personas.', items: ['¿Qué tienes?','¿Qué quieres lograr?','¿Qué debería sentir tu alumno?'] },
+      { k: 'ARCHITECT', d: 'Trazamos la estructura que sostendrá todo lo demás.', items: ['Oferta','Contenido','Recorrido','Tecnología','Touchpoints'] },
+      { k: 'CREATE', d: 'Convertimos la estrategia en un universo visual y digital con alma.', items: ['Marca','Dirección de arte','UX/UI','Web','Plataforma'] },
+      { k: 'EXPERIENCE', d: 'Cuidamos cada interacción: antes, durante y después.', items: ['Antes','Durante','Después'], note: 'Porque la relación no termina cuando alguien paga. Ahí empieza.' },
+      { k: 'CONNECT', d: 'Unimos las herramientas que hacen que todo fluya solo.', items: ['Funnels','CRM','Email','Automatizaciones','WhatsApp','Plataformas'] },
+      { k: 'LAUNCH', d: 'Ponemos tu proyecto en movimiento.', items: ['Probamos','Ajustamos','Lanzamos'], note: 'Y te dejamos una base lista para crecer.' }
+    ].map((m, i) => ({ ...m, ...mStyles[i % 3], n: pad(i), hasNote: !!m.note, note: m.note || '', delay: String((i % 3) * 90) }));
+
+    const eduk = ['App','Marketplace de tutores','Experiencia de familias','Experiencia de estudiantes','Ruta del tutor','Certificación','Arquitectura de experiencia','UX/UI','Identidad visual','Funnels','Touchpoints digitales'];
+
+    const cStyles = [
+      { bg: '#FFFEB4', fg: '#070708', ab: '#070708', af: '#FFFEB4' },
+      { bg: 'linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03))', fg: '#fff', ab: '#FFFEB4', af: '#070708' },
+      { bg: 'linear-gradient(135deg,rgba(60,10,141,.6),rgba(60,10,141,.22))', fg: '#fff', ab: '#FFFEB4', af: '#070708' },
+      { bg: 'linear-gradient(135deg,rgba(82,131,151,.5),rgba(82,131,151,.18))', fg: '#fff', ab: '#FFFEB4', af: '#070708' },
+      { bg: 'linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03))', fg: '#fff', ab: '#FFFEB4', af: '#070708' }
+    ];
+    const cases = [
+      { t: 'EDUK HOMES', tags: 'Education · Marketplace · App · Experience Design' },
+      { t: 'INFOPRODUCTO.CLUB', tags: 'Digital Education · Product · Funnels' },
+      { t: 'ACADEMIAS ONLINE', tags: 'Strategy · Branding · UX · Platform' },
+      { t: 'FUNNELS', tags: 'Conversion · Customer Journey · Automation' },
+      { t: 'EXPERIENCIAS HÍBRIDAS', tags: 'Digital + Physical Experiences' }
+    ].map((c, i) => ({ ...c, ...cStyles[i], n: pad(i), delay: String((i % 3) * 90) }));
+
+    const fmt = n => n.toLocaleString('es-ES');
+    const stats = [
+      { pre: '+', v: fmt(Math.round(530 * S.p)), l: 'Marcas acompañadas' },
+      { pre: '+', v: fmt(Math.round(8 * S.p)), l: 'Países con clientes' },
+      { pre: '', v: fmt(Math.round(70 * S.p)), l: 'Webs, academias y funnels lanzados' }
+    ];
+
+    const corps = ['American Express','Carlson Wagonlit Travel','AENA','Travelplan','Barceló Viajes'];
+    const pathT = ['La creatividad','El emprendimiento','La estrategia','El marketing','La tecnología','Los funnels','La educación digital','Mis propios ecosistemas'];
+    const path = pathT.map((t, i) => ({ t, arrow: i < pathT.length - 1 ? 1 : 0, bg: i === pathT.length - 1 ? '#FFFEB4' : 'rgba(255,255,255,.08)', fg: i === pathT.length - 1 ? '#070708' : '#fff' }));
+
+    const philo = [
+      { k: 'Claridad', d: 'para saber qué ofreces y a quién.' },
+      { k: 'Estructura', d: 'para sostenerlo sin agotarte.' },
+      { k: 'Identidad', d: 'para que tu valor se note antes de hablar.' },
+      { k: 'Tecnología', d: 'para que todo funcione aunque no estés.' },
+      { k: 'Experiencia', d: 'para que las personas quieran quedarse.' }
+    ].map((p, i) => ({ ...p, delay: String(i * 70) }));
+
+    const mT = ['Ve algo tuyo y se detiene.','Entra a tu web y siente: «esto es para mí».','Encuentra justo lo que estaba buscando.','Recibe más de lo que esperaba.','Se inscribe sin sentirse presionado.','Vive un onboarding que le hace pensar: «Elegí bien».','Aprende, avanza y disfruta tu academia.','Logra su primer resultado.','Recuerda cómo lo hiciste sentir.','Te recomienda sin que se lo pidas.'];
+    const go = i => { this.hold = Date.now() + 9000; this.setState({ step: (i + 10) % 10 }); };
+    const moments = mT.map((t, i) => { const on = S.step === i, past = i <= S.step; return { t, n: pad(i), bg: on ? '#FFFEB4' : 'transparent', fg: on ? '#070708' : (past ? '#fff' : 'rgba(255,255,255,.62)'), nc: on ? '#3C0A8D' : '#FFFEB4', bar: past ? '#3C0A8D' : 'rgba(60,10,141,.18)', pick: () => go(i) }; });
+    const cur = moments[S.step];
+
+    const tst = [
+      { q: 'Por fin mi web explica lo que hago sin que yo lo repita en cada consulta. Ahora los pacientes llegan sabiendo que soy para ellos.', name: 'Dra. Andrea Molina', role: 'Médica integrativa', ini: 'AM' },
+      { q: 'Sara entendió en una sesión lo que yo llevaba años sin poder explicar. Mi programa tiene nombre, estructura y lista de espera.', name: 'Carlos Rivas', role: 'Coach ejecutivo', ini: 'CR' },
+      { q: 'Pasé de dar clases por recomendación a tener una academia que mis alumnos disfrutan y recomiendan. Y todo se siente muy yo.', name: 'Lucía Ferrer', role: 'Tutora y educadora', ini: 'LF' }
+    ];
+    const tS = [
+      { bg: 'linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03))', fg: '#fff', av: '#FFFEB4' },
+      { bg: '#FFFEB4', fg: '#070708', av: '#fff' },
+      { bg: 'linear-gradient(135deg,rgba(60,10,141,.55),rgba(60,10,141,.18))', fg: '#fff', av: '#A8A3C8' }
+    ];
+    const testimonials = tst.map((t, i) => ({ ...t, ...tS[i], delay: String(i * 100) }));
+
+    const mbT = ['es una academia.','es una marca nueva.','es una plataforma.','es un funnel.','todavía no sabes qué es… pero sabes que es importante.'];
+    const maybes = mbT.map((t, i) => { const on = S.maybe === i; return { t, op: on ? 1 : .3, c: on ? '#FFFEB4' : '#fff', sc: on ? 1.05 : 1 }; });
+
+    const gDef = [
+      { n: '01', key: 'q1', multi: false, q: '¿Qué quieres crear?', opts: ['Una Academia Online','Una nueva experiencia digital','Un ecosistema de ventas','Una marca','Una plataforma / app','Una experiencia híbrida','Otro'] },
+      { n: '02', key: 'q2', multi: true, q: '¿Qué tienes hoy?', opts: ['Una idea','Una marca','Una audiencia','Una oferta','Un curso','Una academia','Un negocio funcionando'] },
+      { n: '03', key: 'q3', multi: true, q: '¿Qué quieres conseguir?', opts: ['Lanzar','Vender más','Automatizar','Elevar mi percepción de valor','Crear autoridad','Profesionalizar mi experiencia','Escalar'] },
+      { n: '04', key: 'q4', multi: false, q: '¿Cuál es tu rango de inversión?', opts: ['$3K–$5K','$5K–$10K','$10K–$20K','$20K+'] }
+    ];
+    const groups = gDef.map(g => ({ n: g.n, q: g.q, hint: g.multi ? 'Puedes elegir varias' : '', opts: g.opts.map(label => {
+      const v = S[g.key]; const on = g.multi ? v.includes(label) : v === label;
+      return { label, bg: on ? '#070708' : 'rgba(255,255,255,.75)', fg: on ? '#FFFEB4' : '#070708', bd: on ? '#070708' : '#D4C9BD',
+        pick: () => this.setState(s => g.multi ? { [g.key]: s[g.key].includes(label) ? s[g.key].filter(x => x !== label) : [...s[g.key], label] } : { [g.key]: s[g.key] === label ? null : label }) };
+    }) }));
+
+    const dockS = on => on ? { bg: '#FFFEB4', fg: '#070708', mw: mob ? '0px' : '110px', pad: mob ? '13px' : '18px' } : { bg: 'transparent', fg: '#fff', mw: '0px', pad: '13px' };
+    const dsv = i => ({ ...dockS(S.sec === 'servicios' && S.svc === i), go: () => this.setState({ svc: i }) });
+    return {
+      rootRef: this.rootRef, glowRef: this.glowRef, dotRef: this.dotRef, heroRef: this.heroRef, barRef: this.barRef, statsRef: this.statsRef,
+      mob, notMob: !mob,
+      showCursor: (this.props.showCursorGlow ?? true) && !mob,
+      marqueeDur: (this.props.marqueeSeconds ?? 60) + 's',
+      logosA: [...a, ...a], logosB: [...b, ...b], logoW: mob ? '150px' : '200px', logoH: mob ? '86px' : '110px',
+      heroVisW: mob ? '380px' : '560px', stickyPos: mob ? 'relative' : 'sticky', aboutImgW: mob ? '340px' : '480px', caseH: mob ? '210px' : '280px', momentH: mob ? '420px' : '460px',
+      d0: dsv(0), d1: dsv(1), d2: dsv(2), d3: dockS(S.sec === 'casos'), d4: dockS(S.sec === 'sobre'),
+      touch, pillars, realize, services, sd, tree, method, eduk, cases, stats, corps, path, philo, moments, cur, testimonials, maybes, groups,
+      prevM: () => go(S.step - 1), nextM: () => go(S.step + 1),
+      sent: S.sent, notSent: !S.sent, submit: () => this.setState({ sent: true })
+    };
+  }
+}
+</script>
+</body>
+</html>
