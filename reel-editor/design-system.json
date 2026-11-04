@@ -1,0 +1,59 @@
+{
+  "_nota": "Este archivo define el look de tus reels. Cambia colores, fuente y tamaños aquí, sin tocar el código. Los colores van en formato hexadecimal.",
+
+  "colores": {
+    "texto": "#FFFFFF",
+    "resalte": "#FFE600",
+    "contorno": "#000000"
+  },
+
+  "tipografia": {
+    "archivo": "fonts/Poppins-ExtraBold.ttf",
+    "familia": "Poppins ExtraBold",
+    "tamano": 112,
+    "mayusculas": true,
+    "contorno_px": 9,
+    "sombra_px": 3
+  },
+
+  "subtitulos": {
+    "palabras_por_bloque": 3,
+    "max_caracteres_linea": 13,
+    "posicion_vertical_pct": 0.68,
+    "pausa_para_cortar_bloque_seg": 0.35,
+    "palabras_clave_siempre": []
+  },
+
+  "cortes": {
+    "umbral_silencio_db": -32,
+    "pausa_maxima_seg": 0.45,
+    "colchon_seg": 0.12,
+    "segmento_minimo_seg": 0.3
+  },
+
+  "animacion": {
+    "zoom_alterno": true,
+    "zoom_amplio": [1.0, 1.04],
+    "zoom_cerrado": [1.12, 1.16],
+    "zoom_foco_vertical": 0.35,
+    "flash_cada_n_cortes": 4,
+    "flash_intensidad": 0.55,
+    "flash_duracion_seg": 0.12,
+    "fade_entrada_seg": 0.25,
+    "fade_salida_seg": 0.4
+  },
+
+  "audio": {
+    "volumen_musica": 0.12,
+    "bajar_musica_cuando_hablo": true,
+    "volumen_final_lufs": -14
+  },
+
+  "exportacion": {
+    "ancho": 1080,
+    "alto": 1920,
+    "fps": 30,
+    "crf": 20,
+    "preset": "medium"
+  }
+}

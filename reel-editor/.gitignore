@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+entrada/*
+!entrada/.gitkeep
+salida/*
+!salida/.gitkeep
+musica/*
+!musica/.gitkeep
