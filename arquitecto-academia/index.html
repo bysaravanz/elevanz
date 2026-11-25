@@ -500,8 +500,10 @@ async function submitLead(e,main){
   if(!ok){err.textContent='Marca la casilla para recibir tu plano.';err.style.display='block';return;}
   const btn=$('#fBtn'); btn.disabled=true; btn.textContent='Preparando tu plano…';
   const f=formato(A);
+  const lab=id=>{const q=QS.find(x=>x.id===id);const o=q.o.find(x=>x[0]===A[id]);return o?o[1]:(A[id]||'');};
   const payload={nombre,email,whatsapp:wa,arquetipo:ARQ[main].n,formato:f.n,tema:A.tema,audiencia:A.audiencia,transformacion:A.transformacion,
-    profesion:A.profesion,experiencia:A.experiencia,nivel:A.nivel,tiempo:A.tiempo,aprende:A.aprende,meta:A.meta,
+    profesion:lab('profesion'),experiencia:lab('experiencia'),nivel:lab('nivel'),tiempo:lab('tiempo'),aprende:lab('aprende'),meta:lab('meta'),
+    frase_final:lab('a1'),forma_ensenar:lab('a2'),sensacion:lab('a3'),
     plano_url:planUrl(),origen:'arquitecto-academia',utm:location.search.includes('utm_')?Object.fromEntries(new URLSearchParams(location.search)):{}};
   try{
     await fetch(CONFIG.leadEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
