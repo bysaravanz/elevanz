@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arquitecto de Academia | Diseña el plano de tu academia online</title>
+<meta name="description" content="Herramienta gratuita para coaches, terapeutas y consultores. Responde 12 preguntas y recibe el plano completo de tu academia online: arquetipo, promesa, módulos, formato, precios y plan de lanzamiento.">
+<meta property="og:title" content="Arquitecto de Academia">
+<meta property="og:description" content="Responde 12 preguntas y recibe el plano completo de tu academia online.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --violeta:#3C0A8D; --violeta-700:#2F0873; --violeta-900:#250660; --violeta-100:#E7E0F3; --violeta-300:#7B5BB8;
+  --petroleo:#528397; --lavanda:#A8A3C8; --lavanda-50:#F2F1F8; --vainilla:#FFFEB4; --arena:#D4C9BD; --arena-100:#F3EEE8;
+  --tinta:#202524; --tinta-70:#4A504F; --tinta-50:#767B7A; --linea:#E9E3DC;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Montserrat,system-ui,sans-serif;background:#fff;color:var(--tinta);line-height:1.65;-webkit-font-smoothing:antialiased}
+::selection{background:var(--vainilla);color:var(--tinta)}
+h1,h2,h3,.serif{font-family:Montserrat,sans-serif;font-weight:700;line-height:1.2;letter-spacing:-.01em;color:var(--tinta)}
+a{color:var(--violeta)}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+header.top{padding:26px 0;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--linea);margin-bottom:8px}
+.logo{height:34px;width:auto;display:block}
+.toplink{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:var(--violeta)}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--violeta);color:#fff;border:0;border-radius:999px;padding:16px 30px;font:600 13px Montserrat,sans-serif;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:transform .2s var(--ease),background .2s var(--ease),box-shadow .2s var(--ease);text-decoration:none}
+.btn:hover{background:var(--violeta-700);transform:translateY(-2px);box-shadow:0 12px 28px -12px rgba(60,10,141,.45)}
+.btn:active{background:var(--violeta-900);transform:scale(.98)}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+.btn.ghost{background:transparent;color:var(--violeta);border:1.5px solid var(--violeta)}
+.btn.ghost:hover{background:var(--violeta-100)}
+.btn.glow{background:var(--vainilla);color:var(--violeta)}
+.btn.glow:hover{background:#fff}
+.screen{display:none;animation:fade .45s var(--ease)}
+.screen.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.eyebrow{display:inline-block;color:var(--petroleo);font-weight:600;font-size:12px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:18px}
+
+/* Hero */
+.hero{padding:56px 0 72px;text-align:center}
+.hero h1{font-size:clamp(32px,5.6vw,50px);font-weight:800;margin-bottom:20px}
+.hero h1 em{font-style:italic;font-weight:700;color:var(--violeta)}
+.hero p.lead{font-size:18px;color:var(--tinta-70);max-width:580px;margin:0 auto 34px}
+.gets{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:60px 0 0;text-align:left}
+.get{background:#fff;border:1px solid var(--linea);border-radius:20px;padding:22px}
+.get .ic{width:30px;height:30px;border-radius:50%;background:var(--violeta-100);color:var(--violeta);display:grid;place-items:center;font-size:13px;font-weight:700;margin-bottom:12px}
+.get b{display:block;font-size:15px;font-weight:700;margin-bottom:4px}
+.get small{color:var(--tinta-50);font-size:14px}
+.fine{font-size:13px;color:var(--tinta-50);margin-top:16px}
+
+/* Quiz */
+.quiz{padding:28px 0 80px}
+.progress{height:4px;background:var(--linea);border-radius:9px;overflow:hidden;margin-bottom:12px}
+.progress i{display:block;height:100%;background:var(--violeta);width:0;transition:width .35s var(--ease)}
+.step-count{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--petroleo);margin-bottom:34px}
+.q h2{font-size:clamp(23px,3.8vw,30px);margin-bottom:8px}
+.q .hint{color:var(--tinta-50);margin-bottom:26px}
+.q textarea{width:100%;font:16px Montserrat,sans-serif;padding:16px 18px;border:1.5px solid var(--linea);border-radius:10px;background:#fff;resize:vertical;min-height:60px;color:var(--tinta)}
+.q textarea:focus{outline:none;border-color:var(--violeta);box-shadow:0 0 0 4px var(--lavanda-50)}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;background:#fff;border:1.5px solid var(--linea);border-radius:14px;padding:16px 20px;font:500 15px Montserrat,sans-serif;color:var(--tinta);cursor:pointer;transition:border .2s var(--ease),background .2s var(--ease)}
+.opt:hover{border-color:var(--lavanda);background:var(--lavanda-50)}
+.opt.sel{border-color:var(--violeta);background:var(--violeta-100);color:var(--violeta-900);font-weight:600}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:32px}
+.back{background:none;border:0;color:var(--tinta-50);font:600 12px Montserrat;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+
+/* Loading */
+.loading{text-align:center;padding:120px 0}
+.orb{width:64px;height:64px;border-radius:50%;margin:0 auto 26px;border:3px solid var(--violeta-100);border-top-color:var(--violeta);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading p{color:var(--tinta-50)}
+
+/* Result */
+.result{padding:16px 0 90px}
+.r-head{text-align:center;padding:24px 0 32px}
+.r-head h1{font-size:clamp(28px,4.8vw,40px);font-weight:800;margin:4px 0 10px}
+.r-head p{color:var(--tinta-70)}
+.card{background:#fff;border:1px solid var(--linea);border-radius:20px;padding:28px;margin-bottom:18px}
+.card h3{font-size:21px;margin-bottom:12px}
+.card .lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:var(--petroleo);margin-bottom:8px}
+.card.soft{background:var(--arena-100);border-color:var(--arena-100)}
+.arch{background:var(--violeta);border:0}
+.arch .lbl{color:var(--vainilla)}
+.arch h3{font-size:34px;font-weight:800;color:#fff}
+.arch p{color:#fff;opacity:.92}
+.promise{font-size:20px;font-weight:600;line-height:1.5;color:var(--violeta-900)}
+.mods{list-style:none;display:grid;gap:12px}
+.mods li{display:flex;gap:14px;align-items:flex-start}
+.mods .n{flex:0 0 34px;height:34px;border-radius:50%;background:var(--violeta-100);color:var(--violeta);font-weight:700;display:grid;place-items:center;font-size:14px}
+.mods b{display:block;font-weight:700}
+.mods small{color:var(--tinta-50)}
+.lessons{margin:8px 0 0 48px;list-style:none}
+.lessons li{font-size:14px;padding:4px 0;display:block;color:var(--tinta-70)}
+.tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--lavanda-50);color:var(--violeta);padding:3px 9px;border-radius:99px;margin-left:6px;vertical-align:middle}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:640px){.grid2,.gets{grid-template-columns:1fr}}
+.swatches{display:flex;gap:10px;margin:10px 0 16px}
+.sw{flex:1;height:64px;border-radius:12px;border:1px solid rgba(0,0,0,.06);display:flex;align-items:flex-end;padding:6px 8px;font-size:11px;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{font-size:13px;font-weight:500;padding:5px 12px;border-radius:99px;background:var(--lavanda-50);color:var(--violeta-900)}
+.chip.no{background:#F8E9EB;color:#B23A48;text-decoration:line-through}
+.ladder{display:grid;gap:10px}
+.rung{border:1.5px solid var(--linea);border-radius:14px;padding:14px 16px;display:flex;justify-content:space-between;gap:14px;align-items:center}
+.rung.hl{border-color:var(--violeta);background:var(--violeta-100)}
+.rung b{display:block;font-weight:700}
+.rung small{color:var(--tinta-50)}
+.rung .p{font-weight:700;color:var(--violeta);white-space:nowrap}
+.weeks{display:grid;gap:14px}
+.week{display:grid;grid-template-columns:96px 1fr;gap:12px}
+.week .w{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--petroleo)}
+.week .w span{display:block;font-size:16px;letter-spacing:0;text-transform:none;color:var(--tinta);margin-top:2px}
+.week ul{padding-left:18px;color:var(--tinta-70)}
+
+/* Gate */
+.locked{position:relative}
+.locked .blur{filter:blur(6px);pointer-events:none;user-select:none;opacity:.7;max-height:560px;overflow:hidden;-webkit-mask:linear-gradient(#000 60%,transparent);mask:linear-gradient(#000 60%,transparent)}
+.gate{position:relative;margin-top:-40px;background:#fff;border:1.5px solid var(--violeta);border-radius:24px;padding:32px;box-shadow:0 24px 60px -24px rgba(60,10,141,.35)}
+.gate h3{font-size:23px;margin-bottom:8px}
+.gate p{color:var(--tinta-70);margin-bottom:20px}
+.gate form{display:grid;gap:12px}
+.gate input[type=text],.gate input[type=email],.gate input[type=tel]{font:15px Montserrat;padding:14px 16px;border:1.5px solid var(--linea);border-radius:10px;width:100%;color:var(--tinta)}
+.gate input:focus{outline:none;border-color:var(--violeta);box-shadow:0 0 0 4px var(--lavanda-50)}
+.consent{display:flex;gap:10px;font-size:12px;color:var(--tinta-50);align-items:flex-start}
+.consent input{margin-top:3px;accent-color:var(--violeta)}
+.err{color:#B23A48;font-size:13px;display:none}
+.actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:32px 0}
+.cta-final{background:var(--violeta);color:#fff;border-radius:32px;padding:44px 32px;text-align:center}
+.cta-final h3{font-size:26px;color:#fff;margin-bottom:10px}
+.cta-final p{opacity:.88;margin-bottom:24px;max-width:520px;margin-left:auto;margin-right:auto}
+footer{text-align:center;color:var(--tinta-50);font-size:13px;padding:34px 0 54px;border-top:1px solid var(--linea)}
+footer img{height:22px;display:block;margin:0 auto 10px;opacity:.9}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--tinta);color:#fff;padding:12px 22px;border-radius:99px;font-size:14px;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.on{opacity:1}
+.print-only{display:none}
+
+@media print{
+  header.top{border:0}
+  .actions,.cta-final,.gate,footer,.no-print,.toast{display:none!important}
+  .print-only{display:block}
+  .card{break-inside:avoid}
+  .arch,.sw,.mods .n,.chip,.tag,.rung.hl{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .locked .blur{filter:none;opacity:1;max-height:none;-webkit-mask:none;mask:none}
+  .result{padding:0}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <a href="https://saravanz.com" aria-label="SARAVANZ"><img class="logo" id="brand" alt="SARAVANZ" src="__LOGO_DATA_URI__"></a>
+    <a class="no-print toplink" id="ytLink" href="#" target="_blank" rel="noopener">Canal de YouTube</a>
+  </header>
+
+  <!-- INTRO -->
+  <section class="screen on" id="s-intro">
+    <div class="hero">
+      <div class="eyebrow">Herramienta gratuita · Para coaches, terapeutas y consultores</div>
+      <h1>Diseña el plano de tu <em>academia online</em> en 10 minutos</h1>
+      <p class="lead">Responde 12 preguntas sobre lo que sabes y a quién ayudas. Recibes la estructura completa de tu programa, la personalidad de tu academia y un plan de lanzamiento de 4 semanas.</p>
+      <button class="btn" id="startBtn">Empezar mi plano →</button>
+      <p class="fine">Sin registro para empezar. Al final puedes descargar tu plano en PDF.</p>
+      <div class="gets">
+        <div class="get"><span class="ic">1</span><b>Arquetipo de tu academia</b><small>Voz, colores y experiencia que vivirá tu alumno.</small></div>
+        <div class="get"><span class="ic">2</span><b>Promesa y formato</b><small>Qué vendes, en cuánto tiempo y cómo se entrega.</small></div>
+        <div class="get"><span class="ic">3</span><b>Módulos y lecciones</b><small>Tu programa organizado de principio a fin.</small></div>
+        <div class="get"><span class="ic">4</span><b>Precios y lanzamiento</b><small>Escalera de oferta y plan de 4 semanas.</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="screen" id="s-quiz">
+    <div class="quiz">
+      <div class="progress"><i id="bar"></i></div>
+      <div class="step-count" id="stepCount"></div>
+      <div class="q" id="qBox"></div>
+      <div class="nav">
+        <button class="back" id="backBtn">← Atrás</button>
+        <button class="btn" id="nextBtn" disabled>Siguiente →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOADING -->
+  <section class="screen" id="s-loading">
+    <div class="loading">
+      <div class="orb"></div>
+      <h2 style="font-size:24px;margin-bottom:8px">Diseñando tu academia</h2>
+      <p id="loadMsg">Leyendo tus respuestas…</p>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section class="screen" id="s-result">
+    <div class="result" id="resultBox"></div>
+  </section>
+
+  <footer id="footer"></footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ CONFIGURACIÓN (edita aquí) ============ */
+const CONFIG = {
+  autora: 'Sara Rodríguez',
+  firma: 'Diseñadora y estratega de marca. Diseño academias online y experiencias digitales.',
+  youtubeUrl: '#',          // enlace a tu canal
+  agendaUrl: '#',           // enlace de tu calendario en GHL para agendar llamada
+  leadEndpoint: '/api/lead',
+  // Rangos de precio sugeridos. Revísalos y ajústalos a tu criterio.
+  precios: {
+    entrada:   { nombre:'Taller o minicurso', rango:'USD 27 a 47',   detalle:'Resuelve un problema puntual y abre la puerta a tu programa.' },
+    principal: { nombre:'Programa principal', rango:'USD 197 a 497', detalle:'Tu academia completa con la transformación de principio a fin.' },
+    premium:   { nombre:'Programa con acompañamiento', rango:'USD 997 o más', detalle:'El programa más sesiones de seguimiento contigo, en grupo pequeño o 1 a 1.' }
+  }
+};
+
+/* ============ ARQUETIPOS ============ */
+const ARQ = {
+  inocente:{n:'Inocente',e:'Tu academia es un lugar seguro donde aprender se siente simple y optimista.',v:'Cálida, sencilla y positiva. Frases cortas y ejemplos cotidianos.',x:'Pasos pequeños, logros rápidos y mucha claridad visual. Tu alumno nunca se siente perdido.',c:['#F4EDE1','#9CC5A1','#3E6B5A'],u:['sencillo','paso a paso','con calma','confianza'],a:['complejo','exigente','sin excusas'],nom:['Raíz','Escuela Serena','Semilla']},
+  explorador:{n:'Explorador',e:'Tu academia invita a descubrir caminos nuevos con libertad.',v:'Curiosa e inspiradora, con preguntas abiertas.',x:'Rutas flexibles, retos de descubrimiento y espacio para que cada alumno elija su camino.',c:['#E9E2D0','#C8763E','#2F4F4F'],u:['descubre','explora','tu camino','libertad'],a:['obligatorio','rígido','única forma'],nom:['Ruta','Brújula','Travesía']},
+  sabio:{n:'Sabio',e:'Tu academia es la referencia que convierte lo complejo en claridad.',v:'Clara, precisa y fundamentada. Explicas el porqué de cada cosa.',x:'Contenido bien estructurado, recursos descargables, marcos y mapas visuales.',c:['#F2F0EA','#2E4A7D','#B08D57'],u:['comprende','método','fundamento','claridad'],a:['truco','fácil y rápido','hack'],nom:['Método','Escuela Clara','Mapa']},
+  heroe:{n:'Héroe',e:'Tu academia es un campo de entrenamiento para lograr metas difíciles.',v:'Directa, motivadora y enfocada en la acción.',x:'Retos semanales, métricas de avance, desafíos con meta clara y celebración de cada logro.',c:['#F1ECE4','#B3261E','#1F2A44'],u:['logra','reto','avanza','disciplina'],a:['quizás','cuando puedas','sin esfuerzo'],nom:['Desafío','Cima','Impulso']},
+  rebelde:{n:'Rebelde',e:'Tu academia desafía las reglas de tu sector y propone otra forma de hacer las cosas.',v:'Audaz, honesta y sin rodeos.',x:'Contenido que cuestiona creencias, debates y ejercicios para romper patrones.',c:['#EDEAE4','#111111','#E0452B'],u:['rompe','cuestiona','a tu manera','sin filtros'],a:['tradicional','como siempre','lo correcto'],nom:['Contracorriente','Fuera de Molde','Ruptura']},
+  mago:{n:'Mago',e:'Tu academia es un proceso de transformación profunda que cambia cómo se ve el alumno a sí mismo.',v:'Inspiradora, simbólica y visionaria. Usas metáforas y visualizaciones.',x:'Rituales de inicio y cierre, momentos de revelación, ejercicios de visualización y un antes y después visible.',c:['#F3EEF7','#5B2A86','#C9A45C'],u:['transforma','despierta','visión','posibilidad'],a:['básico','rutina','normal'],nom:['Alquimia','Despierta','Portal']},
+  creador:{n:'Creador',e:'Tu academia es un taller donde el alumno construye algo propio.',v:'Imaginativa, expresiva y práctica.',x:'Proyectos concretos, plantillas, galería de trabajos y un entregable en cada módulo.',c:['#F7F1E8','#E07A5F','#3D405B'],u:['crea','diseña','construye','tu obra'],a:['copiar','fórmula','estándar'],nom:['Taller','Estudio Vivo','Lienzo']},
+  gobernante:{n:'Gobernante',e:'Tu academia ofrece estructura, orden y resultados medibles.',v:'Segura, organizada y profesional.',x:'Sistema claro, calendario, checklists, seguimiento de progreso y certificado al final.',c:['#F0EEE9','#1B2A41','#A68A3D'],u:['sistema','estructura','resultados','control'],a:['improvisar','caos','tal vez'],nom:['Sistema','Escuela Maestra','Estructura']},
+  cuidador:{n:'Cuidador',e:'Tu academia acompaña con empatía y hace que el alumno se sienta sostenido.',v:'Empática, paciente y protectora.',x:'Acompañamiento cercano, espacios de escucha, recursos de autocuidado y mensajes de ánimo.',c:['#FAF3EE','#D99A8B','#5E7D6E'],u:['te acompaño','a tu ritmo','cuidado','en compañía'],a:['presión','rápido','solo depende de ti'],nom:['Refugio','Nido','Abrazo']},
+  amante:{n:'Amante',e:'Tu academia es una experiencia bella y sensorial que enamora.',v:'Cálida, emotiva y estética.',x:'Diseño cuidado, experiencias íntimas, detalles de bienvenida y momentos para disfrutar el proceso.',c:['#F8EFEA','#9E2A4B','#D4A373'],u:['disfruta','conecta','pasión','belleza'],a:['frío','técnico','genérico'],nom:['Esencia','Musa','Latido']},
+  bufon:{n:'Bufón',e:'Tu academia demuestra que aprender puede ser divertido.',v:'Ligera, ingeniosa y espontánea.',x:'Gamificación, retos divertidos, humor y dinámicas que dan ganas de compartir.',c:['#FFF6E5','#F2A541','#5D3FD3'],u:['juega','prueba','sin dramas','diviértete'],a:['solemne','aburrido','complicado'],nom:['Juego Serio','Chispa','Recreo']},
+  comun:{n:'Persona Común',e:'Tu academia es una comunidad cercana donde todos pertenecen.',v:'Cercana, honesta y sin pretensiones.',x:'Comunidad activa, ejemplos reales, lenguaje cotidiano y apoyo entre compañeros.',c:['#F3EFE8','#5C7A99','#C27C4E'],u:['entre nosotros','real','práctico','comunidad'],a:['élite','exclusivo','inalcanzable'],nom:['Comunidad','La Mesa','Círculo']}
+};
+
+/* ============ PREGUNTAS ============ */
+const QS = [
+  {id:'tema',t:'text',q:'¿Qué enseñas?',h:'El tema central de tu conocimiento, en pocas palabras.',ph:'Ej: manejo de la ansiedad, finanzas para emprendedoras, liderazgo'},
+  {id:'audiencia',t:'text',q:'¿A quién ayudas?',h:'Describe a tu alumno ideal. Mientras más específico, mejor.',ph:'Ej: mujeres de 35 a 50 que dejaron su empleo para emprender'},
+  {id:'transformacion',t:'text',q:'¿Qué logra tu alumno al terminar?',h:'El resultado concreto que se lleva. Empieza con un verbo.',ph:'Ej: organizar sus finanzas y ahorrar cada mes sin estrés'},
+  {id:'profesion',t:'opt',q:'¿Cuál describe mejor tu perfil?',o:[['coach','Coach'],['terapeuta','Terapeuta o profesional de la salud'],['consultor','Consultor o consultora'],['educador','Educador, formador o tutor'],['creativo','Profesional creativo o técnico'],['otro','Otro perfil']]},
+  {id:'experiencia',t:'opt',q:'¿Ya has enseñado esto antes?',o:[['nunca','Todavía no lo he enseñado'],['unoauno','Sí, en sesiones 1 a 1'],['grupos','Sí, en talleres o grupos'],['contenido','Tengo contenido creado (videos, ebook, posts)']]},
+  {id:'nivel',t:'opt',q:'¿Desde dónde parte tu alumno?',o:[['cero','Empieza desde cero'],['bases','Tiene bases y quiere avanzar'],['avanzado','Ya sabe bastante y busca especializarse']]},
+  {id:'tiempo',t:'opt',q:'¿Cuánto tiempo quieres dedicar a acompañar alumnos cada semana?',o:[['bajo','Casi nada. Quiero que funcione sola'],['medio','Entre 2 y 4 horas'],['alto','5 horas o más']]},
+  {id:'aprende',t:'opt',q:'¿Cómo aprende mejor tu alumno?',o:[['visual','Viendo y escuchando'],['practica','Practicando con ejercicios'],['grupo','Conversando con otros'],['lectura','Leyendo y reflexionando']]},
+  {id:'a1',t:'opt',q:'Cuando alguien termina tu programa, quieres que diga…',o:[['sabio','“Ahora entiendo todo con claridad”'],['mago','“Me cambió la forma de verme”'],['heroe','“Logré lo que creía imposible”'],['cuidador','“Por fin sentí que alguien me acompañaba”'],['explorador','“Descubrí caminos que no conocía”'],['creador','“Creé algo que antes no imaginaba”']]},
+  {id:'a2',t:'opt',q:'Tu forma de enseñar se parece más a…',o:[['inocente','Una guía serena que simplifica todo'],['gobernante','Una líder que pone orden y estructura'],['rebelde','Alguien que rompe las reglas del sector'],['comun','Una amiga cercana que habla claro'],['bufon','Alguien que hace divertido aprender'],['amante','Alguien que inspira con pasión y belleza']]},
+  {id:'a3',t:'opt',q:'¿Qué sensación quieres que tenga tu academia?',o:[['inocente|cuidador','Calma y confianza'],['mago|amante','Magia y transformación'],['heroe|gobernante','Disciplina y logro'],['explorador|rebelde','Libertad y aventura'],['comun|cuidador','Calidez y comunidad'],['creador|bufon','Creatividad e imaginación']]},
+  {id:'meta',t:'opt',q:'¿Qué papel tendrá tu academia en tu negocio?',o:[['principal','Será mi producto principal'],['puerta','Una puerta de entrada a mis servicios 1 a 1'],['extra','Un ingreso adicional que funcione solo']]}
+];
+
+/* ============ ESTADO ============ */
+let A = {}; let i = 0; let unlocked = false;
+const $ = s => document.querySelector(s);
+const esc = s => String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const low = s => { s = String(s||'').trim().replace(/[.]+$/,''); return s ? s.charAt(0).toLowerCase()+s.slice(1) : s; };
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));$(id).classList.add('on');window.scrollTo({top:0,behavior:'smooth'});}
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2400);}
+const store = {get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+/* ============ QUIZ ============ */
+function renderQ(){
+  const q = QS[i];
+  $('#bar').style.width = ((i)/QS.length*100)+'%';
+  $('#stepCount').textContent = `Pregunta ${i+1} de ${QS.length}`;
+  $('#backBtn').style.visibility = i===0 ? 'hidden':'visible';
+  $('#nextBtn').textContent = i===QS.length-1 ? 'Ver mi plano →' : 'Siguiente →';
+  let h = `<h2>${q.q}</h2>${q.h?`<p class="hint">${q.h}</p>`:'<div style="height:18px"></div>'}`;
+  if(q.t==='text'){
+    h += `<textarea id="txt" rows="2" maxlength="160" placeholder="${esc(q.ph)}">${esc(A[q.id]||'')}</textarea>`;
+  } else {
+    h += '<div class="opts">'+q.o.map(([v,l])=>`<button class="opt ${A[q.id]===v?'sel':''}" data-v="${v}">${l}</button>`).join('')+'</div>';
+  }
+  $('#qBox').innerHTML = h;
+  validate();
+  if(q.t==='text'){
+    const t=$('#txt'); t.focus();
+    t.addEventListener('input',()=>{A[q.id]=t.value;validate();});
+    t.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();if(!$('#nextBtn').disabled)next();}});
+  } else {
+    document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+      A[q.id]=b.dataset.v;
+      document.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');
+      validate(); setTimeout(next,260);
+    });
+  }
+}
+function validate(){const q=QS[i];const v=A[q.id];$('#nextBtn').disabled=!(v&&String(v).trim().length>=(q.t==='text'?3:1));}
+function next(){ if(i<QS.length-1){i++;renderQ();} else finish(); }
+$('#nextBtn').onclick=next;
+$('#backBtn').onclick=()=>{if(i>0){i--;renderQ();}};
+$('#startBtn').onclick=()=>{show('#s-quiz');renderQ();};
+
+function finish(){
+  $('#bar').style.width='100%';
+  show('#s-loading');
+  const msgs=['Leyendo tus respuestas…','Definiendo el arquetipo de tu academia…','Ordenando tus módulos…','Armando tu plan de lanzamiento…'];
+  let k=0; const it=setInterval(()=>{k++; if(k<msgs.length) $('#loadMsg').textContent=msgs[k];},700);
+  setTimeout(()=>{clearInterval(it); store.set('aa_answers',JSON.stringify(A)); renderResult();},2900);
+}
+
+/* ============ MOTOR DEL PLANO ============ */
+function arquetipo(a){
+  const s={}; Object.keys(ARQ).forEach(k=>s[k]=0);
+  s[a.a1]+=3; s[a.a2]+=3;
+  const [p,q]=(a.a3||'').split('|'); if(p) s[p]+=2; if(q) s[q]+=1;
+  const order=[a.a1,a.a2,p,q];
+  const ranked=Object.keys(s).sort((x,y)=> s[y]-s[x] || (order.indexOf(x)<0?9:order.indexOf(x)) - (order.indexOf(y)<0?9:order.indexOf(y)));
+  return {main:ranked[0], second:ranked[1]};
+}
+function formato(a){
+  if(a.tiempo==='bajo') return {k:'auto',n:'Programa autoguiado',d:'Lecciones grabadas que tu alumno avanza a su ritmo. Se vende todo el año sin que tengas que estar presente.'+(a.aprende==='grupo'?' Suma una comunidad privada para que tus alumnos conversen entre ellos.':'')};
+  if(a.tiempo==='medio') return {k:'hibrido',n:'Programa híbrido',d:'Lecciones grabadas más una sesión grupal en vivo cada semana para resolver dudas y mantener el ritmo.'};
+  return {k:'cohorte',n:'Programa con acompañamiento',d:'Grupos con fecha de inicio y cierre, sesiones en vivo semanales y revisión personal del avance de cada alumno.'};
+}
+function estructura(a){
+  const T=low(a.tema), X=low(a.transformacion);
+  const base=[
+    {k:'m1',t:'Punto de partida',s:'Dónde está hoy tu alumno y a dónde va',l:['Bienvenida y cómo aprovechar el programa','Diagnóstico inicial de su situación con '+T,'Su meta personal para este programa']},
+    {k:'m2',t:'Fundamentos',s:'Lo esencial de '+T,l:['Los conceptos clave que necesita dominar','Errores frecuentes y por qué ocurren','El mapa de tu método']},
+    {k:'m3',t:'Tu método',s:'El proceso paso a paso que solo tú enseñas',l:['Paso 1 de tu método','Paso 2 de tu método','Paso 3 de tu método']},
+    {k:'m4',t:'Práctica guiada',s:'Llevarlo a la vida real',l:['Ejercicio guiado completo','Casos reales y ejemplos','Plan de acción semanal']},
+    {k:'m5',t:'Obstáculos y ajustes',s:'Qué hacer cuando cuesta mantenerlo',l:['Bloqueos más comunes','Herramientas para ajustar el rumbo','Sesión de preguntas frecuentes']},
+    {k:'m6',t:'Integración',s:'Lograr '+X,l:['Revisión del avance','Plan para los próximos 90 días','Cierre, celebración y siguiente paso']}
+  ];
+  let mods = a.nivel==='cero'? base : a.nivel==='bases' ? base.filter(m=>m.k!=='m2') : base.filter(m=>['m1','m3','m4','m6'].includes(m.k));
+  if(a.nivel==='avanzado'){ mods = mods.map(m=>m.k==='m3'?{...m,s:'Técnicas avanzadas y tu método de especialización'}:m); }
+  const tags={visual:['Video','Video','Plantilla'],practica:['Ejercicio','Video corto','Ejercicio'],grupo:['Video','Conversación en grupo','Foro'],lectura:['Lectura guiada','Video','Diario de reflexión']}[a.aprende]||['Video','Ejercicio','Plantilla'];
+  const f=formato(a).k;
+  return mods.map((m,ix)=>{
+    const lessons=m.l.map((t,j)=>({t,tag:tags[j%tags.length]}));
+    if(f==='hibrido') lessons.push({t:'Sesión grupal en vivo',tag:'En vivo'});
+    if(f==='cohorte') lessons.push({t:'Sesión en vivo y revisión personal',tag:'En vivo'});
+    return {...m,n:ix+1,lessons};
+  });
+}
+function duracion(mods,a){ const w=mods.length; return a.tiempo==='bajo' ? `${w} módulos a tu ritmo (recomendado: 1 por semana)` : `${w} semanas, un módulo por semana`; }
+function recursos(a){
+  return ({visual:['Videos cortos de 8 a 15 minutos','Plantillas visuales descargables','Resumen en video al cierre de cada módulo'],
+    practica:['Cuaderno de ejercicios por módulo','Checklists de aplicación','Retos semanales con entrega'],
+    grupo:['Comunidad privada del programa','Dinámicas de conversación por módulo','Compañero de avance (accountability)'],
+    lectura:['Guía de lectura por módulo','Diario de reflexión descargable','Preguntas de integración al cierre']})[a.aprende];
+}
+function validacion(a){
+  return ({nunca:'Lanza primero una versión piloto con 5 a 10 alumnos fundadores a precio especial. Graba las sesiones en vivo y conviértelas en las lecciones de tu programa.',
+    unoauno:'Revisa tus últimas sesiones 1 a 1. Los pasos que repites con cada cliente ya son tu método: ponles nombre y ordénalos en los módulos 3 y 4.',
+    grupos:'Graba tu próximo taller completo. Ese material es la base de tus primeros módulos y te ahorra semanas de producción.',
+    contenido:'Reúne todo lo que ya creaste y clasifícalo según los módulos de este plano. Probablemente ya tienes cubierta buena parte del programa.'})[a.experiencia];
+}
+function escalera(a){
+  const hl={principal:'principal',puerta:'entrada',extra:'principal'}[a.meta];
+  const nota={principal:'Tu academia es el centro de tu negocio. El taller atrae alumnos y la versión con acompañamiento eleva tu ingreso por cliente.',
+    puerta:'Tu academia funciona como filtro: el alumno te conoce con una oferta accesible y los más comprometidos pasan a tu servicio 1 a 1.',
+    extra:'Prioriza la versión autoguiada con ventas automatizadas. Mientras menos dependa de tu tiempo, mejor cumple su función.'}[a.meta];
+  return {hl,nota};
+}
+function lanzamiento(a,ar){
+  return [
+    {w:'Semana 1',t:'Valida',l:['Conversa con 10 personas de tu público y pregúntales qué les impide '+low(a.transformacion),'Ajusta la promesa con las palabras exactas que ellas usan']},
+    {w:'Semana 2',t:'Prepara',l:['Crea tu página de lista de espera con la promesa de este plano','Define el nombre final y la identidad visual con tu paleta '+ARQ[ar].n]},
+    {w:'Semana 3',t:'Calienta',l:['Publica 3 contenidos o un directo con temas de tus módulos 1 y 2','Invita a cada persona interesada a la lista de espera']},
+    {w:'Semana 4',t:'Abre',l:['Abre inscripciones para alumnos fundadores con precio especial y cupo limitado','Produce el programa a medida que avanza el primer grupo']}
+  ];
+}
+
+/* ============ RENDER DEL RESULTADO ============ */
+function renderResult(){
+  const a=A; const {main,second}=arquetipo(a); const R=ARQ[main], R2=ARQ[second];
+  const f=formato(a); const mods=estructura(a); const esc_=esc;
+  const promesa=`Ayudo a ${esc_(low(a.audiencia))} a ${esc_(low(a.transformacion))} con un ${f.n.toLowerCase()} de ${mods.length} ${a.tiempo==='bajo'?'módulos':'semanas'}.`;
+  const {hl,nota}=escalera(a); const P=CONFIG.precios;
+  const launch=lanzamiento(a,main);
+
+  const free = `
+  <div class="r-head">
+    <div class="eyebrow">Tu plano está listo</div>
+    <h1>Academia de ${esc_(low(a.tema))}</h1>
+    <p>Diseñada para ${esc_(low(a.audiencia))}</p>
+  </div>
+  <div class="card arch">
+    <div class="lbl">Arquetipo de tu academia</div>
+    <h3>${R.n}</h3>
+    <p>${R.e}</p>
+    <p style="margin-top:10px;font-size:14px;opacity:.75">Con un matiz de ${R2.n}.</p>
+  </div>
+  <div class="card soft">
+    <div class="lbl">Tu promesa</div>
+    <p class="promise">“${promesa}”</p>
+  </div>
+  <div class="card">
+    <div class="lbl">Formato recomendado</div>
+    <h3>${f.n}</h3>
+    <p>${f.d}</p>
+    <p style="margin-top:8px;color:var(--tinta-50);font-size:15px">Duración: ${duracion(mods,a)}</p>
+  </div>
+  <div class="card">
+    <div class="lbl">Estructura del programa</div>
+    <ul class="mods">${mods.map(m=>`<li><span class="n">${m.n}</span><div><b>${m.t}</b><small>${esc_(m.s)}</small></div></li>`).join('')}</ul>
+  </div>`;
+
+  const full = `
+  <div class="card">
+    <div class="lbl">Lecciones por módulo</div>
+    <ul class="mods">${mods.map(m=>`<li style="display:block"><div style="display:flex;gap:14px"><span class="n">${m.n}</span><div><b>${m.t}</b><small>${esc_(m.s)}</small></div></div>
+      <ul class="lessons">${m.lessons.map(l=>`<li>• ${esc_(l.t)} <span class="tag">${l.tag}</span></li>`).join('')}</ul></li>`).join('')}</ul>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="lbl">Identidad de tu academia</div>
+      <h3>Paleta ${R.n}</h3>
+      <div class="swatches">${R.c.map(c=>`<div class="sw" style="background:${c};color:${isDark(c)?'#fff':'#202524'}">${c}</div>`).join('')}</div>
+      <p style="font-size:15px"><b>Voz:</b> ${R.v}</p>
+    </div>
+    <div class="card">
+      <div class="lbl">Palabras de tu marca</div>
+      <p style="font-size:14px;color:var(--tinta-50)">Úsalas</p>
+      <div class="chips">${R.u.map(w=>`<span class="chip">${w}</span>`).join('')}</div>
+      <p style="font-size:14px;color:var(--tinta-50);margin-top:12px">Evítalas</p>
+      <div class="chips">${R.a.map(w=>`<span class="chip no">${w}</span>`).join('')}</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="lbl">Experiencia de tu alumno</div>
+    <p>${R.x}</p>
+    <p style="margin-top:14px;font-weight:600">Recursos que debe incluir:</p>
+    <ul style="padding-left:20px">${recursos(a).map(r=>`<li>${r}</li>`).join('')}</ul>
+  </div>
+  <div class="card">
+    <div class="lbl">Ideas de nombre</div>
+    <p style="margin-bottom:10px">Inspiradas en tu arquetipo. Combínalas con tu tema para hacerlas únicas.</p>
+    <div class="chips">${R.nom.map(n=>`<span class="chip" style="font-size:15px;padding:6px 14px">${n}</span>`).join('')}</div>
+  </div>
+  <div class="card">
+    <div class="lbl">Escalera de oferta</div>
+    <p style="margin-bottom:14px">${nota}</p>
+    <div class="ladder">${['entrada','principal','premium'].map(k=>`<div class="rung ${k===hl?'hl':''}"><div><b>${P[k].nombre}${k===hl?' · tu prioridad':''}</b><small>${P[k].detalle}</small></div><span class="p">${P[k].rango}</span></div>`).join('')}</div>
+  </div>
+  <div class="card">
+    <div class="lbl">Tu primer paso</div>
+    <p>${validacion(a)}</p>
+  </div>
+  <div class="card">
+    <div class="lbl">Plan de lanzamiento en 4 semanas</div>
+    <div class="weeks">${launch.map(w=>`<div class="week"><div class="w">${w.w}<br><span>${w.t}</span></div><ul>${w.l.map(x=>`<li>${esc_(x)}</li>`).join('')}</ul></div>`).join('')}</div>
+  </div>
+  <p class="print-only" style="text-align:center;color:#777;font-size:12px;margin-top:20px">Plano creado con Arquitecto de Academia · ${CONFIG.autora}</p>`;
+
+  const gate = `
+  <div class="gate" id="gate">
+    <h3>Desbloquea tu plano completo</h3>
+    <p>Recibe las lecciones de cada módulo, la paleta y voz de tu academia, ideas de nombre, tu escalera de precios y el plan de lanzamiento. Te envío también el enlace a tu plano por email para que lo guardes.</p>
+    <form id="leadForm" novalidate>
+      <input type="text" id="fNombre" placeholder="Tu nombre" autocomplete="given-name" required>
+      <input type="email" id="fEmail" placeholder="Tu mejor email" autocomplete="email" required>
+      <input type="tel" id="fWa" placeholder="WhatsApp (opcional)" autocomplete="tel">
+      <label class="consent"><input type="checkbox" id="fOk"> Acepto recibir mi plano y contenido sobre cómo crear mi academia online. Puedo darme de baja cuando quiera.</label>
+      <div class="err" id="fErr"></div>
+      <button class="btn" type="submit" id="fBtn">Ver mi plano completo →</button>
+    </form>
+  </div>`;
+
+  const actions = `
+  <div class="actions">
+    <button class="btn" id="pdfBtn">Descargar PDF</button>
+    <button class="btn ghost" id="linkBtn">Copiar enlace de mi plano</button>
+    <button class="btn ghost" id="redoBtn">Hacer otro plano</button>
+  </div>
+  <div class="cta-final">
+    <h3>¿Quieres que diseñemos tu academia?</h3>
+    <p>Llevo tu plano a una academia real: marca, estructura, plataforma y experiencia del alumno. Agenda una llamada de diagnóstico sin costo.</p>
+    <a class="btn glow" href="${CONFIG.agendaUrl}" target="_blank" rel="noopener">Agendar llamada →</a>
+  </div>`;
+
+  $('#resultBox').innerHTML = free + (unlocked ? full + actions : `<div class="locked"><div class="blur" aria-hidden="true">${full}</div>${gate}</div>`);
+  show('#s-result');
+
+  if(unlocked){
+    $('#pdfBtn').onclick=()=>window.print();
+    $('#linkBtn').onclick=()=>{const u=planUrl();(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>toast('Enlace copiado')).catch(()=>prompt('Copia tu enlace:',u));};
+    $('#redoBtn').onclick=()=>{A={};i=0;unlocked=false;history.replaceState(null,'',location.pathname);show('#s-intro');};
+  } else {
+    $('#leadForm').onsubmit=e=>submitLead(e,main);
+  }
+}
+function isDark(hex){const n=parseInt(hex.slice(1),16);const r=n>>16,g=n>>8&255,b=n&255;return (r*299+g*587+b*114)/1000<140;}
+
+/* ============ LEAD ============ */
+function enc(o){return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+function dec(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return JSON.parse(decodeURIComponent(escape(atob(s))));}
+function planUrl(){return location.origin+location.pathname+'?plano='+enc(A);}
+
+async function submitLead(e,main){
+  e.preventDefault();
+  const nombre=$('#fNombre').value.trim(), email=$('#fEmail').value.trim(), wa=$('#fWa').value.trim(), ok=$('#fOk').checked;
+  const err=$('#fErr'); err.style.display='none';
+  if(nombre.length<2){err.textContent='Escribe tu nombre.';err.style.display='block';return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){err.textContent='Revisa tu email.';err.style.display='block';return;}
+  if(!ok){err.textContent='Marca la casilla para recibir tu plano.';err.style.display='block';return;}
+  const btn=$('#fBtn'); btn.disabled=true; btn.textContent='Preparando tu plano…';
+  const f=formato(A);
+  const payload={nombre,email,whatsapp:wa,arquetipo:ARQ[main].n,formato:f.n,tema:A.tema,audiencia:A.audiencia,transformacion:A.transformacion,
+    profesion:A.profesion,experiencia:A.experiencia,nivel:A.nivel,tiempo:A.tiempo,aprende:A.aprende,meta:A.meta,
+    plano_url:planUrl(),origen:'arquitecto-academia',utm:location.search.includes('utm_')?Object.fromEntries(new URLSearchParams(location.search)):{}};
+  try{
+    await fetch(CONFIG.leadEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  }catch(_){/* no bloqueamos al usuario si falla la red */}
+  unlocked=true; store.set('aa_unlocked','1');
+  history.replaceState(null,'',planUrl().replace(location.origin,''));
+  renderResult();
+  setTimeout(()=>{const g=document.querySelectorAll('.card')[4]; if(g) g.scrollIntoView({behavior:'smooth',block:'start'});},200);
+  toast('Listo, '+nombre.split(' ')[0]+'. Tu plano completo está abajo.');
+}
+
+/* ============ INICIO ============ */
+$('#ytLink').href=CONFIG.youtubeUrl;
+$('#footer').innerHTML=`<img src="${$('#brand').src}" alt="SARAVANZ">Creado por <b>${CONFIG.autora}</b>. ${CONFIG.firma}`;
+(function boot(){
+  const p=new URLSearchParams(location.search).get('plano');
+  if(p){ try{ A=dec(p); unlocked=true; renderResult(); return; }catch(e){} }
+})();
+</script>
+</body>
+</html>
